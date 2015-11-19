@@ -8,7 +8,7 @@
  * Created: 18/11/2015
  */
 
-SELECT DISTINCT pf.`Codigo_PFisica`, pf.`Nome_PFisica`, tu.`Nome_Turma`, mens.`Valor_Mensalidade`, mens.`Data_Vencimento`, mens.`Nosso_Numero`
+SELECT DISTINCT pf.`Nome_PFisica`, pf.`Codigo_PFisica`, tu.`Nome_Turma`, mens.`Data_Vencimento`, mens.`Valor_Mensalidade`, mens.`Nosso_Numero`
 FROM (((((((`PFisicas` pf
 INNER JOIN `Matriculas` m ON m.`Codigo_PFisica` = pf.`Codigo_PFisica`)
 INNER JOIN `PeriodosLetivos` pl ON pl.`Codigo_Periodo_Letivo` = m.`Codigo_Periodo_Letivo`)

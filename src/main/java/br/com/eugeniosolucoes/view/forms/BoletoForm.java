@@ -57,9 +57,9 @@ public class BoletoForm extends BaseForm {
         plConteudo = new javax.swing.JPanel();
         plControles = new javax.swing.JPanel();
         txtMatriculaAluno = new javax.swing.JTextField();
-        cmbCurso = new javax.swing.JComboBox();
+        cmbTurma = new javax.swing.JComboBox();
         btnPesquisar = new javax.swing.JButton();
-        lblCurso = new javax.swing.JLabel();
+        lblTurma = new javax.swing.JLabel();
         lblMatriculoAno = new javax.swing.JLabel();
         btnEnviarBoletos = new javax.swing.JButton();
         chkTodos = new javax.swing.JCheckBox();
@@ -85,10 +85,10 @@ public class BoletoForm extends BaseForm {
             }
         });
 
-        cmbCurso.setModel(new javax.swing.DefaultComboBoxModel(getCursos()));
-        cmbCurso.addActionListener(new java.awt.event.ActionListener() {
+        cmbTurma.setModel(new javax.swing.DefaultComboBoxModel(getTurmas()));
+        cmbTurma.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbCursoActionPerformed(evt);
+                cmbTurmaActionPerformed(evt);
             }
         });
 
@@ -99,7 +99,7 @@ public class BoletoForm extends BaseForm {
             }
         });
 
-        lblCurso.setText("Curso:");
+        lblTurma.setText("Turma:");
 
         lblMatriculoAno.setText("Matrícula/Aluno:");
 
@@ -153,9 +153,9 @@ public class BoletoForm extends BaseForm {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cmbMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblCurso)
+                        .addComponent(lblTurma)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cmbTurma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblMatriculoAno)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -183,8 +183,8 @@ public class BoletoForm extends BaseForm {
                     .addGroup(plControlesLayout.createSequentialGroup()
                         .addGroup(plControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(plControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(cmbCurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblCurso)
+                                .addComponent(cmbTurma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblTurma)
                                 .addComponent(lblMatriculoAno)
                                 .addComponent(lblMes)
                                 .addComponent(cmbMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -208,7 +208,7 @@ public class BoletoForm extends BaseForm {
                 {"00000103", "Ciclano de Sousa", "Informática", "300.00", "05/11/2015"}
             },
             new String [] {
-                "Matricula", "Aluno", "Curso", "Valor", "Vencimento"
+                "Matricula", "Aluno", "Turma", "Valor", "Vencimento"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -286,10 +286,10 @@ public class BoletoForm extends BaseForm {
         carregarBoletos();
     }//GEN-LAST:event_cmbMesActionPerformed
 
-    private void cmbCursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCursoActionPerformed
-        boletoFiltroModel.setCurso(cmbCurso.getSelectedItem().toString());
+    private void cmbTurmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTurmaActionPerformed
+        boletoFiltroModel.setCurso(cmbTurma.getSelectedItem().toString());
         carregarBoletos();
-    }//GEN-LAST:event_cmbCursoActionPerformed
+    }//GEN-LAST:event_cmbTurmaActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         boletoFiltroModel.setMatriculaAluno(txtMatriculaAluno.getText());
@@ -306,7 +306,7 @@ public class BoletoForm extends BaseForm {
         return boletoFiltroModel.getAnos().toArray(new String[boletoFiltroModel.getAnos().size()]);
     }
 
-    private String[] getCursos() {
+    private String[] getTurmas() {
         return boletoFiltroModel.getCursos().toArray(new String[boletoFiltroModel.getCursos().size()]);
     }
 
@@ -361,12 +361,12 @@ public class BoletoForm extends BaseForm {
     private javax.swing.JButton btnVisualizarBoletos;
     private javax.swing.JCheckBox chkTodos;
     private javax.swing.JComboBox<String> cmbAno;
-    private javax.swing.JComboBox cmbCurso;
     private javax.swing.JComboBox<String> cmbMes;
+    private javax.swing.JComboBox cmbTurma;
     private javax.swing.JLabel lblAno;
-    private javax.swing.JLabel lblCurso;
     private javax.swing.JLabel lblMatriculoAno;
     private javax.swing.JLabel lblMes;
+    private javax.swing.JLabel lblTurma;
     private javax.swing.JPanel plConteudo;
     private javax.swing.JPanel plControles;
     private javax.swing.JPanel plDados;
