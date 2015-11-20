@@ -15,7 +15,9 @@ public class BoletoModel {
 
     private String aluno;
 
-    private String curso;
+    private String turma;
+    
+    private String nossoNumero;
 
     private String valor;
 
@@ -24,10 +26,11 @@ public class BoletoModel {
     public BoletoModel() {
     }
 
-    public BoletoModel( String matricula, String aluno, String curso, String valor, String vencimento ) {
+    public BoletoModel( String matricula, String aluno, String turma, String nossoNumero, String valor, String vencimento ) {
         this.matricula = matricula;
         this.aluno = aluno;
-        this.curso = curso;
+        this.turma = turma;
+        this.nossoNumero = nossoNumero;
         this.valor = valor;
         this.vencimento = vencimento;
     }
@@ -48,12 +51,20 @@ public class BoletoModel {
         this.aluno = aluno;
     }
 
-    public String getCurso() {
-        return curso;
+    public String getTurma() {
+        return turma;
     }
 
-    public void setCurso( String curso ) {
-        this.curso = curso;
+    public void setTurma( String turma ) {
+        this.turma = turma;
+    }
+
+    public String getNossoNumero() {
+        return nossoNumero;
+    }
+
+    public void setNossoNumero(String nossoNumero) {
+        this.nossoNumero = nossoNumero;
     }
 
     public String getValor() {

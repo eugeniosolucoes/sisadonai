@@ -31,11 +31,11 @@ public class BoletoServiceImpl implements BoletoService {
     public BoletoFiltroModel getBoletoFiltroModel() {
         BoletoFiltroModel model = new BoletoFiltroModel();
         model.getAnos().addAll( repository.listarAnos() );
-        model.getCursos().addAll( repository.listarCursos() );
+        model.getTurmas().addAll( repository.listarTurmas() );
         model.setAno( YEAR_FORMAT.format( LocalDate.now().toDate() ) );
         model.setMes( MONTH_FORMAT.format( LocalDate.now().toDate() ) );
-        if(!model.getCursos().isEmpty()) {
-            model.setCurso(model.getCursos().get(0));
+        if(!model.getTurmas().isEmpty()) {
+            model.setTurma(model.getTurmas().get(0));
         }
         return model;
     }

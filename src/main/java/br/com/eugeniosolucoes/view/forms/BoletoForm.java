@@ -15,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
@@ -38,11 +40,17 @@ public class BoletoForm extends BaseForm {
         super();
         boletoFiltroModel = service.getBoletoFiltroModel();
         initComponents();
-        try {
-            carregarBoletos();
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
-        }
+        carregarBoletos();
+        adicionarListeners();
+    }
+
+    private void adicionarListeners() {
+        tblDados.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                lblTotalSelecionados.setText(String.format("Selecionados: %d", tblDados.getSelectedRowCount()));
+            }
+        });
     }
 
     /**
@@ -71,9 +79,11 @@ public class BoletoForm extends BaseForm {
         plDados = new javax.swing.JPanel();
         splDados = new javax.swing.JScrollPane();
         tblDados = new javax.swing.JTable();
+        plStatus = new javax.swing.JPanel();
+        lblTotal = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Listagem de Boletos");
+        setTitle("Envio de Boletos");
 
         plConteudo.setBackground(java.awt.SystemColor.control);
 
@@ -237,8 +247,35 @@ public class BoletoForm extends BaseForm {
             plDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plDadosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(splDados, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
+                .addComponent(splDados, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                 .addContainerGap())
+        );
+
+        plStatus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        lblTotal.setText("Total: 0");
+
+        lblTotalSelecionados.setText("Selecionados: 0");
+
+        javax.swing.GroupLayout plStatusLayout = new javax.swing.GroupLayout(plStatus);
+        plStatus.setLayout(plStatusLayout);
+        plStatusLayout.setHorizontalGroup(
+            plStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plStatusLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblTotalSelecionados, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        plStatusLayout.setVerticalGroup(
+            plStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(plStatusLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(plStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTotal)
+                    .addComponent(lblTotalSelecionados))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout plConteudoLayout = new javax.swing.GroupLayout(plConteudo);
@@ -249,7 +286,8 @@ public class BoletoForm extends BaseForm {
                 .addContainerGap()
                 .addGroup(plConteudoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(plDados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(plControles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(plControles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(plStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         plConteudoLayout.setVerticalGroup(
@@ -259,6 +297,8 @@ public class BoletoForm extends BaseForm {
                 .addComponent(plControles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(plDados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(plStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -287,7 +327,7 @@ public class BoletoForm extends BaseForm {
     }//GEN-LAST:event_cmbMesActionPerformed
 
     private void cmbTurmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTurmaActionPerformed
-        boletoFiltroModel.setCurso(cmbTurma.getSelectedItem().toString());
+        boletoFiltroModel.setTurma(cmbTurma.getSelectedItem().toString());
         carregarBoletos();
     }//GEN-LAST:event_cmbTurmaActionPerformed
 
@@ -307,23 +347,28 @@ public class BoletoForm extends BaseForm {
     }
 
     private String[] getTurmas() {
-        return boletoFiltroModel.getCursos().toArray(new String[boletoFiltroModel.getCursos().size()]);
+        return boletoFiltroModel.getTurmas().toArray(new String[boletoFiltroModel.getTurmas().size()]);
     }
 
     private void carregarBoletos() {
-        boletoModel = service.getBoletosModel(boletoFiltroModel);
-        Object[][] dados = getDados();
-        tblDados.setModel(new javax.swing.table.DefaultTableModel(dados,
-                new String[]{"Matrícula", "Aluno", "Curso", "Valor", "Vencimento"}) {
-            boolean[] canEdit = new boolean[]{
-                false, false, false, false, false
-            };
+        try {
+            boletoModel = service.getBoletosModel(boletoFiltroModel);
+            Object[][] dados = getDados();
+            tblDados.setModel(new javax.swing.table.DefaultTableModel(dados,
+                    new String[]{"Matrícula", "Aluno", "Turma", "Nosso Número", "Valor", "Vencimento"}) {
+                boolean[] canEdit = new boolean[]{
+                    false, false, false, false, false, false
+                };
 
-            @Override
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
-            }
-        });
+                @Override
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit[columnIndex];
+                }
+            });
+            lblTotal.setText(String.format("Total: %d", dados.length));
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, e.getMessage(), e);
+        }
         configurarTabela();
     }
 
@@ -334,7 +379,8 @@ public class BoletoForm extends BaseForm {
             dados[i] = new String[]{
                 model.getMatricula(),
                 model.getAluno(),
-                model.getCurso(),
+                model.getTurma(),
+                model.getNossoNumero(),
                 model.getValor(),
                 model.getVencimento()};
             i++;
@@ -346,13 +392,14 @@ public class BoletoForm extends BaseForm {
         tblDados.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         DefaultTableCellRenderer cellRight = new DefaultTableCellRenderer();
         cellRight.setHorizontalAlignment(SwingConstants.RIGHT);
-        tblDados.getColumnModel().getColumn(3).setCellRenderer(cellRight);
         tblDados.getColumnModel().getColumn(4).setCellRenderer(cellRight);
+        tblDados.getColumnModel().getColumn(5).setCellRenderer(cellRight);
         tblDados.getColumnModel().getColumn(0).setPreferredWidth(60);
         tblDados.getColumnModel().getColumn(1).setPreferredWidth(400);
         tblDados.getColumnModel().getColumn(2).setPreferredWidth(110);
-        tblDados.getColumnModel().getColumn(3).setPreferredWidth(80);
+        tblDados.getColumnModel().getColumn(3).setPreferredWidth(100);
         tblDados.getColumnModel().getColumn(4).setPreferredWidth(80);
+        tblDados.getColumnModel().getColumn(5).setPreferredWidth(80);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -366,10 +413,13 @@ public class BoletoForm extends BaseForm {
     private javax.swing.JLabel lblAno;
     private javax.swing.JLabel lblMatriculoAno;
     private javax.swing.JLabel lblMes;
+    private javax.swing.JLabel lblTotal;
+    private final javax.swing.JLabel lblTotalSelecionados = new javax.swing.JLabel();
     private javax.swing.JLabel lblTurma;
     private javax.swing.JPanel plConteudo;
     private javax.swing.JPanel plControles;
     private javax.swing.JPanel plDados;
+    private javax.swing.JPanel plStatus;
     private javax.swing.JScrollPane splDados;
     private javax.swing.JTable tblDados;
     private javax.swing.JTextField txtMatriculaAluno;

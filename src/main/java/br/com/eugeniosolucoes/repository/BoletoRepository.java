@@ -18,7 +18,7 @@ public interface BoletoRepository {
 
     List<String> listarAnos();
     
-    List<String> listarCursos();
+    List<String> listarTurmas();
     
     List<BoletoModel> listarBoletos( BoletoFiltroModel boletoFiltroDTO );
 

@@ -19,7 +19,7 @@ public class BoletoFiltroModel {
 
     private String mes;
 
-    private String curso;
+    private String turma;
 
     private String matriculaAluno;
 
@@ -39,7 +39,7 @@ public class BoletoFiltroModel {
             "Novembro",
             "Dezembro" );
 
-    private List<String> cursos;
+    private List<String> turmas;
 
     public String getAno() {
         return ano;
@@ -57,12 +57,12 @@ public class BoletoFiltroModel {
         this.mes = mes;
     }
 
-    public String getCurso() {
-        return curso;
+    public String getTurma() {
+        return turma;
     }
 
-    public void setCurso( String curso ) {
-        this.curso = curso;
+    public void setTurma( String turma ) {
+        this.turma = turma;
     }
 
     public String getMatriculaAluno() {
@@ -88,15 +88,15 @@ public class BoletoFiltroModel {
         return meses;
     }
 
-    public List<String> getCursos() {
-        if ( cursos == null ) {
-            cursos = new ArrayList<>();
+    public List<String> getTurmas() {
+        if ( turmas == null ) {
+            turmas = new ArrayList<>();
         }
-        return cursos;
+        return turmas;
     }
 
-    public void setCursos( List<String> cursos ) {
-        this.cursos = cursos;
+    public void setTurmas( List<String> turmas ) {
+        this.turmas = turmas;
     }
 
 }
