@@ -11,9 +11,10 @@ import br.com.caelum.stella.boleto.Boleto;
 import br.com.caelum.stella.boleto.Datas;
 import br.com.caelum.stella.boleto.Endereco;
 import br.com.caelum.stella.boleto.Pagador;
-import br.com.caelum.stella.boleto.bancos.BancoDoBrasil;
 import br.com.caelum.stella.boleto.bancos.Santander;
 import br.com.caelum.stella.boleto.transformer.GeradorDeBoleto;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -21,24 +22,25 @@ import br.com.caelum.stella.boleto.transformer.GeradorDeBoleto;
  */
 public class StellaExemploSantander {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Datas datas = Datas.novasDatas()
-                .comDocumento(1, 5, 2008)
-                .comProcessamento(1, 5, 2008)
-                .comVencimento(2, 5, 2008);
+                .comDocumento(22, 11, 2015)
+                .comProcessamento(22, 11, 2015)
+                .comVencimento(5, 12, 2015);
 
         Endereco enderecoBeneficiario = Endereco.novoEndereco()
-                .comLogradouro("Av das Empresas, 555")
-                .comBairro("Bairro Grande")
-                .comCep("01234-555")
-                .comCidade("São Paulo")
-                .comUf("SP");
+                .comLogradouro("Rua da Quitanda, 185")
+                .comBairro("Centro")
+                .comCep("20091-005")
+                .comCidade("Rio de Janeiro")
+                .comUf("RJ");
 
         //Quem emite o boleto
-        Beneficiario beneficiario = Beneficiario.novoBeneficiario().comNomeBeneficiario("PETROBRAS")
-            .comAgencia("6790").comDigitoAgencia("0").comCarteira("102")
-            .comNumeroConvenio("5260965").comNossoNumero("105613749501")
-            .comDigitoNossoNumero("4");
+        Beneficiario beneficiario = Beneficiario.novoBeneficiario().comNomeBeneficiario("CURSO ADONAI LTDA")
+                .comEndereco(enderecoBeneficiario)
+                .comAgencia("6790").comDigitoAgencia("0").comCarteira("102")
+                .comNumeroConvenio("5260965").comNossoNumero("105613749501")
+                .comDigitoNossoNumero("4");
 
         Endereco enderecoPagador = Endereco.novoEndereco()
                 .comLogradouro("Av dos testes, 111 apto 333")
