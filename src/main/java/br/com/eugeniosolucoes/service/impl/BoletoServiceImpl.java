@@ -45,4 +45,8 @@ public class BoletoServiceImpl implements BoletoService {
         return repository.listarBoletos( boletoFiltroModel );
     }
 
+    @Override
+    public byte[] gerarBoleto(BoletoModel boletoModel) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -15,6 +15,8 @@ import java.util.List;
  */
 public interface BoletoService {
     
+    byte[] gerarBoleto( BoletoModel boletoModel );
+    
     BoletoFiltroModel getBoletoFiltroModel();
 
     List<BoletoModel> getBoletosModel( BoletoFiltroModel boletoFiltroModel );

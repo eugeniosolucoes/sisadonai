@@ -178,7 +178,7 @@ public class BoletoForm extends BaseForm {
                         .addComponent(btnVisualizarBoletos)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEnviarBoletos)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
         plControlesLayout.setVerticalGroup(
             plControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -390,16 +390,24 @@ public class BoletoForm extends BaseForm {
 
     private void configurarTabela() {
         tblDados.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        
         DefaultTableCellRenderer cellRight = new DefaultTableCellRenderer();
         cellRight.setHorizontalAlignment(SwingConstants.RIGHT);
+        DefaultTableCellRenderer cellCenter = new DefaultTableCellRenderer();
+        cellCenter.setHorizontalAlignment(SwingConstants.CENTER);
+       
+        tblDados.getColumnModel().getColumn(0).setCellRenderer(cellCenter);
+        tblDados.getColumnModel().getColumn(2).setCellRenderer(cellCenter);
+        tblDados.getColumnModel().getColumn(3).setCellRenderer(cellCenter);
         tblDados.getColumnModel().getColumn(4).setCellRenderer(cellRight);
-        tblDados.getColumnModel().getColumn(5).setCellRenderer(cellRight);
+        tblDados.getColumnModel().getColumn(5).setCellRenderer(cellCenter);
+
         tblDados.getColumnModel().getColumn(0).setPreferredWidth(60);
         tblDados.getColumnModel().getColumn(1).setPreferredWidth(400);
         tblDados.getColumnModel().getColumn(2).setPreferredWidth(110);
         tblDados.getColumnModel().getColumn(3).setPreferredWidth(100);
-        tblDados.getColumnModel().getColumn(4).setPreferredWidth(80);
         tblDados.getColumnModel().getColumn(5).setPreferredWidth(80);
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
