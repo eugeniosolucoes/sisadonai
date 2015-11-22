@@ -16,9 +16,9 @@ import java.util.logging.Logger;
  *
  * @author eugenio
  */
-public class ExemploCBXBoleto {
+public class CobreBemExemploBB {
 
-    private static final Logger LOG = Logger.getLogger( ExemploCBXBoleto.class.getName() );
+    private static final Logger LOG = Logger.getLogger(CobreBemExemploBB.class.getName() );
     
     
     /**
@@ -36,7 +36,7 @@ public class ExemploCBXBoleto {
             ActiveXComponent cbx = new ActiveXComponent("CobreBemX.ContaCorrente");
 
             Properties props = new Properties();
-            props.load(ExemploCBXBoleto.class.getResourceAsStream("/conf/boleto.properties"));
+            props.load(CobreBemExemploBB.class.getResourceAsStream("/conf/boleto.properties"));
 
             // Monta arquivo de licença de teste para banco 104 carteira CR;
             cbx.setProperty("ArquivoLicenca", props.getProperty("cobrebem.licenca"));
@@ -94,8 +94,8 @@ public class ExemploCBXBoleto {
             Dispatch.put(PadroesBoletoSacado, "InstrucoesCaixa", "<br>Não dispensar juros e multa após o vencimento");
 
             // Imprime o boleto;
-            // cbx.invoke("ImprimeBoletos");
-            cbx.invoke("ImprimeBoletosSemPreview");
+            cbx.invoke("ImprimeBoletos");
+            //cbx.invoke("ImprimeBoletosSemPreview");
 
             cbx = null;
 

@@ -11,7 +11,7 @@
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
     <repositories>
-        <!-- Repositório JRimum -->
+        <!-- Repositório JRimum 
         <repository>
             <id>jrimum.org</id>
             <url>http://jrimum.org/maven/content/groups/public/</url>
@@ -19,13 +19,15 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        -->
     </repositories>
     <dependencies>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.jrimum</groupId>
             <artifactId>jrimum-bopepo</artifactId>
             <version>0.2.3-SNAPSHOT</version>
-        </dependency>        
+        </dependency>
+        -->        
         <dependency>
             <groupId>org.swinglabs</groupId>
             <artifactId>swing-layout</artifactId>
@@ -50,6 +52,36 @@
             <groupId>net.sf.jacob-project</groupId>
             <artifactId>jacob</artifactId>
             <version>1.14.3</version>
+        </dependency>
+        <dependency>
+            <groupId>br.com.caelum.stella</groupId>
+            <artifactId>caelum-stella-core</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>br.com.caelum.stella</groupId>
+            <artifactId>caelum-stella-bean-validation</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>br.com.caelum.stella</groupId>
+            <artifactId>caelum-stella-faces</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>br.com.caelum.stella</groupId>
+            <artifactId>caelum-stella-hibernate-user-types</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>br.com.caelum.stella</groupId>
+            <artifactId>caelum-stella-boleto</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
         </dependency>
     </dependencies>
     <build>
