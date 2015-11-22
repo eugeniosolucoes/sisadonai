@@ -16,7 +16,7 @@ public class BoletoModel {
     private String aluno;
 
     private String turma;
-    
+
     private String nossoNumero;
 
     private String valor;
@@ -26,7 +26,7 @@ public class BoletoModel {
     public BoletoModel() {
     }
 
-    public BoletoModel( String matricula, String aluno, String turma, String nossoNumero, String valor, String vencimento ) {
+    public BoletoModel(String matricula, String aluno, String turma, String nossoNumero, String valor, String vencimento) {
         this.matricula = matricula;
         this.aluno = aluno;
         this.turma = turma;
@@ -34,12 +34,12 @@ public class BoletoModel {
         this.valor = valor;
         this.vencimento = vencimento;
     }
-    
+
     public String getMatricula() {
         return matricula;
     }
 
-    public void setMatricula( String matricula ) {
+    public void setMatricula(String matricula) {
         this.matricula = matricula;
     }
 
@@ -47,7 +47,7 @@ public class BoletoModel {
         return aluno;
     }
 
-    public void setAluno( String aluno ) {
+    public void setAluno(String aluno) {
         this.aluno = aluno;
     }
 
@@ -55,7 +55,7 @@ public class BoletoModel {
         return turma;
     }
 
-    public void setTurma( String turma ) {
+    public void setTurma(String turma) {
         this.turma = turma;
     }
 
@@ -71,7 +71,7 @@ public class BoletoModel {
         return valor;
     }
 
-    public void setValor( String valor ) {
+    public void setValor(String valor) {
         this.valor = valor;
     }
 
@@ -79,7 +79,7 @@ public class BoletoModel {
         return vencimento;
     }
 
-    public void setVencimento( String vencimento ) {
+    public void setVencimento(String vencimento) {
         this.vencimento = vencimento;
     }
 

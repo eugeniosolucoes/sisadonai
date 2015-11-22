@@ -15,18 +15,18 @@ import java.util.logging.Logger;
  */
 public class Main {
 
-    private static final Logger LOG = Logger.getLogger( Main.class.getName() );
+    private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
-    public static void main( String[] args ) {
+    public static void main(String[] args) {
         try {
-            java.awt.EventQueue.invokeLater( new Runnable() {
+            java.awt.EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    new BoletoForm().setVisible( true );
+                    new BoletoForm().setVisible(true);
                 }
-            } );
-        } catch ( Exception e ) {
-            LOG.log( Level.SEVERE, e.getMessage(), e );
+            });
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         } finally {
         }
     }

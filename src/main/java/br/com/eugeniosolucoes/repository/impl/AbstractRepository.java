@@ -19,15 +19,15 @@ import java.util.logging.Logger;
  */
 public class AbstractRepository {
 
-    static final Logger LOG = Logger.getLogger( AbstractRepository.class.getName() );
+    static final Logger LOG = Logger.getLogger(AbstractRepository.class.getName());
 
     static final String ULR = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=C:/Virtual/Virtual.mdb";
 
     static {
         try {
             sun.jdbc.odbc.JdbcOdbcDriver.class.newInstance();
-        } catch ( InstantiationException | IllegalAccessException ex ) {
-            LOG.log( Level.SEVERE, null, ex );
+        } catch (InstantiationException | IllegalAccessException ex) {
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -35,39 +35,40 @@ public class AbstractRepository {
     }
 
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection( ULR, "", "" );
+        return DriverManager.getConnection(ULR, "", "");
     }
 
-    public void fechar( Connection con ) {
-        if ( con != null ) {
+    public void fechar(Connection con) {
+        if (con != null) {
             try {
                 con.close();
-            } catch ( SQLException ex ) {
-                LOG.log( Level.SEVERE, null, ex );
+            } catch (SQLException ex) {
+                LOG.log(Level.SEVERE, null, ex);
             }
         }
     }
-    public void fechar( Connection con, Statement s ) {
-        if ( s != null ) {
+
+    public void fechar(Connection con, Statement s) {
+        if (s != null) {
             try {
                 s.close();
-            } catch ( SQLException ex ) {
-                LOG.log( Level.SEVERE, null, ex );
+            } catch (SQLException ex) {
+                LOG.log(Level.SEVERE, null, ex);
             }
         }
-        fechar( con );
+        fechar(con);
     }
-    
-    public void fechar( Connection con, Statement s, ResultSet rs ) {
-        if ( rs != null ) {
+
+    public void fechar(Connection con, Statement s, ResultSet rs) {
+        if (rs != null) {
             try {
                 rs.close();
-            } catch ( SQLException ex ) {
-                LOG.log( Level.SEVERE, null, ex );
+            } catch (SQLException ex) {
+                LOG.log(Level.SEVERE, null, ex);
             }
         }
-        fechar( con, s );
-    }    
+        fechar(con, s);
+    }
 
     public static AbstractRepository getInstance() {
         return AbstractRepositoryHolder.INSTANCE;

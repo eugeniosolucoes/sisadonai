@@ -14,11 +14,11 @@ import java.util.List;
  * @author eugenio
  */
 public interface BoletoService {
-    
-    byte[] gerarBoleto( BoletoModel boletoModel );
-    
+
+    byte[] gerarBoleto(BoletoModel boletoModel);
+
     BoletoFiltroModel getBoletoFiltroModel();
 
-    List<BoletoModel> getBoletosModel( BoletoFiltroModel boletoFiltroModel );
-    
+    List<BoletoModel> getBoletosModel(BoletoFiltroModel boletoFiltroModel);
+
 }

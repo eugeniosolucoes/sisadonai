@@ -6,37 +6,30 @@
 package br.com.eugeniosolucoes.util;
 
 /**
- * 
- 
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.joda.time.LocalDate;
-
-import org.jrimum.bopepo.BancosSuportados;
-import org.jrimum.bopepo.Boleto;
-import org.jrimum.bopepo.view.BoletoViewer;
-import org.jrimum.domkee.comum.pessoa.endereco.CEP;
-import org.jrimum.domkee.comum.pessoa.endereco.Endereco;
-import org.jrimum.domkee.comum.pessoa.endereco.UnidadeFederativa;
-import org.jrimum.domkee.financeiro.banco.febraban.Agencia;
-import org.jrimum.domkee.financeiro.banco.febraban.Carteira;
-import org.jrimum.domkee.financeiro.banco.febraban.Cedente;
-import org.jrimum.domkee.financeiro.banco.febraban.ContaBancaria;
-import org.jrimum.domkee.financeiro.banco.febraban.NumeroDaConta;
-import org.jrimum.domkee.financeiro.banco.febraban.Sacado;
-import org.jrimum.domkee.financeiro.banco.febraban.TipoDeCobranca;
-import org.jrimum.domkee.financeiro.banco.febraban.TipoDeTitulo;
-import org.jrimum.domkee.financeiro.banco.febraban.Titulo;
-import org.jrimum.domkee.financeiro.banco.febraban.Titulo.Aceite;
-
-*/
- 
+ *
+ *
+ * import java.io.File; import java.io.IOException; import java.math.BigDecimal;
+ * import java.text.SimpleDateFormat; import java.util.Locale; import
+ * java.util.Properties; import java.util.logging.Level; import
+ * java.util.logging.Logger; import org.joda.time.LocalDate;
+ *
+ * import org.jrimum.bopepo.BancosSuportados; import org.jrimum.bopepo.Boleto;
+ * import org.jrimum.bopepo.view.BoletoViewer; import
+ * org.jrimum.domkee.comum.pessoa.endereco.CEP; import
+ * org.jrimum.domkee.comum.pessoa.endereco.Endereco; import
+ * org.jrimum.domkee.comum.pessoa.endereco.UnidadeFederativa; import
+ * org.jrimum.domkee.financeiro.banco.febraban.Agencia; import
+ * org.jrimum.domkee.financeiro.banco.febraban.Carteira; import
+ * org.jrimum.domkee.financeiro.banco.febraban.Cedente; import
+ * org.jrimum.domkee.financeiro.banco.febraban.ContaBancaria; import
+ * org.jrimum.domkee.financeiro.banco.febraban.NumeroDaConta; import
+ * org.jrimum.domkee.financeiro.banco.febraban.Sacado; import
+ * org.jrimum.domkee.financeiro.banco.febraban.TipoDeCobranca; import
+ * org.jrimum.domkee.financeiro.banco.febraban.TipoDeTitulo; import
+ * org.jrimum.domkee.financeiro.banco.febraban.Titulo; import
+ * org.jrimum.domkee.financeiro.banco.febraban.Titulo.Aceite;
+ *
+ */
 /**
  *
  * @author eugenio

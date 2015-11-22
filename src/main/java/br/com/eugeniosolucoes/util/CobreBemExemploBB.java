@@ -18,9 +18,8 @@ import java.util.logging.Logger;
  */
 public class CobreBemExemploBB {
 
-    private static final Logger LOG = Logger.getLogger(CobreBemExemploBB.class.getName() );
-    
-    
+    private static final Logger LOG = Logger.getLogger(CobreBemExemploBB.class.getName());
+
     /**
      * @author CobreBem Tecnologia
      * @param args
@@ -31,7 +30,7 @@ public class CobreBemExemploBB {
      * "%SystemRoot%/System32" <br/>
      * e o JAR do pacote JACOB dentro do diretório de Libraries da sua aplicação
      */
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         try {
             ActiveXComponent cbx = new ActiveXComponent("CobreBemX.ContaCorrente");
 
@@ -100,11 +99,10 @@ public class CobreBemExemploBB {
             cbx = null;
 
         } catch (IOException | NumberFormatException e) {
-            LOG.log( Level.SEVERE, e.getMessage(), e );
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         } finally {
             System.exit(0);
         }
-        
 
     }
 

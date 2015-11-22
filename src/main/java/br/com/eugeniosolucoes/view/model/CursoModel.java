@@ -18,7 +18,7 @@ public class CursoModel {
     public CursoModel() {
     }
 
-    public CursoModel( String id, String nome ) {
+    public CursoModel(String id, String nome) {
         this.id = id;
         this.nome = nome;
     }
@@ -27,7 +27,7 @@ public class CursoModel {
         return nome;
     }
 
-    public void setNome( String nome ) {
+    public void setNome(String nome) {
         this.nome = nome;
     }
 
@@ -35,7 +35,7 @@ public class CursoModel {
         return id;
     }
 
-    public void setId( String id ) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -13,7 +13,6 @@ import br.com.caelum.stella.boleto.Endereco;
 import br.com.caelum.stella.boleto.Pagador;
 import br.com.caelum.stella.boleto.bancos.Santander;
 import br.com.caelum.stella.boleto.transformer.GeradorDeBoleto;
-import java.io.File;
 import java.io.IOException;
 
 /**

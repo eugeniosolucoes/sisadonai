@@ -390,12 +390,12 @@ public class BoletoForm extends BaseForm {
 
     private void configurarTabela() {
         tblDados.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        
+
         DefaultTableCellRenderer cellRight = new DefaultTableCellRenderer();
         cellRight.setHorizontalAlignment(SwingConstants.RIGHT);
         DefaultTableCellRenderer cellCenter = new DefaultTableCellRenderer();
         cellCenter.setHorizontalAlignment(SwingConstants.CENTER);
-       
+
         tblDados.getColumnModel().getColumn(0).setCellRenderer(cellCenter);
         tblDados.getColumnModel().getColumn(2).setCellRenderer(cellCenter);
         tblDados.getColumnModel().getColumn(3).setCellRenderer(cellCenter);
@@ -407,7 +407,7 @@ public class BoletoForm extends BaseForm {
         tblDados.getColumnModel().getColumn(2).setPreferredWidth(110);
         tblDados.getColumnModel().getColumn(3).setPreferredWidth(100);
         tblDados.getColumnModel().getColumn(5).setPreferredWidth(80);
-        
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

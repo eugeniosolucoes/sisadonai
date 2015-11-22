@@ -17,9 +17,9 @@ import java.util.List;
 public interface BoletoRepository {
 
     List<String> listarAnos();
-    
+
     List<String> listarTurmas();
-    
-    List<BoletoModel> listarBoletos( BoletoFiltroModel boletoFiltroDTO );
+
+    List<BoletoModel> listarBoletos(BoletoFiltroModel boletoFiltroDTO);
 
 }
