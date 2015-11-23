@@ -5,7 +5,6 @@
  */
 package br.com.eugeniosolucoes.repository;
 
-import br.com.eugeniosolucoes.view.model.CursoModel;
 import br.com.eugeniosolucoes.view.model.BoletoFiltroModel;
 import br.com.eugeniosolucoes.view.model.BoletoModel;
 import java.util.List;

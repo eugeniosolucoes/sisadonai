@@ -9,16 +9,16 @@ package br.com.eugeniosolucoes.view.model;
  *
  * @author eugenio
  */
-public class CursoModel {
+public class TurmaModel {
 
     private String id;
 
     private String nome;
 
-    public CursoModel() {
+    public TurmaModel() {
     }
 
-    public CursoModel(String id, String nome) {
+    public TurmaModel(String id, String nome) {
         this.id = id;
         this.nome = nome;
     }
