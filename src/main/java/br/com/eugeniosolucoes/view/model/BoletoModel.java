@@ -14,7 +14,7 @@ import java.util.Objects;
 public class BoletoModel {
 
     private String cpf;
-    
+
     private String matricula;
 
     private String aluno;
@@ -26,13 +26,17 @@ public class BoletoModel {
     private String valor;
 
     private String vencimento;
-    
+
     private String situacaoMensalidade;
-    
+
+    private String numeroMensalidade;
+
     public BoletoModel() {
     }
 
-    public BoletoModel(String cpf, String matricula, String aluno, String turma, String nossoNumero, String valor, String vencimento, String situacaoMensalidade) {
+    public BoletoModel(String cpf, String matricula, String aluno, String turma,
+            String nossoNumero, String valor, String vencimento,
+            String situacaoMensalidade, String numeroMensalidade) {
         this.cpf = cpf;
         this.matricula = matricula;
         this.aluno = aluno;
@@ -41,6 +45,7 @@ public class BoletoModel {
         this.valor = valor;
         this.vencimento = vencimento;
         this.situacaoMensalidade = situacaoMensalidade;
+        this.numeroMensalidade = numeroMensalidade;
     }
 
     public String getMatricula() {
@@ -107,6 +112,14 @@ public class BoletoModel {
         this.cpf = cpf;
     }
 
+    public String getNumeroMensalidade() {
+        return numeroMensalidade;
+    }
+
+    public void setNumeroMensalidade(String numeroMensalidade) {
+        this.numeroMensalidade = numeroMensalidade;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 7;

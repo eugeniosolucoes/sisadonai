@@ -93,8 +93,9 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append("mens.`Data_Vencimento`, ");
             sb.append("mens.`Valor_Mensalidade`, ");
             sb.append("mens.`Nosso_Numero`, ");
-            sb.append("mens.`Codigo_Situacao_Mensalidade` ");
-            sb.append("FROM ((((((((`PFisicas` pf ");
+            sb.append("mens.`Codigo_Situacao_Mensalidade`, ");
+            sb.append("mens.`Numero_Mensalidade`  ");
+            sb.append("FROM (((((((((`PFisicas` pf ");
             sb.append("INNER JOIN `Matriculas` m ON m.`Codigo_PFisica` = pf.`Codigo_PFisica`) ");
             sb.append("INNER JOIN `PeriodosLetivos` pl ON pl.`Codigo_Periodo_Letivo` = m.`Codigo_Periodo_Letivo`) ");
             sb.append("INNER JOIN `Cursos` c ON c.`Codigo_Curso` = m.`Codigo_Curso`) ");
@@ -106,6 +107,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append("AND mens.`Codigo_Serie` = s.`Codigo_Serie`  ");
             sb.append("AND mens.`Codigo_PFisica` = pf.`Codigo_PFisica` ) ");
             sb.append("INNER JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`) ");
+            sb.append("INNER JOIN `EnderecosPFisicas` ep ON ep.`Codigo_PFisica` = pf.`Codigo_PFisica` ) ");
             sb.append("WHERE 1 = 1 ");
             sb.append("AND pl.`Codigo_Periodo_Letivo` = ? ");
             sb.append("AND MONTH(mens.`Data_Vencimento`) = ? ");
@@ -133,7 +135,8 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                         rs.getString("Nosso_Numero"),
                         String.format("R$ %.2f", rs.getDouble("Valor_Mensalidade")),
                         DATE_FORMAT.format(rs.getDate("Data_Vencimento")),
-                        rs.getString("Codigo_Situacao_Mensalidade")));
+                        rs.getString("Codigo_Situacao_Mensalidade"),
+                        rs.getString("Numero_Mensalidade")));
             }
             return list;
         } catch (SQLException ex) {

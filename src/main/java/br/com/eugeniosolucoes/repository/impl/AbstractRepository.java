@@ -21,7 +21,7 @@ public class AbstractRepository {
 
     static final Logger LOG = Logger.getLogger(AbstractRepository.class.getName());
 
-    static final String ULR = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=C:/Virtual/Virtual.mdb";
+    static final String ULR = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=C:/Virtual/Virtual-teste.mdb";
 
     static {
         try {
