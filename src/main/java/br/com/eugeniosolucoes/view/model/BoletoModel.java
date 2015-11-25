@@ -5,12 +5,16 @@
  */
 package br.com.eugeniosolucoes.view.model;
 
+import java.util.Objects;
+
 /**
  *
  * @author eugenio
  */
 public class BoletoModel {
 
+    private String cpf;
+    
     private String matricula;
 
     private String aluno;
@@ -22,17 +26,21 @@ public class BoletoModel {
     private String valor;
 
     private String vencimento;
-
+    
+    private String situacaoMensalidade;
+    
     public BoletoModel() {
     }
 
-    public BoletoModel(String matricula, String aluno, String turma, String nossoNumero, String valor, String vencimento) {
+    public BoletoModel(String cpf, String matricula, String aluno, String turma, String nossoNumero, String valor, String vencimento, String situacaoMensalidade) {
+        this.cpf = cpf;
         this.matricula = matricula;
         this.aluno = aluno;
         this.turma = turma;
         this.nossoNumero = nossoNumero;
         this.valor = valor;
         this.vencimento = vencimento;
+        this.situacaoMensalidade = situacaoMensalidade;
     }
 
     public String getMatricula() {
@@ -81,6 +89,44 @@ public class BoletoModel {
 
     public void setVencimento(String vencimento) {
         this.vencimento = vencimento;
+    }
+
+    public String getSituacaoMensalidade() {
+        return situacaoMensalidade;
+    }
+
+    public void setSituacaoMensalidade(String situacaoMensalidade) {
+        this.situacaoMensalidade = situacaoMensalidade;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.cpf);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BoletoModel other = (BoletoModel) obj;
+        return Objects.equals(this.cpf, other.cpf);
     }
 
 }

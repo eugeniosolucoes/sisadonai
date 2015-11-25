@@ -86,13 +86,15 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             con = repository.getConnection();
             StringBuilder sb = new StringBuilder();
             sb.append("SELECT DISTINCT ");
+            sb.append("dp.CPF_PFisica, ");
             sb.append("pf.`Nome_PFisica`, ");
             sb.append("pf.`Codigo_PFisica`, ");
             sb.append("tu.`Nome_Turma`, ");
             sb.append("mens.`Data_Vencimento`, ");
             sb.append("mens.`Valor_Mensalidade`, ");
-            sb.append("mens.`Nosso_Numero` ");
-            sb.append("FROM (((((((`PFisicas` pf ");
+            sb.append("mens.`Nosso_Numero`, ");
+            sb.append("mens.`Codigo_Situacao_Mensalidade` ");
+            sb.append("FROM ((((((((`PFisicas` pf ");
             sb.append("INNER JOIN `Matriculas` m ON m.`Codigo_PFisica` = pf.`Codigo_PFisica`) ");
             sb.append("INNER JOIN `PeriodosLetivos` pl ON pl.`Codigo_Periodo_Letivo` = m.`Codigo_Periodo_Letivo`) ");
             sb.append("INNER JOIN `Cursos` c ON c.`Codigo_Curso` = m.`Codigo_Curso`) ");
@@ -103,6 +105,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append("AND mens.`Codigo_Curso` = c.`Codigo_Curso`  ");
             sb.append("AND mens.`Codigo_Serie` = s.`Codigo_Serie`  ");
             sb.append("AND mens.`Codigo_PFisica` = pf.`Codigo_PFisica` ) ");
+            sb.append("INNER JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`) ");
             sb.append("WHERE 1 = 1 ");
             sb.append("AND pl.`Codigo_Periodo_Letivo` = ? ");
             sb.append("AND MONTH(mens.`Data_Vencimento`) = ? ");
@@ -124,11 +127,13 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             List<BoletoModel> list = new ArrayList<>();
             while (rs.next()) {
                 list.add(new BoletoModel(
+                        rs.getString("CPF_PFisica"),
                         rs.getString("Codigo_PFisica"),
                         rs.getString("Nome_PFisica"), rs.getString("Nome_Turma"),
                         rs.getString("Nosso_Numero"),
                         String.format("R$ %.2f", rs.getDouble("Valor_Mensalidade")),
-                        DATE_FORMAT.format(rs.getDate("Data_Vencimento"))));
+                        DATE_FORMAT.format(rs.getDate("Data_Vencimento")),
+                        rs.getString("Codigo_Situacao_Mensalidade")));
             }
             return list;
         } catch (SQLException ex) {
