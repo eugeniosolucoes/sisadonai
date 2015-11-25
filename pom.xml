@@ -89,7 +89,7 @@
             <version>1.14.3</version>
             <classifier>x86</classifier>
             <type>dll</type>
-        </dependency>        
+        </dependency>
     </dependencies>
     <build>
         <plugins>

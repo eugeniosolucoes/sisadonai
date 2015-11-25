@@ -5,8 +5,8 @@
  */
 package br.com.eugeniosolucoes.repository.impl;
 
-import br.com.eugeniosolucoes.view.model.BoletoModel;
-import br.com.eugeniosolucoes.view.model.BoletoFiltroModel;
+import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
+import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.repository.BoletoRepository;
 import br.com.eugeniosolucoes.util.MyStrings;
 import br.com.eugeniosolucoes.view.model.EnderecoModel;
@@ -77,7 +77,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
     }
 
     @Override
-    public List<BoletoModel> listarBoletos(BoletoFiltroModel boletoFiltroDTO) {
+    public List<DadosBoletoModel> listarBoletos(DadosBoletoFiltroModel boletoFiltroDTO) {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -134,9 +134,9 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                 ps.setString(5, String.format("%s", "%" + boletoFiltroDTO.getMatriculaAluno().trim().toUpperCase() + "%"));
             }
             rs = ps.executeQuery();
-            List<BoletoModel> list = new ArrayList<>();
+            List<DadosBoletoModel> list = new ArrayList<>();
             while (rs.next()) {
-                list.add(new BoletoModel(
+                list.add(new DadosBoletoModel(
                         rs.getString("CPF_PFisica"),
                         rs.getString("Codigo_PFisica"),
                         rs.getString("Nome_PFisica"), rs.getString("Nome_Turma"),

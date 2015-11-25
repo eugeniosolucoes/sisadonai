@@ -5,8 +5,8 @@
  */
 package br.com.eugeniosolucoes.repository;
 
-import br.com.eugeniosolucoes.view.model.BoletoFiltroModel;
-import br.com.eugeniosolucoes.view.model.BoletoModel;
+import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
+import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.util.List;
 
 /**
@@ -19,6 +19,6 @@ public interface BoletoRepository {
 
     List<String> listarTurmas();
 
-    List<BoletoModel> listarBoletos(BoletoFiltroModel boletoFiltroDTO);
+    List<DadosBoletoModel> listarBoletos(DadosBoletoFiltroModel boletoFiltroDTO);
 
 }

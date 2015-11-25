@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author eugenio
  */
-public class BoletoModel {
+public class DadosBoletoModel {
 
     private String cpf;
 
@@ -34,10 +34,10 @@ public class BoletoModel {
 
     private EnderecoModel endereco;
 
-    public BoletoModel() {
+    public DadosBoletoModel() {
     }
 
-    public BoletoModel(String cpf, String matricula, String aluno, String turma,
+    public DadosBoletoModel(String cpf, String matricula, String aluno, String turma,
             String nossoNumero, Double valor, Date vencimento,
             String situacaoMensalidade, String numeroMensalidade, EnderecoModel endereco) {
         this.cpf = cpf;
@@ -83,6 +83,11 @@ public class BoletoModel {
     public void setNossoNumero(String nossoNumero) {
         this.nossoNumero = nossoNumero;
     }
+
+    public String getNumeroDocumento() {
+        return String.format("%s-%s", this.matricula, this.numeroMensalidade );
+    }
+
 
     public Double getValor() {
         return valor;
@@ -150,7 +155,7 @@ public class BoletoModel {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final BoletoModel other = (BoletoModel) obj;
+        final DadosBoletoModel other = (DadosBoletoModel) obj;
         return Objects.equals(this.cpf, other.cpf);
     }
 

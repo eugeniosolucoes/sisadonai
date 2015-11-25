@@ -7,9 +7,10 @@ package br.com.eugeniosolucoes.view.forms;
 
 import br.com.eugeniosolucoes.service.BoletoService;
 import br.com.eugeniosolucoes.service.impl.BoletoServiceImpl;
-import br.com.eugeniosolucoes.view.model.BoletoFiltroModel;
-import br.com.eugeniosolucoes.view.model.BoletoModel;
+import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
+import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,22 +27,26 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class BoletoForm extends BaseForm {
 
     static final Logger LOG = Logger.getLogger(BoletoForm.class.getName());
-    
+
     private final BoletoService service = new BoletoServiceImpl();
 
-    private final BoletoFiltroModel boletoFiltroModel;
+    private DadosBoletoFiltroModel boletoFiltroModel;
 
-    private List<BoletoModel> boletoModel;
+    private List<DadosBoletoModel> boletoModel;
 
     /**
      * Creates new form View1
      */
     public BoletoForm() {
         super();
-        boletoFiltroModel = service.getBoletoFiltroModel();
+        carregarFiltros();
         initComponents();
-        carregarBoletos();
+        listarBoletos();
         adicionarListeners();
+    }
+
+    private void carregarFiltros() {
+        boletoFiltroModel = service.carregarFiltros();
     }
 
     private void adicionarListeners() {
@@ -126,6 +131,11 @@ public class BoletoForm extends BaseForm {
         });
 
         btnVisualizarBoletos.setText("Visualizar Boletos");
+        btnVisualizarBoletos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVisualizarBoletosActionPerformed(evt);
+            }
+        });
 
         cmbAno.setModel(new javax.swing.DefaultComboBoxModel<>(getAnos()));
         cmbAno.setSelectedItem(boletoFiltroModel.getAno());
@@ -318,22 +328,22 @@ public class BoletoForm extends BaseForm {
 
     private void cmbAnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAnoActionPerformed
         boletoFiltroModel.setAno(cmbAno.getSelectedItem().toString());
-        carregarBoletos();
+        listarBoletos();
     }//GEN-LAST:event_cmbAnoActionPerformed
 
     private void cmbMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbMesActionPerformed
         boletoFiltroModel.setMes(cmbMes.getSelectedItem().toString());
-        carregarBoletos();
+        listarBoletos();
     }//GEN-LAST:event_cmbMesActionPerformed
 
     private void cmbTurmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTurmaActionPerformed
         boletoFiltroModel.setTurma(cmbTurma.getSelectedItem().toString());
-        carregarBoletos();
+        listarBoletos();
     }//GEN-LAST:event_cmbTurmaActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         boletoFiltroModel.setMatriculaAluno(txtMatriculaAluno.getText());
-        carregarBoletos();
+        listarBoletos();
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     private void txtMatriculaAlunoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMatriculaAlunoKeyPressed
@@ -341,6 +351,19 @@ public class BoletoForm extends BaseForm {
             btnPesquisarActionPerformed(null);
         }
     }//GEN-LAST:event_txtMatriculaAlunoKeyPressed
+
+    private void btnVisualizarBoletosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarBoletosActionPerformed
+        // TODO add your handling code here:
+        List<DadosBoletoModel> selecionados = new ArrayList<>();
+        for (int i : tblDados.getSelectedRows()) {
+            selecionados.add(boletoModel.get(i));
+        }
+        byte[] pdfs = service.visualizarBoletos(selecionados);
+        if (pdfs != null) {
+
+            
+        }
+    }//GEN-LAST:event_btnVisualizarBoletosActionPerformed
 
     private String[] getAnos() {
         return boletoFiltroModel.getAnos().toArray(new String[boletoFiltroModel.getAnos().size()]);
@@ -350,9 +373,9 @@ public class BoletoForm extends BaseForm {
         return boletoFiltroModel.getTurmas().toArray(new String[boletoFiltroModel.getTurmas().size()]);
     }
 
-    private void carregarBoletos() {
+    private void listarBoletos() {
         try {
-            boletoModel = service.getBoletosModel(boletoFiltroModel);
+            boletoModel = service.listarBoletos(boletoFiltroModel);
             Object[][] dados = getDados();
             tblDados.setModel(new javax.swing.table.DefaultTableModel(dados,
                     new String[]{"Matrícula", "Aluno", "Turma", "Nosso Número", "Valor", "Vencimento"}) {
@@ -375,14 +398,14 @@ public class BoletoForm extends BaseForm {
     private Object[][] getDados() {
         Object[][] dados = new Object[boletoModel.size()][];
         int i = 0;
-        for (BoletoModel model : boletoModel) {
+        for (DadosBoletoModel model : boletoModel) {
             dados[i] = new String[]{
                 model.getMatricula(),
                 model.getAluno(),
                 model.getTurma(),
                 model.getNossoNumero(),
                 String.format("R$ %.2f", model.getValor()),
-                DATE_FORMAT.format( model.getVencimento())};
+                DATE_FORMAT.format(model.getVencimento())};
             i++;
         }
         return dados;

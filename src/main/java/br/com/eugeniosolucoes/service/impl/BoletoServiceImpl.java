@@ -16,9 +16,10 @@ import br.com.caelum.stella.boleto.transformer.GeradorDeBoleto;
 import br.com.eugeniosolucoes.repository.BoletoRepository;
 import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
 import br.com.eugeniosolucoes.service.BoletoService;
-import br.com.eugeniosolucoes.view.model.BoletoFiltroModel;
-import br.com.eugeniosolucoes.view.model.BoletoModel;
+import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
+import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import org.joda.time.LocalDate;
@@ -36,8 +37,8 @@ public class BoletoServiceImpl implements BoletoService {
     BoletoRepository repository = new BoletoRepositoryImpl();
 
     @Override
-    public BoletoFiltroModel getBoletoFiltroModel() {
-        BoletoFiltroModel model = new BoletoFiltroModel();
+    public DadosBoletoFiltroModel carregarFiltros() {
+        DadosBoletoFiltroModel model = new DadosBoletoFiltroModel();
         model.getAnos().addAll(repository.listarAnos());
         model.getTurmas().addAll(repository.listarTurmas());
         model.setAno(YEAR_FORMAT.format(LocalDate.now().toDate()));
@@ -49,58 +50,63 @@ public class BoletoServiceImpl implements BoletoService {
     }
 
     @Override
-    public List<BoletoModel> getBoletosModel(BoletoFiltroModel boletoFiltroModel) {
-        return repository.listarBoletos(boletoFiltroModel);
+    public List<DadosBoletoModel> listarBoletos(DadosBoletoFiltroModel dadosBoletoFiltroModel) {
+        return repository.listarBoletos(dadosBoletoFiltroModel);
     }
 
     @Override
-    public byte[] gerarBoleto(BoletoModel boletoModel) {
-        Datas datas = Datas.novasDatas()
-                .comDocumento(22, 11, 2015)
-                .comProcessamento(22, 11, 2015)
-                .comVencimento(5, 12, 2015);
+    public byte[] visualizarBoletos(List<DadosBoletoModel> lista) {
+        List<Boleto> boletos = new ArrayList<>();
+        for (DadosBoletoModel dados : lista) {
+            Datas datas = Datas.novasDatas()
+                    .comDocumento(22, 11, 2015)
+                    .comProcessamento(22, 11, 2015)
+                    .comVencimento(5, 12, 2015);
 
-        Endereco enderecoBeneficiario = Endereco.novoEndereco()
-                .comLogradouro("Rua da Quitanda, 185")
-                .comBairro("Centro")
-                .comCep("20091-005")
-                .comCidade("Rio de Janeiro")
-                .comUf("RJ");
+            Endereco enderecoBeneficiario = Endereco.novoEndereco()
+                    .comLogradouro("Rua da Quitanda, 185")
+                    .comBairro("Centro")
+                    .comCep("20091-005")
+                    .comCidade("Rio de Janeiro")
+                    .comUf("RJ");
 
-        //Quem emite o boleto
-        Beneficiario beneficiario = Beneficiario.novoBeneficiario().comNomeBeneficiario("CURSO ADONAI LTDA")
-                .comEndereco(enderecoBeneficiario)
-                .comAgencia("6790").comDigitoAgencia("0").comCarteira("102")
-                .comNumeroConvenio("5260965").comNossoNumero("105613749501")
-                .comDigitoNossoNumero("4");
+            //Quem emite o boleto
+            Beneficiario beneficiario = Beneficiario.novoBeneficiario().comNomeBeneficiario("CURSO ADONAI LTDA")
+                    .comEndereco(enderecoBeneficiario)
+                    .comAgencia("6790").comDigitoAgencia("0").comCarteira("102")
+                    .comNumeroConvenio("5260965").comNossoNumero("105613749501")
+                    .comDigitoNossoNumero("4");
 
-        Endereco enderecoPagador = Endereco.novoEndereco()
-                .comLogradouro(boletoModel.getEndereco().getLogradouro())
-                .comBairro(boletoModel.getEndereco().getBairro())
-                .comCep(boletoModel.getEndereco().getCep())
-                .comCidade(boletoModel.getEndereco().getCidade())
-                .comUf(boletoModel.getEndereco().getEstado());
+            Endereco enderecoPagador = Endereco.novoEndereco()
+                    .comLogradouro(dados.getEndereco().getLogradouro())
+                    .comBairro(dados.getEndereco().getBairro())
+                    .comCep(dados.getEndereco().getCep())
+                    .comCidade(dados.getEndereco().getCidade())
+                    .comUf(dados.getEndereco().getEstado());
 
-        //Quem paga o boleto
-        Pagador pagador = Pagador.novoPagador()
-                .comNome(boletoModel.getAluno())
-                .comDocumento(boletoModel.getCpf())
-                .comEndereco(enderecoPagador);
+            //Quem paga o boleto
+            Pagador pagador = Pagador.novoPagador()
+                    .comNome(dados.getAluno())
+                    .comDocumento(dados.getCpf())
+                    .comEndereco(enderecoPagador);
 
-        Banco banco = new Santander();
+            Banco banco = new Santander();
 
-        Boleto boleto = Boleto.novoBoleto()
-                .comBanco(banco)
-                .comDatas(datas)
-                .comBeneficiario(beneficiario)
-                .comPagador(pagador)
-                .comValorBoleto(boletoModel.getValor().toString())
-                .comNumeroDoDocumento("1234")
-                .comInstrucoes("instrucao 1", "instrucao 2", "instrucao 3", "instrucao 4", "instrucao 5")
-                .comLocaisDePagamento("local 1", "local 2");
+            Boleto boleto = Boleto.novoBoleto()
+                    .comBanco(banco)
+                    .comDatas(datas)
+                    .comBeneficiario(beneficiario)
+                    .comPagador(pagador)
+                    .comValorBoleto(dados.getValor().toString())
+                    .comNumeroDoDocumento(dados.getNumeroDocumento())
+                    .comInstrucoes("instrucao 1", "instrucao 2", "instrucao 3", "instrucao 4", "instrucao 5")
+                    .comLocaisDePagamento("local 1", "local 2");
 
-        GeradorDeBoleto gerador = new GeradorDeBoleto(boleto);
-
-        return gerador.geraPDF();
+            boletos.add(boleto);
+        }
+        if (!boletos.isEmpty()) {
+            return new GeradorDeBoleto(boletos).geraPDF();
+        }
+        return null;
     }
 }

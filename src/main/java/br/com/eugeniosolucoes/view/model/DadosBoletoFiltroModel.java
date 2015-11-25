@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author eugenio
  */
-public class BoletoFiltroModel {
+public class DadosBoletoFiltroModel {
 
     private String ano;
 

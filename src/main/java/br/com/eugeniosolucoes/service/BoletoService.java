@@ -5,8 +5,8 @@
  */
 package br.com.eugeniosolucoes.service;
 
-import br.com.eugeniosolucoes.view.model.BoletoFiltroModel;
-import br.com.eugeniosolucoes.view.model.BoletoModel;
+import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
+import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.util.List;
 
 /**
@@ -15,10 +15,10 @@ import java.util.List;
  */
 public interface BoletoService {
 
-    byte[] gerarBoleto(BoletoModel boletoModel);
+    byte[] visualizarBoletos(List<DadosBoletoModel> lista);
 
-    BoletoFiltroModel getBoletoFiltroModel();
+    DadosBoletoFiltroModel carregarFiltros();
 
-    List<BoletoModel> getBoletosModel(BoletoFiltroModel boletoFiltroModel);
+    List<DadosBoletoModel> listarBoletos(DadosBoletoFiltroModel boletoFiltroModel);
 
 }
