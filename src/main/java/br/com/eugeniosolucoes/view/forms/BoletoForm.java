@@ -26,7 +26,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class BoletoForm extends BaseForm {
 
     static final Logger LOG = Logger.getLogger(BoletoForm.class.getName());
-
+    
     private final BoletoService service = new BoletoServiceImpl();
 
     private final BoletoFiltroModel boletoFiltroModel;
@@ -381,8 +381,8 @@ public class BoletoForm extends BaseForm {
                 model.getAluno(),
                 model.getTurma(),
                 model.getNossoNumero(),
-                model.getValor(),
-                model.getVencimento()};
+                String.format("R$ %.2f", model.getValor()),
+                DATE_FORMAT.format( model.getVencimento())};
             i++;
         }
         return dados;

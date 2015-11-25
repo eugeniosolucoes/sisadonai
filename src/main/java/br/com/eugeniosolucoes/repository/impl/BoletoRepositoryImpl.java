@@ -9,6 +9,7 @@ import br.com.eugeniosolucoes.view.model.BoletoModel;
 import br.com.eugeniosolucoes.view.model.BoletoFiltroModel;
 import br.com.eugeniosolucoes.repository.BoletoRepository;
 import br.com.eugeniosolucoes.util.MyStrings;
+import br.com.eugeniosolucoes.view.model.EnderecoModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,8 +29,6 @@ import java.util.logging.Logger;
 public class BoletoRepositoryImpl implements BoletoRepository {
 
     static final Logger LOG = Logger.getLogger(BoletoRepositoryImpl.class.getName());
-
-    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
 
     AbstractRepository repository = AbstractRepository.getInstance();
 
@@ -94,8 +93,14 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append("mens.`Valor_Mensalidade`, ");
             sb.append("mens.`Nosso_Numero`, ");
             sb.append("mens.`Codigo_Situacao_Mensalidade`, ");
-            sb.append("mens.`Numero_Mensalidade`  ");
-            sb.append("FROM (((((((((`PFisicas` pf ");
+            sb.append("mens.`Numero_Mensalidade`,  ");
+            sb.append("ep.`Endereco`,   ");
+            sb.append("ep.`Complemento_Endereco`,   ");
+            sb.append("bai.`Nome_Bairro`,   ");
+            sb.append("cid.`Nome_Cidade`,   ");
+            sb.append("est.`Sigla_Estado`,  ");
+            sb.append("ep.`CEP_Endereco`  ");
+            sb.append("FROM ((((((((((((`PFisicas` pf ");
             sb.append("INNER JOIN `Matriculas` m ON m.`Codigo_PFisica` = pf.`Codigo_PFisica`) ");
             sb.append("INNER JOIN `PeriodosLetivos` pl ON pl.`Codigo_Periodo_Letivo` = m.`Codigo_Periodo_Letivo`) ");
             sb.append("INNER JOIN `Cursos` c ON c.`Codigo_Curso` = m.`Codigo_Curso`) ");
@@ -108,6 +113,9 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append("AND mens.`Codigo_PFisica` = pf.`Codigo_PFisica` ) ");
             sb.append("INNER JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`) ");
             sb.append("INNER JOIN `EnderecosPFisicas` ep ON ep.`Codigo_PFisica` = pf.`Codigo_PFisica` ) ");
+            sb.append("INNER JOIN `Estados` est ON est.`Codigo_Estado` = ep.`Codigo_Estado`  ) ");
+            sb.append("INNER JOIN `Cidades` cid ON cid.`Codigo_Cidade` = ep.`Codigo_Cidade` AND cid.`Codigo_Estado` = ep.`Codigo_Estado` ) ");
+            sb.append("LEFT  JOIN `Bairros` bai ON bai.`Codigo_Bairro` = ep.`Codigo_Bairro` AND bai.`Codigo_Cidade` = ep.`Codigo_Cidade` AND bai.`Codigo_Estado` = ep.`Codigo_Estado` ) ");
             sb.append("WHERE 1 = 1 ");
             sb.append("AND pl.`Codigo_Periodo_Letivo` = ? ");
             sb.append("AND MONTH(mens.`Data_Vencimento`) = ? ");
@@ -133,10 +141,18 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                         rs.getString("Codigo_PFisica"),
                         rs.getString("Nome_PFisica"), rs.getString("Nome_Turma"),
                         rs.getString("Nosso_Numero"),
-                        String.format("R$ %.2f", rs.getDouble("Valor_Mensalidade")),
-                        DATE_FORMAT.format(rs.getDate("Data_Vencimento")),
+                        rs.getDouble("Valor_Mensalidade"),
+                        rs.getDate("Data_Vencimento"),
                         rs.getString("Codigo_Situacao_Mensalidade"),
-                        rs.getString("Numero_Mensalidade")));
+                        rs.getString("Numero_Mensalidade"),
+                        new EnderecoModel(
+                                rs.getString("Endereco"),
+                                rs.getString("Complemento_Endereco"),
+                                rs.getString("Nome_Bairro"),
+                                rs.getString("Nome_Cidade"),
+                                rs.getString("Sigla_Estado"),
+                                rs.getString("CEP_Endereco")
+                        )));
             }
             return list;
         } catch (SQLException ex) {

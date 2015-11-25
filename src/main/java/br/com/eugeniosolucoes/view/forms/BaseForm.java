@@ -6,6 +6,8 @@
 package br.com.eugeniosolucoes.view.forms;
 
 import java.awt.Toolkit;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
@@ -15,6 +17,8 @@ import javax.swing.UIManager;
  */
 public class BaseForm extends JFrame {
 
+    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
+    
     public BaseForm() {
         super();
         setupView();

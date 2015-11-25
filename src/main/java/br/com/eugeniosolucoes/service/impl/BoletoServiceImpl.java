@@ -75,11 +75,11 @@ public class BoletoServiceImpl implements BoletoService {
                 .comDigitoNossoNumero("4");
 
         Endereco enderecoPagador = Endereco.novoEndereco()
-                .comLogradouro("Av dos testes, 111 apto 333")
-                .comBairro("Bairro Teste")
-                .comCep("01234-111")
-                .comCidade("São Paulo")
-                .comUf("SP");
+                .comLogradouro(boletoModel.getEndereco().getLogradouro())
+                .comBairro(boletoModel.getEndereco().getBairro())
+                .comCep(boletoModel.getEndereco().getCep())
+                .comCidade(boletoModel.getEndereco().getCidade())
+                .comUf(boletoModel.getEndereco().getEstado());
 
         //Quem paga o boleto
         Pagador pagador = Pagador.novoPagador()
@@ -94,7 +94,7 @@ public class BoletoServiceImpl implements BoletoService {
                 .comDatas(datas)
                 .comBeneficiario(beneficiario)
                 .comPagador(pagador)
-                .comValorBoleto("200.00")
+                .comValorBoleto(boletoModel.getValor().toString())
                 .comNumeroDoDocumento("1234")
                 .comInstrucoes("instrucao 1", "instrucao 2", "instrucao 3", "instrucao 4", "instrucao 5")
                 .comLocaisDePagamento("local 1", "local 2");

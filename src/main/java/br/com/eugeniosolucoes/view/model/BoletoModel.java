@@ -5,6 +5,7 @@
  */
 package br.com.eugeniosolucoes.view.model;
 
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -23,20 +24,22 @@ public class BoletoModel {
 
     private String nossoNumero;
 
-    private String valor;
+    private Double valor;
 
-    private String vencimento;
+    private Date vencimento;
 
     private String situacaoMensalidade;
 
     private String numeroMensalidade;
 
+    private EnderecoModel endereco;
+
     public BoletoModel() {
     }
 
     public BoletoModel(String cpf, String matricula, String aluno, String turma,
-            String nossoNumero, String valor, String vencimento,
-            String situacaoMensalidade, String numeroMensalidade) {
+            String nossoNumero, Double valor, Date vencimento,
+            String situacaoMensalidade, String numeroMensalidade, EnderecoModel endereco) {
         this.cpf = cpf;
         this.matricula = matricula;
         this.aluno = aluno;
@@ -46,6 +49,7 @@ public class BoletoModel {
         this.vencimento = vencimento;
         this.situacaoMensalidade = situacaoMensalidade;
         this.numeroMensalidade = numeroMensalidade;
+        this.endereco = endereco;
     }
 
     public String getMatricula() {
@@ -80,19 +84,19 @@ public class BoletoModel {
         this.nossoNumero = nossoNumero;
     }
 
-    public String getValor() {
+    public Double getValor() {
         return valor;
     }
 
-    public void setValor(String valor) {
+    public void setValor(Double valor) {
         this.valor = valor;
     }
 
-    public String getVencimento() {
+    public Date getVencimento() {
         return vencimento;
     }
 
-    public void setVencimento(String vencimento) {
+    public void setVencimento(Date vencimento) {
         this.vencimento = vencimento;
     }
 
@@ -118,6 +122,14 @@ public class BoletoModel {
 
     public void setNumeroMensalidade(String numeroMensalidade) {
         this.numeroMensalidade = numeroMensalidade;
+    }
+
+    public EnderecoModel getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(EnderecoModel endereco) {
+        this.endereco = endereco;
     }
     
     @Override
