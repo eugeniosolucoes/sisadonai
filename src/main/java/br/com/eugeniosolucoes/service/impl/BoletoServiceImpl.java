@@ -60,9 +60,11 @@ public class BoletoServiceImpl implements BoletoService {
         List<Boleto> boletos = new ArrayList<>();
         for (DadosBoletoModel dados : lista) {
             Datas datas = Datas.novasDatas()
-                    .comDocumento(22, 11, 2015)
-                    .comProcessamento(22, 11, 2015)
-                    .comVencimento(5, 12, 2015);
+                    .comDocumento(LocalDate.now().getDayOfMonth(), LocalDate.now().getMonthOfYear(), LocalDate.now().getYear())
+                    .comProcessamento(LocalDate.now().getDayOfMonth(), LocalDate.now().getMonthOfYear(), LocalDate.now().getYear())
+                    .comVencimento(LocalDate.fromDateFields(dados.getVencimento()).getDayOfMonth(), 
+                            LocalDate.fromDateFields(dados.getVencimento()).getMonthOfYear(), 
+                            LocalDate.fromDateFields(dados.getVencimento()).getYear());
 
             Endereco enderecoBeneficiario = Endereco.novoEndereco()
                     .comLogradouro("Rua da Quitanda, 185")
