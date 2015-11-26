@@ -10,15 +10,19 @@ import br.com.eugeniosolucoes.service.impl.BoletoServiceImpl;
 import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -358,10 +362,14 @@ public class BoletoForm extends BaseForm {
         for (int i : tblDados.getSelectedRows()) {
             selecionados.add(boletoModel.get(i));
         }
-        byte[] pdfs = service.visualizarBoletos(selecionados);
-        if (pdfs != null) {
-
-            
+        JasperPrint jasperPrint = service.visualizarBoletos(selecionados);
+        if (jasperPrint != null) {
+            JDialog viewer = new JDialog(new javax.swing.JFrame(), "Visualização dos Boletos", true);
+            viewer.setSize(800, 600);
+            viewer.setLocationRelativeTo(null);
+            JasperViewer jrViewer = new JasperViewer(jasperPrint, true);
+            viewer.getContentPane().add(jrViewer.getContentPane());
+            viewer.setVisible(true);
         }
     }//GEN-LAST:event_btnVisualizarBoletosActionPerformed
 

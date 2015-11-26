@@ -12,16 +12,17 @@ import br.com.caelum.stella.boleto.Datas;
 import br.com.caelum.stella.boleto.Endereco;
 import br.com.caelum.stella.boleto.Pagador;
 import br.com.caelum.stella.boleto.bancos.Santander;
-import br.com.caelum.stella.boleto.transformer.GeradorDeBoleto;
 import br.com.eugeniosolucoes.repository.BoletoRepository;
 import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
 import br.com.eugeniosolucoes.service.BoletoService;
+import br.com.eugeniosolucoes.util.MyGeradorDeBoleto;
 import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import net.sf.jasperreports.engine.JasperPrint;
 import org.joda.time.LocalDate;
 
 /**
@@ -55,7 +56,7 @@ public class BoletoServiceImpl implements BoletoService {
     }
 
     @Override
-    public byte[] visualizarBoletos(List<DadosBoletoModel> lista) {
+    public JasperPrint visualizarBoletos(List<DadosBoletoModel> lista) {
         List<Boleto> boletos = new ArrayList<>();
         for (DadosBoletoModel dados : lista) {
             Datas datas = Datas.novasDatas()
@@ -105,7 +106,7 @@ public class BoletoServiceImpl implements BoletoService {
             boletos.add(boleto);
         }
         if (!boletos.isEmpty()) {
-            return new GeradorDeBoleto(boletos).geraPDF();
+            return new MyGeradorDeBoleto(boletos).geraRelatorio();
         }
         return null;
     }

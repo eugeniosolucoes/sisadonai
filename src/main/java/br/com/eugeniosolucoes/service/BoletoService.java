@@ -8,6 +8,7 @@ package br.com.eugeniosolucoes.service;
 import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.util.List;
+import net.sf.jasperreports.engine.JasperPrint;
 
 /**
  *
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public interface BoletoService {
 
-    byte[] visualizarBoletos(List<DadosBoletoModel> lista);
+    JasperPrint visualizarBoletos(List<DadosBoletoModel> lista);
 
     DadosBoletoFiltroModel carregarFiltros();
 
