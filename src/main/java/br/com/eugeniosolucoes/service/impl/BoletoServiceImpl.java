@@ -20,6 +20,7 @@ import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -39,11 +40,13 @@ public class BoletoServiceImpl implements BoletoService {
 
     @Override
     public DadosBoletoFiltroModel carregarFiltros() {
+        LocalDate dataCorrente = LocalDate.now();
+        Date proximoMes = dataCorrente.plusMonths(1).toDate();
         DadosBoletoFiltroModel model = new DadosBoletoFiltroModel();
         model.getAnos().addAll(repository.listarAnos());
         model.getTurmas().addAll(repository.listarTurmas());
-        model.setAno(YEAR_FORMAT.format(LocalDate.now().toDate()));
-        model.setMes(MONTH_FORMAT.format(LocalDate.now().toDate()));
+        model.setAno(YEAR_FORMAT.format(proximoMes));
+        model.setMes(MONTH_FORMAT.format(proximoMes));
         if (!model.getTurmas().isEmpty()) {
             model.setTurma(model.getTurmas().get(0));
         }
@@ -57,13 +60,16 @@ public class BoletoServiceImpl implements BoletoService {
 
     @Override
     public JasperPrint visualizarBoletos(List<DadosBoletoModel> lista) {
+        if (lista.isEmpty()) {
+            throw new IllegalStateException("Nenhum boleto selecionado!");
+        }
         List<Boleto> boletos = new ArrayList<>();
         for (DadosBoletoModel dados : lista) {
             Datas datas = Datas.novasDatas()
                     .comDocumento(LocalDate.now().getDayOfMonth(), LocalDate.now().getMonthOfYear(), LocalDate.now().getYear())
                     .comProcessamento(LocalDate.now().getDayOfMonth(), LocalDate.now().getMonthOfYear(), LocalDate.now().getYear())
-                    .comVencimento(LocalDate.fromDateFields(dados.getVencimento()).getDayOfMonth(), 
-                            LocalDate.fromDateFields(dados.getVencimento()).getMonthOfYear(), 
+                    .comVencimento(LocalDate.fromDateFields(dados.getVencimento()).getDayOfMonth(),
+                            LocalDate.fromDateFields(dados.getVencimento()).getMonthOfYear(),
                             LocalDate.fromDateFields(dados.getVencimento()).getYear());
 
             Endereco enderecoBeneficiario = Endereco.novoEndereco()
@@ -74,11 +80,13 @@ public class BoletoServiceImpl implements BoletoService {
                     .comUf("RJ");
 
             //Quem emite o boleto
-            Beneficiario beneficiario = Beneficiario.novoBeneficiario().comNomeBeneficiario("CURSO ADONAI LTDA")
+            Beneficiario beneficiario = Beneficiario.novoBeneficiario()
+                    .comNomeBeneficiario("CURSO ADONAI LTDA")
                     .comEndereco(enderecoBeneficiario)
-                    .comAgencia("6790").comDigitoAgencia("0").comCarteira("102")
-                    .comNumeroConvenio("5260965").comNossoNumero("105613749501")
-                    .comDigitoNossoNumero("4");
+                    .comAgencia("6790").comDigitoAgencia("0")
+                    .comCarteira("102")
+                    .comNumeroConvenio("5260965")
+                    .comNossoNumero("105613749501").comDigitoNossoNumero("4");
 
             Endereco enderecoPagador = Endereco.novoEndereco()
                     .comLogradouro(dados.getEndereco().getLogradouro())

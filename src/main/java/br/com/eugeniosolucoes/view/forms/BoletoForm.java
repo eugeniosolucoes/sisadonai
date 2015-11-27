@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
@@ -357,19 +358,22 @@ public class BoletoForm extends BaseForm {
     }//GEN-LAST:event_txtMatriculaAlunoKeyPressed
 
     private void btnVisualizarBoletosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarBoletosActionPerformed
-        // TODO add your handling code here:
         List<DadosBoletoModel> selecionados = new ArrayList<>();
-        for (int i : tblDados.getSelectedRows()) {
-            selecionados.add(boletoModel.get(i));
-        }
-        JasperPrint jasperPrint = service.visualizarBoletos(selecionados);
-        if (jasperPrint != null) {
-            JDialog viewer = new JDialog(new javax.swing.JFrame(), "Visualização dos Boletos", true);
-            viewer.setSize(800, 600);
-            viewer.setLocationRelativeTo(null);
-            JasperViewer jrViewer = new JasperViewer(jasperPrint, true);
-            viewer.getContentPane().add(jrViewer.getContentPane());
-            viewer.setVisible(true);
+        try {
+            for (int i : tblDados.getSelectedRows()) {
+                selecionados.add(boletoModel.get(i));
+            }
+            JasperPrint jasperPrint = service.visualizarBoletos(selecionados);
+            if (jasperPrint != null) {
+                JDialog viewer = new JDialog(new javax.swing.JFrame(), "Visualização dos Boletos", true);
+                viewer.setSize(800, 600);
+                viewer.setLocationRelativeTo(null);
+                JasperViewer jrViewer = new JasperViewer(jasperPrint, true);
+                viewer.getContentPane().add(jrViewer.getContentPane());
+                viewer.setVisible(true);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }//GEN-LAST:event_btnVisualizarBoletosActionPerformed
 
