@@ -116,7 +116,8 @@ public class BoletoServiceImpl implements BoletoService {
             boletos.add(boleto);
         }
         if (!boletos.isEmpty()) {
-            return new MyGeradorDeBoleto(boletos).geraRelatorio();
+            MyGeradorDeBoleto gerador = new MyGeradorDeBoleto(boletos);
+            return gerador.geraRelatorio();
         }
         return null;
     }
