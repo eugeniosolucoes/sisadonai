@@ -18,25 +18,25 @@ import net.sf.jasperreports.engine.JasperPrint;
  */
 public class MyGeradorDeBoleto extends GeradorDeBoleto {
 
-    public MyGeradorDeBoleto(Collection<Boleto> boletos) {
-        super(boletos);
+    public MyGeradorDeBoleto( Collection<Boleto> boletos ) {
+        super( boletos );
     }
 
-    public MyGeradorDeBoleto(Boleto... boletos) {
-        super(boletos);
+    public MyGeradorDeBoleto( Boleto... boletos ) {
+        super( boletos );
     }
 
-    public MyGeradorDeBoleto(InputStream template, Map<String, Object> parametros, Boleto... boletos) {
-        super(template, parametros, boletos);
+    public MyGeradorDeBoleto( InputStream template, Map<String, Object> parametros, Boleto... boletos ) {
+        super( template, parametros, boletos );
     }
 
-    public MyGeradorDeBoleto(InputStream template, Map<String, Object> parametros, Collection<Boleto> boletos) {
-        super(template, parametros, boletos);
+    public MyGeradorDeBoleto( InputStream template, Map<String, Object> parametros, Collection<Boleto> boletos ) {
+        super( template, parametros, boletos );
     }
 
     @Override
     public JasperPrint geraRelatorio() {
-        return super.geraRelatorio(); 
+        return super.geraRelatorio();
     }
-    
+
 }

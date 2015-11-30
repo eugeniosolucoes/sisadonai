@@ -37,9 +37,9 @@ public class DadosBoletoModel {
     public DadosBoletoModel() {
     }
 
-    public DadosBoletoModel(String cpf, String matricula, String aluno, String turma,
+    public DadosBoletoModel( String cpf, String matricula, String aluno, String turma,
             String nossoNumero, Double valor, Date vencimento,
-            String situacaoMensalidade, String numeroMensalidade, EnderecoModel endereco) {
+            String situacaoMensalidade, String numeroMensalidade, EnderecoModel endereco ) {
         this.cpf = cpf;
         this.matricula = matricula;
         this.aluno = aluno;
@@ -56,7 +56,7 @@ public class DadosBoletoModel {
         return matricula;
     }
 
-    public void setMatricula(String matricula) {
+    public void setMatricula( String matricula ) {
         this.matricula = matricula;
     }
 
@@ -64,7 +64,7 @@ public class DadosBoletoModel {
         return aluno;
     }
 
-    public void setAluno(String aluno) {
+    public void setAluno( String aluno ) {
         this.aluno = aluno;
     }
 
@@ -72,7 +72,7 @@ public class DadosBoletoModel {
         return turma;
     }
 
-    public void setTurma(String turma) {
+    public void setTurma( String turma ) {
         this.turma = turma;
     }
 
@@ -80,20 +80,19 @@ public class DadosBoletoModel {
         return nossoNumero;
     }
 
-    public void setNossoNumero(String nossoNumero) {
+    public void setNossoNumero( String nossoNumero ) {
         this.nossoNumero = nossoNumero;
     }
 
     public String getNumeroDocumento() {
-        return String.format("%s-%s", this.matricula, this.numeroMensalidade );
+        return String.format( "%s-%s", this.matricula, this.numeroMensalidade );
     }
-
 
     public Double getValor() {
         return valor;
     }
 
-    public void setValor(Double valor) {
+    public void setValor( Double valor ) {
         this.valor = valor;
     }
 
@@ -101,7 +100,7 @@ public class DadosBoletoModel {
         return vencimento;
     }
 
-    public void setVencimento(Date vencimento) {
+    public void setVencimento( Date vencimento ) {
         this.vencimento = vencimento;
     }
 
@@ -109,7 +108,7 @@ public class DadosBoletoModel {
         return situacaoMensalidade;
     }
 
-    public void setSituacaoMensalidade(String situacaoMensalidade) {
+    public void setSituacaoMensalidade( String situacaoMensalidade ) {
         this.situacaoMensalidade = situacaoMensalidade;
     }
 
@@ -117,7 +116,7 @@ public class DadosBoletoModel {
         return cpf;
     }
 
-    public void setCpf(String cpf) {
+    public void setCpf( String cpf ) {
         this.cpf = cpf;
     }
 
@@ -125,7 +124,7 @@ public class DadosBoletoModel {
         return numeroMensalidade;
     }
 
-    public void setNumeroMensalidade(String numeroMensalidade) {
+    public void setNumeroMensalidade( String numeroMensalidade ) {
         this.numeroMensalidade = numeroMensalidade;
     }
 
@@ -133,30 +132,30 @@ public class DadosBoletoModel {
         return endereco;
     }
 
-    public void setEndereco(EnderecoModel endereco) {
+    public void setEndereco( EnderecoModel endereco ) {
         this.endereco = endereco;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.cpf);
+        hash = 37 * hash + Objects.hashCode( this.cpf );
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals( Object obj ) {
+        if ( this == obj ) {
             return true;
         }
-        if (obj == null) {
+        if ( obj == null ) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if ( getClass() != obj.getClass() ) {
             return false;
         }
         final DadosBoletoModel other = (DadosBoletoModel) obj;
-        return Objects.equals(this.cpf, other.cpf);
+        return Objects.equals( this.cpf, other.cpf );
     }
 
 }

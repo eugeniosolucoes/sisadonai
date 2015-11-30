@@ -16,10 +16,10 @@ import net.sf.jasperreports.engine.JasperPrint;
  */
 public interface BoletoService {
 
-    JasperPrint visualizarBoletos(List<DadosBoletoModel> lista);
+    JasperPrint visualizarBoletos( List<DadosBoletoModel> lista );
 
     DadosBoletoFiltroModel carregarFiltros();
 
-    List<DadosBoletoModel> listarBoletos(DadosBoletoFiltroModel boletoFiltroModel);
+    List<DadosBoletoModel> listarBoletos( DadosBoletoFiltroModel boletoFiltroModel );
 
 }

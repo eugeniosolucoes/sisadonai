@@ -12,16 +12,21 @@ package br.com.eugeniosolucoes.view.model;
 public class EnderecoModel {
 
     private String logradouro;
+
     private String complemento;
+
     private String bairro;
+
     private String cidade;
+
     private String estado;
+
     private String cep;
 
     public EnderecoModel() {
     }
 
-    public EnderecoModel(String logradouro, String complemento, String bairro, String cidade, String estado, String cep) {
+    public EnderecoModel( String logradouro, String complemento, String bairro, String cidade, String estado, String cep ) {
         this.logradouro = logradouro;
         this.complemento = complemento;
         this.bairro = bairro;
@@ -29,12 +34,12 @@ public class EnderecoModel {
         this.estado = estado;
         this.cep = cep;
     }
-    
+
     public String getLogradouro() {
         return logradouro;
     }
 
-    public void setLogradouro(String logradouro) {
+    public void setLogradouro( String logradouro ) {
         this.logradouro = logradouro;
     }
 
@@ -42,7 +47,7 @@ public class EnderecoModel {
         return complemento == null ? "" : complemento;
     }
 
-    public void setComplemento(String complemento) {
+    public void setComplemento( String complemento ) {
         this.complemento = complemento;
     }
 
@@ -50,7 +55,7 @@ public class EnderecoModel {
         return bairro == null ? "" : bairro;
     }
 
-    public void setBairro(String bairro) {
+    public void setBairro( String bairro ) {
         this.bairro = bairro;
     }
 
@@ -58,7 +63,7 @@ public class EnderecoModel {
         return cidade == null ? "" : cidade.toUpperCase();
     }
 
-    public void setCidade(String cidade) {
+    public void setCidade( String cidade ) {
         this.cidade = cidade;
     }
 
@@ -66,7 +71,7 @@ public class EnderecoModel {
         return estado == null ? "" : estado.toUpperCase();
     }
 
-    public void setEstado(String estado) {
+    public void setEstado( String estado ) {
         this.estado = estado;
     }
 
@@ -74,7 +79,7 @@ public class EnderecoModel {
         return cep == null ? "" : cep;
     }
 
-    public void setCep(String cep) {
+    public void setCep( String cep ) {
         this.cep = cep;
     }
 

@@ -18,7 +18,7 @@ public class TurmaModel {
     public TurmaModel() {
     }
 
-    public TurmaModel(String id, String nome) {
+    public TurmaModel( String id, String nome ) {
         this.id = id;
         this.nome = nome;
     }
@@ -27,7 +27,7 @@ public class TurmaModel {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome( String nome ) {
         this.nome = nome;
     }
 
@@ -35,7 +35,7 @@ public class TurmaModel {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId( String id ) {
         this.id = id;
     }
 

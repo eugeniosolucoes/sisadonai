@@ -17,8 +17,8 @@ public class MyStrings {
      * @param string string a ser verificada
      * @return true caso a string seja nula ou vazia
      */
-    public static boolean isNullOrEmpty(java.lang.String string) {
-        return (string == null || ("").equals(string.trim()));
+    public static boolean isNullOrEmpty( java.lang.String string ) {
+        return ( string == null || ( "" ).equals( string.trim() ) );
     }
 
 }

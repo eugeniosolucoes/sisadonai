@@ -19,6 +19,6 @@ public interface BoletoRepository {
 
     List<String> listarTurmas();
 
-    List<DadosBoletoModel> listarBoletos(DadosBoletoFiltroModel boletoFiltroDTO);
+    List<DadosBoletoModel> listarBoletos( DadosBoletoFiltroModel boletoFiltroDTO );
 
 }

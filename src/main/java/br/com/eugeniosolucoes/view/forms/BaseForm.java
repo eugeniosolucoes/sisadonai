@@ -17,8 +17,8 @@ import javax.swing.UIManager;
  */
 public class BaseForm extends JFrame {
 
-    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
-    
+    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "dd/MM/yyyy", new Locale( "pt", "BR" ) );
+
     public BaseForm() {
         super();
         setupView();
@@ -26,10 +26,10 @@ public class BaseForm extends JFrame {
 
     final void setupView() {
         try {
-            javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(BoletoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
+        } catch ( ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex ) {
+            java.util.logging.Logger.getLogger( BoletoForm.class.getName() ).log( java.util.logging.Level.SEVERE, null, ex );
         }
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagens/adonai.png")));
+        setIconImage( Toolkit.getDefaultToolkit().getImage( getClass().getResource( "/imagens/adonai.png" ) ) );
     }
 }

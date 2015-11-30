@@ -37,7 +37,7 @@ public class DadosBoletoFiltroModel {
             "Setembro",
             "Outubro",
             "Novembro",
-            "Dezembro");
+            "Dezembro" );
 
     private List<String> turmas;
 
@@ -45,7 +45,7 @@ public class DadosBoletoFiltroModel {
         return ano;
     }
 
-    public void setAno(String ano) {
+    public void setAno( String ano ) {
         this.ano = ano;
     }
 
@@ -53,7 +53,7 @@ public class DadosBoletoFiltroModel {
         return mes;
     }
 
-    public void setMes(String mes) {
+    public void setMes( String mes ) {
         this.mes = mes;
     }
 
@@ -61,7 +61,7 @@ public class DadosBoletoFiltroModel {
         return turma;
     }
 
-    public void setTurma(String turma) {
+    public void setTurma( String turma ) {
         this.turma = turma;
     }
 
@@ -69,16 +69,16 @@ public class DadosBoletoFiltroModel {
         return matriculaAluno;
     }
 
-    public void setMatriculaAluno(String matriculaAluno) {
+    public void setMatriculaAluno( String matriculaAluno ) {
         this.matriculaAluno = matriculaAluno;
     }
 
-    public void setAnos(List<String> anos) {
+    public void setAnos( List<String> anos ) {
         this.anos = anos;
     }
 
     public List<String> getAnos() {
-        if (anos == null) {
+        if ( anos == null ) {
             anos = new ArrayList<>();
         }
         return anos;
@@ -89,13 +89,13 @@ public class DadosBoletoFiltroModel {
     }
 
     public List<String> getTurmas() {
-        if (turmas == null) {
+        if ( turmas == null ) {
             turmas = new ArrayList<>();
         }
         return turmas;
     }
 
-    public void setTurmas(List<String> turmas) {
+    public void setTurmas( List<String> turmas ) {
         this.turmas = turmas;
     }
 

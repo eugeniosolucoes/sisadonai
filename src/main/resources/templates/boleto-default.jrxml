@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="boleto-default" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ff653490-88f9-4546-aaa6-53f137c26ccc">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="616"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<style name="Celula" forecolor="#646464" fontName="Arial" fontSize="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -36,9 +36,12 @@
 		</field>
 	</subDataset>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["/Users/mario/"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="SUB_INSTRUCOES" class="net.sf.jasperreports.engine.JasperReport"/>
+	<parameter name="SUB_INSTRUCOES" class="net.sf.jasperreports.engine.JasperReport" isForPrompting="false">
+		<defaultValueExpression><![CDATA["boleto-default_instrucoes.jasper"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LOGO" class="java.io.InputStream" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -772,8 +775,8 @@
 				<textFieldExpression><![CDATA[$F{documentoBeneficiario}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="3" y="124" width="156" height="146" uuid="ac5cd87f-75be-47d5-ac10-4edf25480e2c"/>
-				<imageExpression><![CDATA[]]></imageExpression>
+				<reportElement key="LOGO" x="10" y="109" width="156" height="146" uuid="56744782-bc86-4d4f-ac18-dc55a0bb0810"/>
+				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
 			</image>
 		</band>
 	</detail>
