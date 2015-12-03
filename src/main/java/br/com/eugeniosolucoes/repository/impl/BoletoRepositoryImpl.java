@@ -94,6 +94,8 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "mens.`Nosso_Numero`, " );
             sb.append( "mens.`Codigo_Situacao_Mensalidade`, " );
             sb.append( "mens.`Numero_Mensalidade`,  " );
+            sb.append( "mens.`Percentual_Multa`,  " );
+            sb.append( "mens.`Percentual_Juros`,  " );
             sb.append( "ep.`Endereco`,   " );
             sb.append( "ep.`Complemento_Endereco`,   " );
             sb.append( "bai.`Nome_Bairro`,   " );
@@ -145,6 +147,8 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                         rs.getDate( "Data_Vencimento" ),
                         rs.getString( "Codigo_Situacao_Mensalidade" ),
                         rs.getString( "Numero_Mensalidade" ),
+                        rs.getDouble( "Percentual_Multa" ),
+                        rs.getDouble( "Percentual_Juros" ),
                         new EnderecoModel(
                                 rs.getString( "Endereco" ),
                                 rs.getString( "Complemento_Endereco" ),

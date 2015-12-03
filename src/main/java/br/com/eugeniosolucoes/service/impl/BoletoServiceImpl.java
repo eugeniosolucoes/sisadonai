@@ -5,7 +5,6 @@
  */
 package br.com.eugeniosolucoes.service.impl;
 
-import br.com.caelum.stella.boleto.Banco;
 import br.com.caelum.stella.boleto.Beneficiario;
 import br.com.caelum.stella.boleto.Boleto;
 import br.com.caelum.stella.boleto.Datas;
@@ -41,6 +40,8 @@ public class BoletoServiceImpl implements BoletoService {
 
     static final Logger LOG = Logger.getLogger( BoletoServiceImpl.class.getName() );
 
+    static final SimpleDateFormat DATA_FORMAT = new SimpleDateFormat( "dd/MM/yyyy", new Locale( "pt", "BR" ) );
+
     static final SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat( "yyyy", new Locale( "pt", "BR" ) );
 
     static final SimpleDateFormat MONTH_FORMAT = new SimpleDateFormat( "MMMM", new Locale( "pt", "BR" ) );
@@ -50,7 +51,7 @@ public class BoletoServiceImpl implements BoletoService {
     @Override
     public DadosBoletoFiltroModel carregarFiltros() {
         LocalDate dataCorrente = LocalDate.now();
-        Date proximoMes = dataCorrente.plusMonths( 1 ).toDate();
+        Date proximoMes = dataCorrente.plusMonths( 0 ).toDate();
         DadosBoletoFiltroModel model = new DadosBoletoFiltroModel();
         model.getAnos().addAll( repository.listarAnos() );
         model.getTurmas().addAll( repository.listarTurmas() );
@@ -75,7 +76,7 @@ public class BoletoServiceImpl implements BoletoService {
         List<Boleto> boletos = new ArrayList<>();
 
         Santander banco = new Santander();
-        
+
         //TODO: TESTE -105613749500
         long nossoNumeroInicial = Long.parseLong( "1056137495" ) * 100;
 
@@ -87,7 +88,7 @@ public class BoletoServiceImpl implements BoletoService {
                 .comUf( "RJ" );
 
         for ( DadosBoletoModel dados : lista ) {
-            
+
             Datas datas = Datas.novasDatas()
                     .comDocumento( LocalDate.now().getDayOfMonth(),
                             LocalDate.now().getMonthOfYear(),
@@ -105,9 +106,9 @@ public class BoletoServiceImpl implements BoletoService {
                     .comCarteira( "102" )
                     .comNumeroConvenio( "5260965" )
                     .comNossoNumero( String.valueOf( ++nossoNumeroInicial ) );
-            
-            String digito = banco.getGeradorDeDigito().calculaDVNossoNumero(beneficiario.getNossoNumero());
-            
+
+            String digito = banco.getGeradorDeDigito().calculaDVNossoNumero( beneficiario.getNossoNumero() );
+
             beneficiario.comDigitoNossoNumero( digito );
 
             Endereco enderecoPagador = Endereco.novoEndereco()
@@ -130,32 +131,53 @@ public class BoletoServiceImpl implements BoletoService {
                     .comPagador( pagador )
                     .comValorBoleto( dados.getValor().toString() )
                     .comNumeroDoDocumento( dados.getNumeroDocumento() )
-                    .comInstrucoes(
-                            "Após 5/12/2015 cobrar: Juros de Mora de 0,99% Mensal (R$ 0,12 ao dia) / Multa de 2,00% (R$ 7,50)",
-                            "Mensalidade DEZEMBRO 2015: R$ 375,00",
-                            "*** TOTAL À PAGAR ATÉ O VENCIMENTO: R$ 375,00 ***",
-                            String.format( "%s (%s)", dados.getAluno(), dados.getTurma() ) )
-                    .comLocaisDePagamento( "Até o vencimento pagável em qualquer banco do sistema de compensação", "local 2" );
+                    .comInstrucoes( criarInstrucao1( dados ),
+                            criarInstrucao2( dados ),
+                            criarInstrucao3( dados ),
+                            criarInstrucao4( dados ) )
+                    .comLocaisDePagamento( "Até o vencimento pagável em qualquer banco do sistema de compensação" );
 
             boletos.add( boleto );
         }
-        MyGeradorDeBoleto gerador = new MyGeradorDeBoleto( boletos );
+        //MyGeradorDeBoleto gerador = new MyGeradorDeBoleto( boletos );
 
-//        Map<String, Object> parametros = new HashMap<>();
-//
-//        InputStream templetoBoleto = getClass().getResourceAsStream( "/templates/boleto-default.jasper" );
-//
-//        parametros.put( "LOGO", getClass().getResourceAsStream( "/imagens/adonai.png" ) );
-//
-//        parametros.put( JRParameter.REPORT_LOCALE, new Locale( "pt", "BR" ) );
-//        InputStream template_sub = getClass().getResourceAsStream( "/templates/boleto-default_instrucoes.jasper" );
-//        try {
-//            parametros.put( "SUB_INSTRUCOES", JRLoader.loadObject( template_sub ) );
-//        } catch ( Exception e ) {
-//            LOG.log( Level.SEVERE, e.getMessage(), e );
-//        }
-//
-//        MyGeradorDeBoleto gerador = new MyGeradorDeBoleto( templetoBoleto, parametros, boletos );
-        return gerador.geraRelatorio();
+        //return gerador.geraRelatorio();
+        return criarGeradorDeBoleto( boletos ).geraRelatorio();
+    }
+
+    private static MyGeradorDeBoleto criarGeradorDeBoleto( List<Boleto> boletos ) {
+        Map<String, Object> parametros = new HashMap<>();
+
+        InputStream templetoBoleto = BoletoServiceImpl.class.getResourceAsStream( "/templates/boleto-default.jasper" );
+
+        parametros.put( "LOGO", BoletoServiceImpl.class.getResourceAsStream( "/imagens/adonai.png" ) );
+
+        parametros.put( JRParameter.REPORT_LOCALE, new Locale( "pt", "BR" ) );
+
+        MyGeradorDeBoleto gerador = new MyGeradorDeBoleto( templetoBoleto, parametros, boletos );
+        return gerador;
+    }
+
+    private static String criarInstrucao1( DadosBoletoModel dados ) {
+        return String.format( "Após %s cobrar: Juros de Mora de 0,99%% Mensal (R$ %.2f ao dia) / "
+                + "Multa de 2,00%% (R$ %.2f)",
+                DATA_FORMAT.format( dados.getVencimento() ),
+                ( dados.getValor() * dados.getPercentualJuros() / 100 ),
+                ( dados.getValor() * dados.getPercentualMulta() / 100 ) );
+    }
+
+    private static String criarInstrucao4( DadosBoletoModel dados ) {
+        return String.format( "%s (%s)", dados.getAluno(), dados.getTurma() );
+    }
+
+    private static String criarInstrucao3( DadosBoletoModel dados ) {
+        return String.format( "*** TOTAL À PAGAR ATÉ O VENCIMENTO: R$ %.2f ***", dados.getValor() );
+    }
+
+    private static String criarInstrucao2( DadosBoletoModel dados ) {
+        return String.format( "Mensalidade %s %s: R$ %.2f",
+                MONTH_FORMAT.format( dados.getVencimento() ).toUpperCase(),
+                YEAR_FORMAT.format( dados.getVencimento() ),
+                dados.getValor() );
     }
 }

@@ -5,6 +5,7 @@
  */
 package br.com.eugeniosolucoes.view.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
@@ -31,6 +32,10 @@ public class DadosBoletoModel {
     private String situacaoMensalidade;
 
     private String numeroMensalidade;
+    
+    private Double percentualMulta;
+    
+    private Double percentualJuros;
 
     private EnderecoModel endereco;
 
@@ -39,7 +44,8 @@ public class DadosBoletoModel {
 
     public DadosBoletoModel( String cpf, String matricula, String aluno, String turma,
             String nossoNumero, Double valor, Date vencimento,
-            String situacaoMensalidade, String numeroMensalidade, EnderecoModel endereco ) {
+            String situacaoMensalidade, String numeroMensalidade, Double percentualMulta, 
+            Double percentualJuros, EnderecoModel endereco ) {
         this.cpf = cpf;
         this.matricula = matricula;
         this.aluno = aluno;
@@ -49,6 +55,8 @@ public class DadosBoletoModel {
         this.vencimento = vencimento;
         this.situacaoMensalidade = situacaoMensalidade;
         this.numeroMensalidade = numeroMensalidade;
+        this.percentualMulta = percentualMulta;
+        this.percentualJuros = percentualJuros;
         this.endereco = endereco;
     }
 
@@ -128,6 +136,22 @@ public class DadosBoletoModel {
         this.numeroMensalidade = numeroMensalidade;
     }
 
+    public Double getPercentualMulta() {
+        return percentualMulta;
+    }
+
+    public void setPercentualMulta( Double percentualMulta ) {
+        this.percentualMulta = percentualMulta;
+    }
+
+    public Double getPercentualJuros() {
+        return percentualJuros;
+    }
+
+    public void setPercentualJuros( Double percentualJuros ) {
+        this.percentualJuros = percentualJuros;
+    }
+    
     public EnderecoModel getEndereco() {
         return endereco;
     }
