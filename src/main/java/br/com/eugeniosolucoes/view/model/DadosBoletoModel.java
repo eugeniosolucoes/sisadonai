@@ -32,9 +32,9 @@ public class DadosBoletoModel {
     private String situacaoMensalidade;
 
     private String numeroMensalidade;
-    
+
     private Double percentualMulta;
-    
+
     private Double percentualJuros;
 
     private EnderecoModel endereco;
@@ -44,7 +44,7 @@ public class DadosBoletoModel {
 
     public DadosBoletoModel( String cpf, String matricula, String aluno, String turma,
             String nossoNumero, Double valor, Date vencimento,
-            String situacaoMensalidade, String numeroMensalidade, Double percentualMulta, 
+            String situacaoMensalidade, String numeroMensalidade, Double percentualMulta,
             Double percentualJuros, EnderecoModel endereco ) {
         this.cpf = cpf;
         this.matricula = matricula;
@@ -151,7 +151,7 @@ public class DadosBoletoModel {
     public void setPercentualJuros( Double percentualJuros ) {
         this.percentualJuros = percentualJuros;
     }
-    
+
     public EnderecoModel getEndereco() {
         return endereco;
     }
