@@ -5,7 +5,7 @@
  */
 package br.com.eugeniosolucoes.app;
 
-import br.com.eugeniosolucoes.view.forms.BoletoForm;
+import br.com.eugeniosolucoes.view.forms.MainForm;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,7 +22,7 @@ public class Main {
             java.awt.EventQueue.invokeLater( new Runnable() {
                 @Override
                 public void run() {
-                    new BoletoForm().setVisible( true );
+                    new MainForm().setVisible( true );
                 }
             } );
         } catch ( Exception e ) {

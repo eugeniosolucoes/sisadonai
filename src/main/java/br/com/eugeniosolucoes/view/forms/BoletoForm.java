@@ -9,6 +9,7 @@ import br.com.eugeniosolucoes.service.BoletoService;
 import br.com.eugeniosolucoes.service.impl.BoletoServiceImpl;
 import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
+import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import net.sf.jasperreports.view.JasperViewer;
  *
  * @author eugenio
  */
-public class BoletoForm extends BaseForm {
+public class BoletoForm extends JDialog {
 
     static final Logger LOG = Logger.getLogger( BoletoForm.class.getName() );
 
@@ -42,13 +43,15 @@ public class BoletoForm extends BaseForm {
     /**
      * Creates new form View1
      */
-    public BoletoForm() {
-        super();
+    
+    public BoletoForm( Frame owner, String title, boolean modal ) {
+        super( owner, title, modal );
         carregarFiltros();
         initComponents();
         listarBoletos();
         adicionarListeners();
     }
+    
 
     private void carregarFiltros() {
         boletoFiltroModel = service.carregarFiltros();
@@ -92,8 +95,9 @@ public class BoletoForm extends BaseForm {
         plStatus = new javax.swing.JPanel();
         lblTotal = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Envio de Boletos");
+        setType(java.awt.Window.Type.POPUP);
 
         plConteudo.setBackground(java.awt.SystemColor.control);
 
@@ -417,7 +421,7 @@ public class BoletoForm extends BaseForm {
                 model.getTurma(),
                 model.getNossoNumero(),
                 String.format( "R$ %.2f", model.getValor() ),
-                DATE_FORMAT.format( model.getVencimento() )};
+                BaseForm.DATE_FORMAT.format( model.getVencimento() )};
             i++;
         }
         return dados;

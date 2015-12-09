@@ -124,6 +124,14 @@ public class DadosBoletoModel {
         return cpf;
     }
 
+    public String getCpfFormatado() {
+        StringBuilder sb = new StringBuilder( cpf );
+        sb.insert( 3, "." );
+        sb.insert( 7, "." );
+        sb.insert( 11, "-" );
+        return sb.toString();
+    }
+    
     public void setCpf( String cpf ) {
         this.cpf = cpf;
     }

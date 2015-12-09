@@ -119,7 +119,7 @@ public class BoletoServiceImpl implements BoletoService {
             //Quem paga o boleto
             Pagador pagador = Pagador.novoPagador()
                     .comNome( dados.getAluno() )
-                    .comDocumento( dados.getCpf() )
+                    .comDocumento( dados.getCpfFormatado() )
                     .comEndereco( enderecoPagador );
 
             Boleto boleto = Boleto.novoBoleto()
@@ -148,7 +148,7 @@ public class BoletoServiceImpl implements BoletoService {
 
         InputStream templetoBoleto = BoletoServiceImpl.class.getResourceAsStream( "/templates/boleto-default.jasper" );
 
-        parametros.put( "LOGO", BoletoServiceImpl.class.getResourceAsStream( "/imagens/adonai.png" ) );
+        //parametros.put( "LOGO", BoletoServiceImpl.class.getResourceAsStream( "/imagens/adonai.png" ) );
 
         parametros.put( JRParameter.REPORT_LOCALE, new Locale( "pt", "BR" ) );
 
