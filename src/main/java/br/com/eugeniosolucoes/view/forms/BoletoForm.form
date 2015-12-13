@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" value="Envio de Boletos"/>
@@ -82,7 +82,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="lblAno" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -108,6 +108,8 @@
                               <Component id="btnVisualizarBoletos" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnEnviarBoletos" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jpbEnvio" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace pref="124" max="32767" attributes="0"/>
@@ -147,6 +149,7 @@
                           <Component id="chkTodos" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnVisualizarBoletos" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnEnviarBoletos" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jpbEnvio" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -191,6 +194,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Enviar Boletos"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEnviarBoletosActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JCheckBox" name="chkTodos">
               <Properties>
@@ -267,6 +273,14 @@
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
+            </Component>
+            <Component class="javax.swing.JProgressBar" name="jpbEnvio">
+              <Properties>
+                <Property name="indeterminate" type="boolean" value="true"/>
+                <Property name="opaque" type="boolean" value="true"/>
+                <Property name="string" type="java.lang.String" value="Processando envio..."/>
+                <Property name="stringPainted" type="boolean" value="true"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

@@ -38,6 +38,8 @@ public class DadosBoletoModel {
     private Double percentualJuros;
 
     private EnderecoModel endereco;
+    
+    private String email;
 
     public DadosBoletoModel() {
     }
@@ -45,7 +47,7 @@ public class DadosBoletoModel {
     public DadosBoletoModel( String cpf, String matricula, String aluno, String turma,
             String nossoNumero, Double valor, Date vencimento,
             String situacaoMensalidade, String numeroMensalidade, Double percentualMulta,
-            Double percentualJuros, EnderecoModel endereco ) {
+            Double percentualJuros, EnderecoModel endereco, String email ) {
         this.cpf = cpf;
         this.matricula = matricula;
         this.aluno = aluno;
@@ -58,6 +60,7 @@ public class DadosBoletoModel {
         this.percentualMulta = percentualMulta;
         this.percentualJuros = percentualJuros;
         this.endereco = endereco;
+        this.email = email;
     }
 
     public String getMatricula() {
@@ -131,7 +134,7 @@ public class DadosBoletoModel {
         sb.insert( 11, "-" );
         return sb.toString();
     }
-    
+
     public void setCpf( String cpf ) {
         this.cpf = cpf;
     }
@@ -168,6 +171,14 @@ public class DadosBoletoModel {
         this.endereco = endereco;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail( String email ) {
+        this.email = email;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 7;

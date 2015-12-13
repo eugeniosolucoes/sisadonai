@@ -25,7 +25,7 @@ public class BaseForm extends JFrame {
     }
 
     final void setupView() {
-        setTitle( "Sistema ADONAI 1.0");
+        setTitle( "Sistema ADONAI 1.0" );
         try {
             javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
         } catch ( ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex ) {

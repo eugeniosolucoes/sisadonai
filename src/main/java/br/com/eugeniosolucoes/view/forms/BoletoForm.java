@@ -5,13 +5,16 @@
  */
 package br.com.eugeniosolucoes.view.forms;
 
+import br.com.eugeniosolucoes.controle.Controlador;
+import br.com.eugeniosolucoes.excecoes.ActionException;
+import br.com.eugeniosolucoes.modelo.Anexo;
 import br.com.eugeniosolucoes.service.BoletoService;
 import br.com.eugeniosolucoes.service.impl.BoletoServiceImpl;
+import br.com.eugeniosolucoes.util.MyStrings;
 import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -42,16 +45,19 @@ public class BoletoForm extends JDialog {
 
     /**
      * Creates new form View1
+     *
+     * @param owner
+     * @param title
+     * @param modal
      */
-    
     public BoletoForm( Frame owner, String title, boolean modal ) {
         super( owner, title, modal );
         carregarFiltros();
         initComponents();
+        jpbEnvio.setVisible( false );
         listarBoletos();
         adicionarListeners();
     }
-    
 
     private void carregarFiltros() {
         boletoFiltroModel = service.carregarFiltros();
@@ -89,6 +95,7 @@ public class BoletoForm extends JDialog {
         lblAno = new javax.swing.JLabel();
         lblMes = new javax.swing.JLabel();
         cmbMes = new javax.swing.JComboBox<>();
+        jpbEnvio = new javax.swing.JProgressBar();
         plDados = new javax.swing.JPanel();
         splDados = new javax.swing.JScrollPane();
         tblDados = new javax.swing.JTable();
@@ -128,6 +135,11 @@ public class BoletoForm extends JDialog {
         lblMatriculoAno.setText("Matrícula/Aluno:");
 
         btnEnviarBoletos.setText("Enviar Boletos");
+        btnEnviarBoletos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarBoletosActionPerformed(evt);
+            }
+        });
 
         chkTodos.setText("Selecionar Todos");
         chkTodos.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -166,13 +178,18 @@ public class BoletoForm extends JDialog {
             }
         });
 
+        jpbEnvio.setIndeterminate(true);
+        jpbEnvio.setOpaque(true);
+        jpbEnvio.setString("Processando envio...");
+        jpbEnvio.setStringPainted(true);
+
         javax.swing.GroupLayout plControlesLayout = new javax.swing.GroupLayout(plControles);
         plControles.setLayout(plControlesLayout);
         plControlesLayout.setHorizontalGroup(
             plControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plControlesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(plControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(plControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(plControlesLayout.createSequentialGroup()
                         .addComponent(lblAno)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -196,7 +213,9 @@ public class BoletoForm extends JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnVisualizarBoletos)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEnviarBoletos)))
+                        .addComponent(btnEnviarBoletos)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jpbEnvio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(124, Short.MAX_VALUE))
         );
         plControlesLayout.setVerticalGroup(
@@ -224,7 +243,8 @@ public class BoletoForm extends JDialog {
                 .addGroup(plControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chkTodos)
                     .addComponent(btnVisualizarBoletos)
-                    .addComponent(btnEnviarBoletos))
+                    .addComponent(btnEnviarBoletos)
+                    .addComponent(jpbEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -362,11 +382,8 @@ public class BoletoForm extends JDialog {
     }//GEN-LAST:event_txtMatriculaAlunoKeyPressed
 
     private void btnVisualizarBoletosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarBoletosActionPerformed
-        List<DadosBoletoModel> selecionados = new ArrayList<>();
+        List<DadosBoletoModel> selecionados = getSelecionados();
         try {
-            for ( int i : tblDados.getSelectedRows() ) {
-                selecionados.add( boletoModel.get( i ) );
-            }
             JasperPrint jasperPrint = service.visualizarBoletos( selecionados );
             if ( jasperPrint != null ) {
                 JDialog viewer = new JDialog( new javax.swing.JFrame(), "Visualização dos Boletos", true );
@@ -380,6 +397,30 @@ public class BoletoForm extends JDialog {
             JOptionPane.showMessageDialog( null, e.getMessage() );
         }
     }//GEN-LAST:event_btnVisualizarBoletosActionPerformed
+
+    private List<DadosBoletoModel> getSelecionados() {
+        List<DadosBoletoModel> selecionados = new ArrayList<>();
+        for ( int i : tblDados.getSelectedRows() ) {
+            selecionados.add( boletoModel.get( i ) );
+        }
+        return selecionados;
+    }
+
+    private void btnEnviarBoletosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarBoletosActionPerformed
+        final List<DadosBoletoModel> selecionados = getSelecionados();
+        new Thread( new Runnable() {
+            @Override
+            public void run() {
+                Controlador control = new Controlador();
+                try {
+                    control.processar( "CMD_ENVIAR_EMAIL", selecionados, jpbEnvio );
+                } catch ( ActionException ex ) {
+                    LOG.log( Level.SEVERE, ex.getMessage(), ex );
+                    MyStrings.exibeMensagem( ex.getMessage() );
+                }
+            }
+        } ).start();
+    }//GEN-LAST:event_btnEnviarBoletosActionPerformed
 
     private String[] getAnos() {
         return boletoFiltroModel.getAnos().toArray( new String[boletoFiltroModel.getAnos().size()] );
@@ -457,6 +498,7 @@ public class BoletoForm extends JDialog {
     private javax.swing.JComboBox<String> cmbAno;
     private javax.swing.JComboBox<String> cmbMes;
     private javax.swing.JComboBox cmbTurma;
+    private javax.swing.JProgressBar jpbEnvio;
     private javax.swing.JLabel lblAno;
     private javax.swing.JLabel lblMatriculoAno;
     private javax.swing.JLabel lblMes;

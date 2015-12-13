@@ -87,6 +87,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "SELECT DISTINCT " );
             sb.append( "dp.CPF_PFisica, " );
             sb.append( "pf.`Nome_PFisica`, " );
+            sb.append( "epf.`Email_Site`, " );
             sb.append( "pf.`Codigo_PFisica`, " );
             sb.append( "tu.`Nome_Turma`, " );
             sb.append( "mens.`Data_Vencimento`, " );
@@ -102,12 +103,13 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "cid.`Nome_Cidade`,   " );
             sb.append( "est.`Sigla_Estado`,  " );
             sb.append( "ep.`CEP_Endereco`  " );
-            sb.append( "FROM ((((((((((((`PFisicas` pf " );
+            sb.append( "FROM (((((((((((((`PFisicas` pf " );
             sb.append( "INNER JOIN `Matriculas` m ON m.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
             sb.append( "INNER JOIN `PeriodosLetivos` pl ON pl.`Codigo_Periodo_Letivo` = m.`Codigo_Periodo_Letivo`) " );
             sb.append( "INNER JOIN `Cursos` c ON c.`Codigo_Curso` = m.`Codigo_Curso`) " );
             sb.append( "INNER JOIN `Series` s ON s.`Codigo_Serie` = m.`Codigo_Serie`) " );
             sb.append( "INNER JOIN `Turnos` t ON t.`Codigo_Turno` = m.`Codigo_Turno`) " );
+            sb.append( "INNER JOIN `EmailSitePFisicas` epf ON epf.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
             sb.append( "INNER JOIN `TurmasEscola` tu ON tu.`Codigo_Curso` = c.`Codigo_Curso` AND tu.`Codigo_Serie`= s.`Codigo_Serie` AND tu.`Codigo_Turno` = t.`Codigo_Turno`) " );
             sb.append( "INNER JOIN `Mensalidades` mens ON mens.`Codigo_Periodo_Letivo` = pl.`Codigo_Periodo_Letivo`  " );
             sb.append( "AND mens.`Codigo_Curso` = c.`Codigo_Curso`  " );
@@ -156,7 +158,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                                 rs.getString( "Nome_Cidade" ),
                                 rs.getString( "Sigla_Estado" ),
                                 rs.getString( "CEP_Endereco" )
-                        ) ) );
+                        ), rs.getString( "Email_Site") ) );
             }
             return list;
         } catch ( SQLException ex ) {

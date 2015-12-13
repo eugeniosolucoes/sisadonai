@@ -43,12 +43,12 @@ public class MainForm extends BaseForm {
         jMenuTesouraria = new javax.swing.JMenu();
         mItemEnvioBoletos = new javax.swing.JMenuItem();
         jMenuSistema = new javax.swing.JMenu();
-        mItemConfiguracoes = new javax.swing.JMenuItem();
+        jMenuConfiguracoes = new javax.swing.JMenu();
+        mItemConfigEnvioDeBoletos = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         mItemSair = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(800, 600));
 
         javax.swing.GroupLayout jpConteudoLayout = new javax.swing.GroupLayout(jpConteudo);
         jpConteudo.setLayout(jpConteudoLayout);
@@ -80,8 +80,17 @@ public class MainForm extends BaseForm {
 
         jMenuSistema.setText("Sistema");
 
-        mItemConfiguracoes.setText("Configurações");
-        jMenuSistema.add(mItemConfiguracoes);
+        jMenuConfiguracoes.setText("Configurações");
+
+        mItemConfigEnvioDeBoletos.setText("Envio de Boletos...");
+        mItemConfigEnvioDeBoletos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mItemConfigEnvioDeBoletosActionPerformed(evt);
+            }
+        });
+        jMenuConfiguracoes.add(mItemConfigEnvioDeBoletos);
+
+        jMenuSistema.add(jMenuConfiguracoes);
         jMenuSistema.add(jSeparator1);
 
         mItemSair.setText("Sair");
@@ -108,14 +117,20 @@ public class MainForm extends BaseForm {
         new BoletoForm( this, "Envio de Boletos", true ).setVisible( true );
     }//GEN-LAST:event_mItemEnvioBoletosActionPerformed
 
+    private void mItemConfigEnvioDeBoletosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemConfigEnvioDeBoletosActionPerformed
+        // TODO add your handling code here:
+        new ConfigEnvioDeBoletoForm(this, "Configuração de Envio de Boletos", true ).setVisible( true );
+    }//GEN-LAST:event_mItemConfigEnvioDeBoletosActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar jMenuBarMain;
+    private javax.swing.JMenu jMenuConfiguracoes;
     private javax.swing.JMenu jMenuSecretaria;
     private javax.swing.JMenu jMenuSistema;
     private javax.swing.JMenu jMenuTesouraria;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPanel jpConteudo;
-    private javax.swing.JMenuItem mItemConfiguracoes;
+    private javax.swing.JMenuItem mItemConfigEnvioDeBoletos;
     private javax.swing.JMenuItem mItemEnvioBoletos;
     private javax.swing.JMenuItem mItemSair;
     // End of variables declaration//GEN-END:variables
