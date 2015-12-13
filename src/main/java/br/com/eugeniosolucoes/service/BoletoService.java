@@ -23,13 +23,12 @@ public interface BoletoService {
     static final SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat( "yyyy", new Locale( "pt", "BR" ) );
 
     static final SimpleDateFormat MONTH_FORMAT = new SimpleDateFormat( "MMMM", new Locale( "pt", "BR" ) );
-    
-    
+
     JasperPrint visualizarBoletos( List<DadosBoletoModel> lista );
 
     DadosBoletoFiltroModel carregarFiltros();
 
     List<DadosBoletoModel> listarBoletos( DadosBoletoFiltroModel boletoFiltroModel );
 
-    byte[] criarBoletoPDF( DadosBoletoModel dados );    
+    byte[] criarBoletoPDF( DadosBoletoModel dados );
 }

@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
  * @author eugenio
  */
 public class ConfigEnvioDeBoletoForm extends JDialog {
-    
+
     private Remetente obj;
 
     /**
@@ -35,7 +35,7 @@ public class ConfigEnvioDeBoletoForm extends JDialog {
      * @param modal
      */
     public ConfigEnvioDeBoletoForm( Frame owner, String title, boolean modal ) {
-        super( owner, title, modal);
+        super( owner, title, modal );
         initComponents();
         obj = new Remetente();
         retornarRemetente();
@@ -243,7 +243,7 @@ public class ConfigEnvioDeBoletoForm extends JDialog {
     }
 
     private void btnSalvarDadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarDadosActionPerformed
-        
+
         obj = new Remetente( txtRemetente.getText() );
         obj.getEmail().setEndereco( txtEmailRemetente.getText() );
         obj.setServidor( txtServidorRemetente.getText() );
@@ -251,16 +251,16 @@ public class ConfigEnvioDeBoletoForm extends JDialog {
         obj.setSenha( new String( txtSenha.getPassword() ) );
         obj.getEmail().setAssunto( txtAssunto.getText() );
         obj.getEmail().setMensagem( txtMensagem.getText() );
-        
+
         try {
-            
+
             new Controlador().processar( "CMD_SALVAR_REMETENTE", obj );
-            
+
         } catch ( ActionException ex ) {
-            
+
             Logger.getLogger( ConfigEnvioDeBoletoForm.class.getName() ).log( Level.SEVERE, null, ex );
             JOptionPane.showMessageDialog( this, ex.getMessage() );
-            
+
         }
     }//GEN-LAST:event_btnSalvarDadosActionPerformed
 

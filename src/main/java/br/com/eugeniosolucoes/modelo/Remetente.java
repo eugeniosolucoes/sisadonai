@@ -13,8 +13,8 @@ import java.util.List;
  */
 public class Remetente extends UsuarioDeEmail {
 
-    private static final long serialVersionUID = 1L;    
-    
+    private static final long serialVersionUID = 1L;
+
     private String servidor;
 
     private String usuario;

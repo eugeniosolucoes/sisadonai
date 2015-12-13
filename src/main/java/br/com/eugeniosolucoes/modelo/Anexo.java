@@ -11,7 +11,7 @@ package br.com.eugeniosolucoes.modelo;
 public class Anexo {
 
     private String nome;
-    
+
     private byte[] pdf;
 
     public String getNome() {
@@ -21,7 +21,7 @@ public class Anexo {
     public void setNome( String nome ) {
         this.nome = nome;
     }
-    
+
     public byte[] getPdf() {
         return pdf;
     }

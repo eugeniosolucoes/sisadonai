@@ -18,7 +18,6 @@ import br.com.eugeniosolucoes.util.MyGeradorDeBoleto;
 import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,11 +35,11 @@ import org.joda.time.LocalDate;
  * @author eugenio
  */
 public class BoletoServiceImpl implements BoletoService {
-    
+
     static final Logger LOG = Logger.getLogger( BoletoServiceImpl.class.getName() );
-    
+
     BoletoRepository repository = new BoletoRepositoryImpl();
-    
+
     @Override
     public DadosBoletoFiltroModel carregarFiltros() {
         LocalDate dataCorrente = LocalDate.now();
@@ -55,27 +54,27 @@ public class BoletoServiceImpl implements BoletoService {
         }
         return model;
     }
-    
+
     @Override
     public List<DadosBoletoModel> listarBoletos( DadosBoletoFiltroModel dadosBoletoFiltroModel ) {
         return repository.listarBoletos( dadosBoletoFiltroModel );
     }
-    
+
     @Override
     public JasperPrint visualizarBoletos( List<DadosBoletoModel> lista ) {
         if ( lista.isEmpty() ) {
             throw new IllegalStateException( "Nenhum boleto selecionado!" );
         }
         List<Boleto> boletos = new ArrayList<>();
-        
+
         for ( DadosBoletoModel dados : lista ) {
-            
+
             if ( Long.valueOf( dados.getNossoNumero() ) == 0L ) {
                 continue;
             }
-            
+
             Boleto boleto = criarBoleto( dados );
-            
+
             boletos.add( boleto );
         }
         //MyGeradorDeBoleto gerador = new MyGeradorDeBoleto( boletos );
@@ -83,7 +82,7 @@ public class BoletoServiceImpl implements BoletoService {
         //return gerador.geraRelatorio();
         return criarGeradorDeBoleto( boletos ).geraRelatorio();
     }
-    
+
     private Boleto criarBoleto( DadosBoletoModel dados ) {
         Santander banco = new Santander();
         //TODO: TESTE -105613749500
@@ -111,7 +110,7 @@ public class BoletoServiceImpl implements BoletoService {
                 .comDigitoCodigoBeneficiario( "9" )
                 .comCarteira( "101" )
                 .comNumeroConvenio( "7570007" )
-                .comNossoNumero( String.valueOf( dados.getNossoNumero() ) );
+                .comNossoNumero( dados.getNossoNumero() );
         String digito = banco.getGeradorDeDigito().calculaDVNossoNumero( beneficiario.getNossoNumero() );
         beneficiario.comDigitoNossoNumero( digito );
         Endereco enderecoPagador = Endereco.novoEndereco()
@@ -140,7 +139,7 @@ public class BoletoServiceImpl implements BoletoService {
                 .comLocaisDePagamento( "Até o vencimento pagável em qualquer banco do sistema de compensação" );
         return boleto;
     }
-    
+
     @Override
     public byte[] criarBoletoPDF( DadosBoletoModel dados ) {
         Boleto boleto = criarBoleto( dados );
@@ -154,7 +153,7 @@ public class BoletoServiceImpl implements BoletoService {
         }
         return pdf;
     }
-    
+
     private static MyGeradorDeBoleto criarGeradorDeBoleto( List<Boleto> boletos ) {
         Map<String, Object> parametros = new HashMap<>();
 
@@ -165,7 +164,7 @@ public class BoletoServiceImpl implements BoletoService {
         MyGeradorDeBoleto gerador = new MyGeradorDeBoleto( templetoBoleto, parametros, boletos );
         return gerador;
     }
-    
+
     private static MyGeradorDeBoleto criarGeradorDeBoleto( Boleto boleto ) {
         Map<String, Object> parametros = new HashMap<>();
 
@@ -175,8 +174,8 @@ public class BoletoServiceImpl implements BoletoService {
 
         MyGeradorDeBoleto gerador = new MyGeradorDeBoleto( templetoBoleto, parametros, boleto );
         return gerador;
-    }    
-    
+    }
+
     private static String criarInstrucao1( DadosBoletoModel dados ) {
         return String.format( "Após %s cobrar: Juros de Mora de 0,99%% Mensal (R$ %.2f ao dia) / "
                 + "Multa de 2,00%% (R$ %.2f)",
@@ -184,15 +183,15 @@ public class BoletoServiceImpl implements BoletoService {
                 ( dados.getValor() * dados.getPercentualJuros() / 100 ),
                 ( dados.getValor() * dados.getPercentualMulta() / 100 ) );
     }
-    
+
     private static String criarInstrucao4( DadosBoletoModel dados ) {
         return String.format( "%s (%s)", dados.getAluno(), dados.getTurma() );
     }
-    
+
     private static String criarInstrucao3( DadosBoletoModel dados ) {
         return String.format( "*** TOTAL À PAGAR ATÉ O VENCIMENTO: R$ %.2f ***", dados.getValor() );
     }
-    
+
     private static String criarInstrucao2( DadosBoletoModel dados ) {
         return String.format( "Mensalidade %s %s: R$ %.2f",
                 MONTH_FORMAT.format( dados.getVencimento() ).toUpperCase(),

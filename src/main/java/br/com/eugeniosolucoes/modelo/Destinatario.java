@@ -10,8 +10,8 @@ package br.com.eugeniosolucoes.modelo;
  */
 public class Destinatario extends UsuarioDeEmail {
 
-    private static final long serialVersionUID = 1L;    
-    
+    private static final long serialVersionUID = 1L;
+
     public Destinatario() {
         email = new Email();
     }

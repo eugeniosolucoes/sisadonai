@@ -119,7 +119,7 @@ public class MainForm extends BaseForm {
 
     private void mItemConfigEnvioDeBoletosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemConfigEnvioDeBoletosActionPerformed
         // TODO add your handling code here:
-        new ConfigEnvioDeBoletoForm(this, "Configuração de Envio de Boletos", true ).setVisible( true );
+        new ConfigEnvioDeBoletoForm( this, "Configuração de Envio de Boletos", true ).setVisible( true );
     }//GEN-LAST:event_mItemConfigEnvioDeBoletosActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

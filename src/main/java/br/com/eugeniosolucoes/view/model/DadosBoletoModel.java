@@ -38,7 +38,7 @@ public class DadosBoletoModel {
     private Double percentualJuros;
 
     private EnderecoModel endereco;
-    
+
     private String email;
 
     public DadosBoletoModel() {
@@ -178,7 +178,7 @@ public class DadosBoletoModel {
     public void setEmail( String email ) {
         this.email = email;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
