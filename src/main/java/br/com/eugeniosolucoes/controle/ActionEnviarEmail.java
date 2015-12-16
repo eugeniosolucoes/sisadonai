@@ -4,6 +4,7 @@
  */
 package br.com.eugeniosolucoes.controle;
 
+import br.com.eugeniosolucoes.app.Main;
 import br.com.eugeniosolucoes.excecoes.ActionException;
 import br.com.eugeniosolucoes.modelo.Destinatario;
 import br.com.eugeniosolucoes.modelo.Remetente;
@@ -45,6 +46,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import org.joda.time.LocalDateTime;
@@ -92,8 +94,9 @@ public class ActionEnviarEmail extends ActionComand implements IAction {
         log.append( "[EMAIL--------------------------------------------];" );
         log.append( "[DATA------];" );
         log.append( "[HORA------];" );
-        log.append( "[STATUS-----------------------------]\n" );
+        log.append( String.format( "[STATUS-----------------------------]%n" ) );
 
+        JButton btn = null;
         try {
             Remetente obj = (Remetente) serializarByteParaObjeto( new FileInputStream( ActionSalvarRemetente.DATA_FILE ) );
 
@@ -105,7 +108,10 @@ public class ActionEnviarEmail extends ActionComand implements IAction {
 
             JProgressBar jp = (JProgressBar) this.getParametro( 1 );
 
+            btn = (JButton) this.getParametro( 2 );
+
             jp.setVisible( true );
+            btn.setEnabled( false );
 
             processarDestinatarios( obj, selecionados, jp );
 
@@ -146,6 +152,10 @@ public class ActionEnviarEmail extends ActionComand implements IAction {
 
         } catch ( ActionException | IOException | HeadlessException | IllegalStateException e ) {
             MyStrings.exibeMensagem( e.getMessage() );
+        } finally {
+            if ( btn != null ) {
+                btn.setEnabled( true );
+            }
         }
 
     }
@@ -237,9 +247,12 @@ public class ActionEnviarEmail extends ActionComand implements IAction {
         for ( DadosBoletoModel selecionado : selecionados ) {
             Destinatario dest = new Destinatario();
             if ( MyStrings.validarEmail( selecionado.getEmail().trim() ) ) {
-                // TODO - ALTERAR APOS TESTE
-                // dest.getEmail().setEndereco( selecionado.getEmail().trim() );
-                dest.getEmail().setEndereco( "ageniws@gmail.com" );
+                // TODO - REMOVER APOS TESTE DE HOMOLOGACAO
+                if ( Main.isTestMode() ) {
+                    dest.getEmail().setEndereco( Main.getEmailTest() );
+                } else {
+                    dest.getEmail().setEndereco( selecionado.getEmail().trim() );
+                }
 
                 dest.getEmail().getAnexo().setNome( String.format( "BOLETO_%s_%s.pdf",
                         BoletoService.MONTH_FORMAT.format( selecionado.getVencimento() ),
@@ -250,7 +263,7 @@ public class ActionEnviarEmail extends ActionComand implements IAction {
                 dest.getEmail().getAnexo().setPdf( pdf );
 
                 jp.setString( String.format( "Processando email %d de %d", cont + 1, selecionados.size() ) );
-
+                cont++;
             } else {
                 throw new ActionException( "A lista possui email(s) inválido(s)!" );
             }

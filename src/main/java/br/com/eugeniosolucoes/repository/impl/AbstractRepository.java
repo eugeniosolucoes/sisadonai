@@ -5,6 +5,7 @@
  */
 package br.com.eugeniosolucoes.repository.impl;
 
+import br.com.eugeniosolucoes.app.Main;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -23,6 +24,8 @@ public class AbstractRepository {
 
     static final String ULR = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=C:/Virtual/Virtual.mdb";
 
+    static final String ULR_TESTE = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=";
+
     static {
         try {
             sun.jdbc.odbc.JdbcOdbcDriver.class.newInstance();
@@ -35,7 +38,12 @@ public class AbstractRepository {
     }
 
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection( ULR, "", "" );
+        // TODO - REMOVER APOS TESTE DE HOMOLOGACAO
+        if ( !Main.isTestMode() ) {
+            return DriverManager.getConnection( ULR, "", "" );
+        } else {
+            return DriverManager.getConnection( ULR_TESTE + Main.getDBTest(), "", "" );
+        }
     }
 
     public void fechar( Connection con ) {

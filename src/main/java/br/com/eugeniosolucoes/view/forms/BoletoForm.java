@@ -7,7 +7,6 @@ package br.com.eugeniosolucoes.view.forms;
 
 import br.com.eugeniosolucoes.controle.Controlador;
 import br.com.eugeniosolucoes.excecoes.ActionException;
-import br.com.eugeniosolucoes.modelo.Anexo;
 import br.com.eugeniosolucoes.service.BoletoService;
 import br.com.eugeniosolucoes.service.impl.BoletoServiceImpl;
 import br.com.eugeniosolucoes.util.MyStrings;
@@ -413,7 +412,7 @@ public class BoletoForm extends JDialog {
             public void run() {
                 Controlador control = new Controlador();
                 try {
-                    control.processar( "CMD_ENVIAR_EMAIL", selecionados, jpbEnvio );
+                    control.processar( "CMD_ENVIAR_EMAIL", selecionados, jpbEnvio, btnEnviarBoletos );
                 } catch ( ActionException ex ) {
                     LOG.log( Level.SEVERE, ex.getMessage(), ex );
                     MyStrings.exibeMensagem( ex.getMessage() );
