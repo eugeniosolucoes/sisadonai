@@ -5,6 +5,7 @@
  */
 package br.com.eugeniosolucoes.view.forms;
 
+import br.com.eugeniosolucoes.app.Main;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +26,9 @@ public class MainForm extends BaseForm {
     }
 
     private void setup() {
+        if(Main.isTestMode()) {
+            this.setTitle( String.format( "%s (MODO TESTE ATIVADO: %s - %s)", this.getTitle(), Main.getDBTest(), Main.getEmailTest() ) );
+        }
         setExtendedState( MAXIMIZED_BOTH );
     }
 

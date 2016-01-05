@@ -110,6 +110,7 @@ public class BoletoServiceImpl implements BoletoService {
                 .comDigitoCodigoBeneficiario( "9" )
                 .comCarteira( "101" )
                 .comNumeroConvenio( "7570007" )
+                .comDocumento( "10.851.328/0001-75" )
                 .comNossoNumero( dados.getNossoNumero() );
         String digito = banco.getGeradorDeDigito().calculaDVNossoNumero( beneficiario.getNossoNumero() );
         beneficiario.comDigitoNossoNumero( digito );

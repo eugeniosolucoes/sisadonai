@@ -1,0 +1,1 @@
+jar cf sisadonai.jar target\sisadonai-1.0.jar target\dependency-jars
