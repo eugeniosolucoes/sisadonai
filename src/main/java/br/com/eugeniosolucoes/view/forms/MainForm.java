@@ -26,10 +26,14 @@ public class MainForm extends BaseForm {
     }
 
     private void setup() {
-        if(Main.isTestMode()) {
-            this.setTitle( String.format( "%s (MODO TESTE ATIVADO: %s - %s)", this.getTitle(), Main.getDBTest(), Main.getEmailTest() ) );
-        }
+        exibirModoTeste();
         setExtendedState( MAXIMIZED_BOTH );
+    }
+
+    private void exibirModoTeste() {
+        if(Main.isTestMode()) {
+            this.setTitle( String.format( "%s (MODO TESTE ATIVADO: BANCO: %s - EMAIL: %s)", this.getTitle(), Main.getDBTest(), Main.getEmailTest() ) );
+        }
     }
 
     /**

@@ -1,1 +1,4 @@
-jar cf sisadonai.jar target\sisadonai-1.0.jar target\dependency-jars
+cd target
+jar cf sisadonai.jar sisadonai-1.0.jar dependency-jars
+move sisadonai.jar ..\sisadonai.jar
+pause

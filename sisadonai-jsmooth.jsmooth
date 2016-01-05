@@ -6,6 +6,7 @@
 <JVMSearchPath>jdkpath</JVMSearchPath>
 <JVMSearchPath>exepath</JVMSearchPath>
 <JVMSearchPath>jview</JVMSearchPath>
+<arguments></arguments>
 <bundledJVMPath>jre</bundledJVMPath>
 <classPath>target\sisadonai-1.0.jar</classPath>
 <classPath>target\dependency-jars\activation-1.1.jar</classPath>
@@ -33,10 +34,9 @@
 <classPath>target\dependency-jars\swing-layout-1.0.3.jar</classPath>
 <classPath>target\dependency-jars\validation-api-1.0.0.GA.jar</classPath>
 <currentDirectory>.</currentDirectory>
-<embeddedJar>true</embeddedJar>
+<embeddedJar>false</embeddedJar>
 <executableName>sisadonai.exe</executableName>
 <initialMemoryHeap>-1</initialMemoryHeap>
-<jarLocation>sisadonai.jar</jarLocation>
 <mainClassName>br.com.eugeniosolucoes.app.Main</mainClassName>
 <maximumMemoryHeap>-1</maximumMemoryHeap>
 <maximumVersion>1.7</maximumVersion>

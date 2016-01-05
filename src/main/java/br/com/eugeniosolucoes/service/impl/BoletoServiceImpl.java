@@ -69,7 +69,7 @@ public class BoletoServiceImpl implements BoletoService {
 
         for ( DadosBoletoModel dados : lista ) {
 
-            if ( Long.valueOf( dados.getNossoNumero() ) == 0L ) {
+            if ( !dados.isBoletoValido() ) {
                 continue;
             }
 
@@ -194,9 +194,9 @@ public class BoletoServiceImpl implements BoletoService {
     }
 
     private static String criarInstrucao2( DadosBoletoModel dados ) {
-        return String.format( "Mensalidade %s %s: R$ %.2f",
-                MONTH_FORMAT.format( dados.getVencimento() ).toUpperCase(),
-                YEAR_FORMAT.format( dados.getVencimento() ),
+        return String.format( "Parcela %s de %s: R$ %.2f",
+                dados.getNumeroMensalidade(),
+                dados.getQuantidadeMensalidade(),
                 dados.getValor() );
     }
 }

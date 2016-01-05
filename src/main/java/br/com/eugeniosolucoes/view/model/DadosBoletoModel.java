@@ -33,6 +33,8 @@ public class DadosBoletoModel {
 
     private String numeroMensalidade;
 
+    private String quantidadeMensalidade;
+    
     private Double percentualMulta;
 
     private Double percentualJuros;
@@ -46,8 +48,8 @@ public class DadosBoletoModel {
 
     public DadosBoletoModel( String cpf, String matricula, String aluno, String turma,
             String nossoNumero, Double valor, Date vencimento,
-            String situacaoMensalidade, String numeroMensalidade, Double percentualMulta,
-            Double percentualJuros, EnderecoModel endereco, String email ) {
+            String situacaoMensalidade, String numeroMensalidade, String quantidadeMensalidade, 
+            Double percentualMulta, Double percentualJuros, EnderecoModel endereco, String email ) {
         this.cpf = cpf;
         this.matricula = matricula;
         this.aluno = aluno;
@@ -57,6 +59,7 @@ public class DadosBoletoModel {
         this.vencimento = vencimento;
         this.situacaoMensalidade = situacaoMensalidade;
         this.numeroMensalidade = numeroMensalidade;
+        this.quantidadeMensalidade = quantidadeMensalidade;
         this.percentualMulta = percentualMulta;
         this.percentualJuros = percentualJuros;
         this.endereco = endereco;
@@ -147,6 +150,14 @@ public class DadosBoletoModel {
         this.numeroMensalidade = numeroMensalidade;
     }
 
+    public String getQuantidadeMensalidade() {
+        return quantidadeMensalidade;
+    }
+
+    public void setQuantidadeMensalidade( String quantidadeMensalidade ) {
+        this.quantidadeMensalidade = quantidadeMensalidade;
+    }
+    
     public Double getPercentualMulta() {
         return percentualMulta;
     }
@@ -201,4 +212,8 @@ public class DadosBoletoModel {
         return Objects.equals( this.cpf, other.cpf );
     }
 
+    
+    public boolean isBoletoValido() {
+        return Long.valueOf( this.nossoNumero ) != 0L;
+    }
 }

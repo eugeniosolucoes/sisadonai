@@ -95,6 +95,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "mens.`Nosso_Numero`, " );
             sb.append( "mens.`Codigo_Situacao_Mensalidade`, " );
             sb.append( "mens.`Numero_Mensalidade`,  " );
+            sb.append( "tabmens.`Qtde_Mensalidades`, " );
             sb.append( "mens.`Percentual_Multa`,  " );
             sb.append( "mens.`Percentual_Juros`,  " );
             sb.append( "ep.`Endereco`,   " );
@@ -103,7 +104,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "cid.`Nome_Cidade`,   " );
             sb.append( "est.`Sigla_Estado`,  " );
             sb.append( "ep.`CEP_Endereco`  " );
-            sb.append( "FROM (((((((((((((`PFisicas` pf " );
+            sb.append( "FROM ((((((((((((((`PFisicas` pf " );
             sb.append( "INNER JOIN `Matriculas` m ON m.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
             sb.append( "INNER JOIN `PeriodosLetivos` pl ON pl.`Codigo_Periodo_Letivo` = m.`Codigo_Periodo_Letivo`) " );
             sb.append( "INNER JOIN `Cursos` c ON c.`Codigo_Curso` = m.`Codigo_Curso`) " );
@@ -115,13 +116,16 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "AND mens.`Codigo_Curso` = c.`Codigo_Curso`  " );
             sb.append( "AND mens.`Codigo_Serie` = s.`Codigo_Serie`  " );
             sb.append( "AND mens.`Codigo_PFisica` = pf.`Codigo_PFisica` ) " );
+            sb.append( "INNER JOIN `TabelasMensalidades` tabmens ON tabmens.`Codigo_Periodo_Letivo` = pl.`Codigo_Periodo_Letivo` " );
+            sb.append( "AND tabmens.`Codigo_Curso` = c.`Codigo_Curso` " );
+            sb.append( "AND tabmens.`Codigo_Serie` = s.`Codigo_Serie` ) " );
             sb.append( "INNER JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
             sb.append( "INNER JOIN `EnderecosPFisicas` ep ON ep.`Codigo_PFisica` = pf.`Codigo_PFisica` ) " );
             sb.append( "INNER JOIN `Estados` est ON est.`Codigo_Estado` = ep.`Codigo_Estado`  ) " );
             sb.append( "INNER JOIN `Cidades` cid ON cid.`Codigo_Cidade` = ep.`Codigo_Cidade` AND cid.`Codigo_Estado` = ep.`Codigo_Estado` ) " );
             sb.append( "LEFT  JOIN `Bairros` bai ON bai.`Codigo_Bairro` = ep.`Codigo_Bairro` AND bai.`Codigo_Cidade` = ep.`Codigo_Cidade` AND bai.`Codigo_Estado` = ep.`Codigo_Estado` ) " );
             sb.append( "WHERE 1 = 1 " );
-            sb.append( "AND pl.`Codigo_Periodo_Letivo` = ? " );
+            sb.append( "AND YEAR(mens.`Data_Vencimento`) = ? " );
             sb.append( "AND MONTH(mens.`Data_Vencimento`) = ? " );
             sb.append( "AND tu.`Nome_Turma` = ? " );
             if ( !MyStrings.isNullOrEmpty( boletoFiltroDTO.getMatriculaAluno() ) ) {
@@ -130,7 +134,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "AND m.`Codigo_Situacao_Aluno` = '01' " );
             sb.append( "ORDER BY pf.`Nome_PFisica`; " );
             ps = con.prepareStatement( sb.toString() );
-            ps.setString( 1, boletoFiltroDTO.getAno() );
+            ps.setInt( 1, Integer.valueOf( boletoFiltroDTO.getAno() ) );
             ps.setInt( 2, boletoFiltroDTO.getMeses().indexOf( boletoFiltroDTO.getMes() ) + 1 );
             ps.setString( 3, boletoFiltroDTO.getTurma() );
             if ( !MyStrings.isNullOrEmpty( boletoFiltroDTO.getMatriculaAluno() ) ) {
@@ -149,6 +153,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                         rs.getDate( "Data_Vencimento" ),
                         rs.getString( "Codigo_Situacao_Mensalidade" ),
                         rs.getString( "Numero_Mensalidade" ),
+                        rs.getString( "Qtde_Mensalidades" ), 
                         rs.getDouble( "Percentual_Multa" ),
                         rs.getDouble( "Percentual_Juros" ),
                         new EnderecoModel(

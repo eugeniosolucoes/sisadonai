@@ -245,6 +245,10 @@ public class ActionEnviarEmail extends ActionComand implements IAction {
     private void processarDestinatarios( Remetente obj, List<DadosBoletoModel> selecionados, JProgressBar jp ) throws ActionException, FileNotFoundException, IOException {
         int cont = 0;
         for ( DadosBoletoModel selecionado : selecionados ) {
+            if ( !selecionado.isBoletoValido() ) {
+                cont++;
+                continue;
+            }
             Destinatario dest = new Destinatario();
             if ( MyStrings.validarEmail( selecionado.getEmail().trim() ) ) {
                 // TODO - REMOVER APOS TESTE DE HOMOLOGACAO
@@ -263,11 +267,11 @@ public class ActionEnviarEmail extends ActionComand implements IAction {
                 dest.getEmail().getAnexo().setPdf( pdf );
 
                 jp.setString( String.format( "Processando email %d de %d", cont + 1, selecionados.size() ) );
-                cont++;
             } else {
                 throw new ActionException( "A lista possui email(s) inválido(s)!" );
             }
             obj.getDestinatarios().add( dest );
+            cont++;
         }
 
     }
