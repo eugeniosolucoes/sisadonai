@@ -177,7 +177,7 @@ public class MainForm extends BaseForm {
                 File f = arquivo.getSelectedFile();
                 String conteudo = tar.corrigirArquivo( f );
                 String nomeArquivo = tar.criarNovoArquivo( f.getCanonicalPath(), conteudo );
-                MyStrings.exibeMensagem( String.format( "Arquivo %s criado com sucesso!", nomeArquivo ) );
+                MyStrings.exibeMensagem( String.format( "Arquivo de Remessa preparado com sucesso!%nLocal: %s", nomeArquivo ) );
             } catch (Exception ex ) {
                 LOG.log( Level.SEVERE, ex.getMessage(), ex );
                 MyStrings.exibeMensagem( ex.getMessage() );
