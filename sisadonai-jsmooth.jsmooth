@@ -6,7 +6,6 @@
 <JVMSearchPath>jdkpath</JVMSearchPath>
 <JVMSearchPath>exepath</JVMSearchPath>
 <JVMSearchPath>jview</JVMSearchPath>
-<arguments></arguments>
 <bundledJVMPath>jre</bundledJVMPath>
 <classPath>target\sisadonai-1.0.jar</classPath>
 <classPath>target\dependency-jars\activation-1.1.jar</classPath>

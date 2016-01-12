@@ -52,14 +52,14 @@ public class Main {
             return false;
         }
     }
-    
+
     public static String getEmailTest() {
         try {
             return CONFIG.getProperty( "email.teste" );
         } catch ( Exception e ) {
             return null;
         }
-    }    
+    }
 
     public static String getDBTest() {
         try {
@@ -67,5 +67,5 @@ public class Main {
         } catch ( Exception e ) {
             return null;
         }
-    }    
+    }
 }

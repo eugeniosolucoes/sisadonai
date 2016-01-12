@@ -153,7 +153,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                         rs.getDate( "Data_Vencimento" ),
                         rs.getString( "Codigo_Situacao_Mensalidade" ),
                         rs.getString( "Numero_Mensalidade" ),
-                        rs.getString( "Qtde_Mensalidades" ), 
+                        rs.getString( "Qtde_Mensalidades" ),
                         rs.getDouble( "Percentual_Multa" ),
                         rs.getDouble( "Percentual_Juros" ),
                         new EnderecoModel(
