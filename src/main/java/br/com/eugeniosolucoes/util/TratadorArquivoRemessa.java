@@ -164,16 +164,15 @@ public class TratadorArquivoRemessa {
      * @throws java.io.FileNotFoundException
      */
     private static final Logger LOG = Logger.getLogger( TratadorArquivoRemessa.class.getName() );
-
+    
     static final String INICIO_COD_TRANSMISSAO = "34510";
-
+    
     static final String CONTA_CORRENTE = "013003087";
-
+    
     static final String DIGITO_CONTA_CORRENTE = "9";
-
+    
     static final int TAMANHO = 240;
-
-
+    
     public String corrigirArquivo( File file ) {
         StringBuilder arquivo = new StringBuilder();
         int cont = 0;
@@ -186,6 +185,8 @@ public class TratadorArquivoRemessa {
                     arquivo.append( String.format( "%s%n", tratarLinha2( linha ) ) );
                 } else if ( linha.charAt( 13 ) == 'P' ) {
                     arquivo.append( String.format( "%s%n", tratarLinhaP( linha ) ) );
+                } else if ( linha.charAt( 13 ) == 'R' ) {
+                    arquivo.append( String.format( "%s%n", tratarLinhaR( linha ) ) );
                 } else {
                     arquivo.append( String.format( "%s%n", linha ) );
                 }
@@ -198,7 +199,7 @@ public class TratadorArquivoRemessa {
         showSizeLine( arquivo );
         return arquivo.toString();
     }
-
+    
     static void showSizeLine( StringBuilder arquivo ) {
         int cont = 0;
         String str = arquivo.toString();
@@ -208,7 +209,7 @@ public class TratadorArquivoRemessa {
             System.out.printf( "%2s %s%n", cont++, linha.length() );
         }
     }
-
+    
     public String criarNovoArquivo( String arquivo, String conteudo ) throws IOException {
         String nomeArquivo = tratarNomeArquivo( arquivo );
         if ( arquivo != null ) {
@@ -220,16 +221,16 @@ public class TratadorArquivoRemessa {
         }
         return nomeArquivo;
     }
-
+    
     static String tratarNomeArquivo( String nome ) {
         int indice = nome.lastIndexOf( ".txt" );
         return nome.substring( 0, indice ).concat( "-sisadonai.txt" );
     }
-
+    
     static String recuperarCampo( String linha, int i, int f ) {
         return linha.substring( i - 1, f - 1 );
     }
-
+    
     static void imprimirMarcadores() {
         int cont = 1;
         for ( int i = 1; i <= TAMANHO; i++ ) {
@@ -278,12 +279,16 @@ public class TratadorArquivoRemessa {
         }
         return linha;
     }
-
+    
     static String tratarLinhaP( String linha ) {
-        return linha.replaceAll( "13003087-0", "0130030879" );
-
+        return linha.replaceAll( "13003087-0", "0130030879" )
+                .substring( 0, 139 ).concat( "99" ).concat( linha.substring( 141 ) );
     }
 
+    static String tratarLinhaR( String linha ) {
+        return linha.substring( 0, 86 ).concat( "200" ).concat( linha.substring( 89 ) );
+    }
+    
     static void validarLinhas( StringBuilder arquivo ) {
         int cont = 0;
         String str = arquivo.toString();
@@ -298,7 +303,7 @@ public class TratadorArquivoRemessa {
             }
         }
     }
-
+    
     static boolean isArquivoValidado( StringBuilder arquivo ) {
         try {
             validarLinhas( arquivo );
