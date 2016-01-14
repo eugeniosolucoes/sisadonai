@@ -1,0 +1,4 @@
+[EMAIL--------------------------------------------];[DATA------];[HORA------];[STATUS-----------------------------]
+ageniws@gmail.com                                  ; 14/01/2016 ; 08:37:10   ; Envio com sucesso!  
+ageniws@gmail.com                                  ; 14/01/2016 ; 08:37:19   ; Envio com sucesso!  
+ageniws@gmail.com                                  ; 14/01/2016 ; 08:37:26   ; Envio com sucesso!  

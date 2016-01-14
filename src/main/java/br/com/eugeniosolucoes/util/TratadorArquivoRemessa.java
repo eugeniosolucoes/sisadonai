@@ -284,7 +284,7 @@ public class TratadorArquivoRemessa {
         return linha.replaceAll( "13003087-0", "0130030879" )
                 .substring( 0, 139 ).concat( "99" )
                 .concat( linha.substring( 141 ) )
-                .substring( 0, 116 )
+                .substring( 0, 117 )
                 .concat( "2" ).concat( linha.substring( 118 ) );
     }
 
