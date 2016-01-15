@@ -281,11 +281,12 @@ public class TratadorArquivoRemessa {
     }
 
     static String tratarLinhaP( String linha ) {
+        String dataVencimento = linha.substring( 77, 85 );
         return linha.replaceAll( "13003087-0", "0130030879" )
                 .substring( 0, 139 ).concat( "99" )
                 .concat( linha.substring( 141 ) )
                 .substring( 0, 117 )
-                .concat( "2" ).concat( linha.substring( 118 ) );
+                .concat( "2" ).concat( dataVencimento.concat( linha.substring( 126 ) ) );
     }
 
     static String tratarLinhaR( String linha ) {
