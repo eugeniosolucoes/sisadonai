@@ -35,6 +35,7 @@
 <currentDirectory>.</currentDirectory>
 <embeddedJar>false</embeddedJar>
 <executableName>sisadonai.exe</executableName>
+<iconLocation>src\main\resources\imagens\adonai.gif</iconLocation>
 <initialMemoryHeap>-1</initialMemoryHeap>
 <mainClassName>br.com.eugeniosolucoes.app.Main</mainClassName>
 <maximumMemoryHeap>-1</maximumMemoryHeap>
