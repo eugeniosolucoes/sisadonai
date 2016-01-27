@@ -291,7 +291,7 @@ public class TratadorArquivoRemessa {
 
     static String tratarLinhaR( String linha ) {
         return linha
-                .substring( 0, 64 ).concat( "2" )
+                .substring( 0, 65 ).concat( "2" )
                 .concat( linha.substring( 66 ) )                
                 .substring( 0, 86 ).concat( "200" ).concat( linha.substring( 89 ) );
     }
