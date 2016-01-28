@@ -5,6 +5,8 @@
  */
 package br.com.eugeniosolucoes.util;
 
+import br.com.eugeniosolucoes.repository.ArquivoRemessaRepository;
+import br.com.eugeniosolucoes.repository.impl.ArquivoRemessaRepositoryImpl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -173,6 +175,8 @@ public class TratadorArquivoRemessa {
     
     static final int TAMANHO = 240;
     
+    ArquivoRemessaRepository repository = new ArquivoRemessaRepositoryImpl();
+    
     public String corrigirArquivo( File file ) {
         StringBuilder arquivo = new StringBuilder();
         int cont = 0;
@@ -187,6 +191,8 @@ public class TratadorArquivoRemessa {
                     arquivo.append( String.format( "%s%n", tratarLinhaP( linha ) ) );
                 } else if ( linha.charAt( 13 ) == 'R' ) {
                     arquivo.append( String.format( "%s%n", tratarLinhaR( linha ) ) );
+                } else if ( linha.charAt( 13 ) == 'Q' ) {
+                    arquivo.append( String.format( "%s%n", tratarLinhaQ( linha ) ) );                    
                 } else {
                     arquivo.append( String.format( "%s%n", linha ) );
                 }
@@ -288,12 +294,18 @@ public class TratadorArquivoRemessa {
                 .substring( 0, 135 ).concat( "1" )
                 .concat( linha.substring( 136 ) );
     }
-
+    
     static String tratarLinhaR( String linha ) {
         return linha
                 .substring( 0, 65 ).concat( "2" )
-                .concat( linha.substring( 66 ) )                
+                .concat( linha.substring( 66 ) )
                 .substring( 0, 86 ).concat( "200" ).concat( linha.substring( 89 ) );
+    }
+    
+    String tratarLinhaQ( String linha ) {
+        String cpf = recuperarCampo( linha, 23, 34 );
+        String cep = repository.retornarCepDoAluno( cpf );
+        return linha.substring( 0, 128 ).concat( cep ).concat( linha.substring( 136 ) );
     }
     
     static void validarLinhas( StringBuilder arquivo ) {
@@ -320,4 +332,5 @@ public class TratadorArquivoRemessa {
         }
         return true;
     }
+    
 }
