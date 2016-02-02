@@ -6,34 +6,57 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="jMenuTesouraria">
           <Properties>
+            <Property name="mnemonic" type="int" value="84"/>
             <Property name="text" type="java.lang.String" value="Tesouraria"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="mItemPrepararArqRemessa">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Preparar Arquivo de Remessa"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mItemPrepararArqRemessaActionPerformed"/>
-              </Events>
-            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mItemEnvioBoletos">
               <Properties>
+                <Property name="mnemonic" type="int" value="66"/>
                 <Property name="text" type="java.lang.String" value="Envio de Boletos"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mItemEnvioBoletosActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="mItemPrepararArqRemessa">
+              <Properties>
+                <Property name="mnemonic" type="int" value="80"/>
+                <Property name="text" type="java.lang.String" value="Preparar Arquivo de Remessa"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mItemPrepararArqRemessaActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="jMenuAjuda">
+          <Properties>
+            <Property name="mnemonic" type="int" value="65"/>
+            <Property name="text" type="java.lang.String" value="Ajuda"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="mItemSobreEnvioDeBoletos">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Sobre o Envio de Boletos"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="mItemSobreArquivoRemessa">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Sobre Preparar Arquivo de Remessa"/>
+              </Properties>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenuSistema">
           <Properties>
+            <Property name="mnemonic" type="int" value="83"/>
             <Property name="text" type="java.lang.String" value="Sistema"/>
           </Properties>
           <SubComponents>
             <Menu class="javax.swing.JMenu" name="jMenuConfiguracoes">
               <Properties>
+                <Property name="mnemonic" type="int" value="67"/>
                 <Property name="text" type="java.lang.String" value="Configura&#xe7;&#xf5;es"/>
               </Properties>
               <SubComponents>
@@ -51,6 +74,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mItemSair">
               <Properties>
+                <Property name="mnemonic" type="int" value="114"/>
                 <Property name="text" type="java.lang.String" value="Sair"/>
               </Properties>
               <Events>
