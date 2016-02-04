@@ -17,6 +17,8 @@ import javax.swing.UIManager;
  */
 public class BaseForm extends JFrame {
 
+    
+    static final String SYSTEM_TITLE = "Sistema ADONAI 1.0";
     static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "dd/MM/yyyy", new Locale( "pt", "BR" ) );
 
     public BaseForm() {
@@ -25,7 +27,7 @@ public class BaseForm extends JFrame {
     }
 
     final void setupView() {
-        setTitle( "Sistema ADONAI 1.0" );
+        setTitle( SYSTEM_TITLE );
         try {
             javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
         } catch ( ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex ) {
