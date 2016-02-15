@@ -20,5 +20,5 @@ Compile time: 0 minutes, 0 seconds
 8	Graphics
 
 
-Created c:\Documents and Settings\eugenio\Meus documentos\NetBeansProjects\sisadonai\src\test\resources\doc\sisadonai.chm, 539,865 bytes
-Compression decreased file by 9,047 bytes.
+Created c:\Documents and Settings\eugenio\Meus documentos\NetBeansProjects\sisadonai\src\test\resources\doc\sisadonai.chm, 539,813 bytes
+Compression decreased file by 9,221 bytes.
