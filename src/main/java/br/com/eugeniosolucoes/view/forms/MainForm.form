@@ -30,24 +30,6 @@
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenuAjuda">
-          <Properties>
-            <Property name="mnemonic" type="int" value="65"/>
-            <Property name="text" type="java.lang.String" value="Ajuda"/>
-          </Properties>
-          <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="mItemSobreEnvioDeBoletos">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Sobre o Envio de Boletos"/>
-              </Properties>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="mItemSobreArquivoRemessa">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Sobre Preparar Arquivo de Remessa"/>
-              </Properties>
-            </MenuItem>
-          </SubComponents>
-        </Menu>
         <Menu class="javax.swing.JMenu" name="jMenuSistema">
           <Properties>
             <Property name="mnemonic" type="int" value="83"/>

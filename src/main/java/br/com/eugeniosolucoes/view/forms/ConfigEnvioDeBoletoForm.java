@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
  *
  * @author eugenio
  */
-public class ConfigEnvioDeBoletoForm extends JDialog {
+public class ConfigEnvioDeBoletoForm extends BaseDialog {
 
     private Remetente obj;
 
@@ -37,6 +37,7 @@ public class ConfigEnvioDeBoletoForm extends JDialog {
     public ConfigEnvioDeBoletoForm( Frame owner, String title, boolean modal ) {
         super( owner, title, modal );
         initComponents();
+        mostrarAjuda( this.tabEmail  );
         obj = new Remetente();
         retornarRemetente();
     }

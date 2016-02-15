@@ -38,6 +38,7 @@ public class MainForm extends BaseForm {
     }
 
     private void setup() {
+        mostrarAjuda( jpConteudo );
         exibirModoTeste();
         setExtendedState( MAXIMIZED_BOTH );
         try {
@@ -68,9 +69,6 @@ public class MainForm extends BaseForm {
         jMenuTesouraria = new javax.swing.JMenu();
         mItemEnvioBoletos = new javax.swing.JMenuItem();
         mItemPrepararArqRemessa = new javax.swing.JMenuItem();
-        jMenuAjuda = new javax.swing.JMenu();
-        mItemSobreEnvioDeBoletos = new javax.swing.JMenuItem();
-        mItemSobreArquivoRemessa = new javax.swing.JMenuItem();
         jMenuSistema = new javax.swing.JMenu();
         jMenuConfiguracoes = new javax.swing.JMenu();
         mItemConfigEnvioDeBoletos = new javax.swing.JMenuItem();
@@ -114,17 +112,6 @@ public class MainForm extends BaseForm {
         jMenuTesouraria.add(mItemPrepararArqRemessa);
 
         jMenuBarMain.add(jMenuTesouraria);
-
-        jMenuAjuda.setMnemonic('A');
-        jMenuAjuda.setText("Ajuda");
-
-        mItemSobreEnvioDeBoletos.setText("Sobre o Envio de Boletos");
-        jMenuAjuda.add(mItemSobreEnvioDeBoletos);
-
-        mItemSobreArquivoRemessa.setText("Sobre Preparar Arquivo de Remessa");
-        jMenuAjuda.add(mItemSobreArquivoRemessa);
-
-        jMenuBarMain.add(jMenuAjuda);
 
         jMenuSistema.setMnemonic('S');
         jMenuSistema.setText("Sistema");
@@ -222,7 +209,6 @@ public class MainForm extends BaseForm {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenuAjuda;
     private javax.swing.JMenuBar jMenuBarMain;
     private javax.swing.JMenu jMenuConfiguracoes;
     private javax.swing.JMenu jMenuSistema;
@@ -233,7 +219,5 @@ public class MainForm extends BaseForm {
     private javax.swing.JMenuItem mItemEnvioBoletos;
     private javax.swing.JMenuItem mItemPrepararArqRemessa;
     private javax.swing.JMenuItem mItemSair;
-    private javax.swing.JMenuItem mItemSobreArquivoRemessa;
-    private javax.swing.JMenuItem mItemSobreEnvioDeBoletos;
     // End of variables declaration//GEN-END:variables
 }

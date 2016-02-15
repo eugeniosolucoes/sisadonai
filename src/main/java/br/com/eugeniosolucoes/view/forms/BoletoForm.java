@@ -32,7 +32,7 @@ import net.sf.jasperreports.view.JasperViewer;
  *
  * @author eugenio
  */
-public class BoletoForm extends JDialog {
+public class BoletoForm extends BaseDialog {
 
     static final Logger LOG = Logger.getLogger( BoletoForm.class.getName() );
 
@@ -41,7 +41,7 @@ public class BoletoForm extends JDialog {
     private DadosBoletoFiltroModel boletoFiltroModel;
 
     private List<DadosBoletoModel> boletoModel;
-
+    
     /**
      * Creates new form View1
      *
@@ -53,6 +53,7 @@ public class BoletoForm extends JDialog {
         super( owner, title, modal );
         carregarFiltros();
         initComponents();
+        mostrarAjuda( plConteudo );
         jpbEnvio.setVisible( false );
         listarBoletos();
         adicionarListeners();

@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="KEL CHM Creator v.1.4.0.0">
+<!-- Sitemap 1.0 -->
+</HEAD>
+<BODY>
+<OBJECT type="text/site properties">
+	<param name="ImageType" value="Book">
+	<param name="Window Styles" value="0x27">
+	<param name="ExWindow Styles" value="0x100">
+	<param name="comment" value="title:Online Help">
+	<param name="comment" value="base:index.htm">
+</OBJECT>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="SisAdonai">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Envio de boletos">
+			<param name="Local" value="Help-SisAdonai-Envio-de-boletos.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Preparar Arquivo Remessa">
+			<param name="Local" value="Help-SisAdonai-Preparar-Arquivo-Remessa.htm">
+			</OBJECT>
+	</UL>
+</UL>
+</BODY>
+</HTML>
