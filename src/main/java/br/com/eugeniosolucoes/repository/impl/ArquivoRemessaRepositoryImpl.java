@@ -6,7 +6,6 @@
 package br.com.eugeniosolucoes.repository.impl;
 
 import br.com.eugeniosolucoes.repository.ArquivoRemessaRepository;
-import br.com.eugeniosolucoes.util.MyStrings;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

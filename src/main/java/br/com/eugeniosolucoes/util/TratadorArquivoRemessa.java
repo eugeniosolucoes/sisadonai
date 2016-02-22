@@ -5,6 +5,7 @@
  */
 package br.com.eugeniosolucoes.util;
 
+import br.com.eugeniosolucoes.excecoes.CepException;
 import br.com.eugeniosolucoes.repository.ArquivoRemessaRepository;
 import br.com.eugeniosolucoes.repository.impl.ArquivoRemessaRepositoryImpl;
 import java.io.File;
@@ -192,7 +193,10 @@ public class TratadorArquivoRemessa {
                 } else if ( linha.charAt( 13 ) == 'R' ) {
                     arquivo.append( String.format( "%s%n", tratarLinhaR( linha ) ) );
                 } else if ( linha.charAt( 13 ) == 'Q' ) {
-                    arquivo.append( String.format( "%s%n", tratarLinhaQ( linha ) ) );                    
+                    try {
+                        arquivo.append( String.format( "%s%n", tratarLinhaQ( linha ) ) );                    
+                    } catch ( Exception e ) {
+                    }
                 } else {
                     arquivo.append( String.format( "%s%n", linha ) );
                 }
@@ -302,9 +306,12 @@ public class TratadorArquivoRemessa {
                 .substring( 0, 86 ).concat( "200" ).concat( linha.substring( 89 ) );
     }
     
-    String tratarLinhaQ( String linha ) {
+    String tratarLinhaQ( String linha ) throws CepException {
         String cpf = recuperarCampo( linha, 23, 34 );
         String cep = repository.retornarCepDoAluno( cpf );
+        if( MyStrings.isNullOrEmpty( cep ) || cep.length() != 8 ) {
+            throw new CepException("CEP inválido: " + cep );
+        }
         return linha.substring( 0, 128 ).concat( cep ).concat( linha.substring( 136 ) );
     }
     

@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -187,7 +188,6 @@ public class MainForm extends BaseForm {
                 MyStrings.exibeMensagem( String.format( "Arquivo de Remessa preparado com sucesso!%nLocal: %s", nomeArquivo ) );
             } catch ( Exception ex ) {
                 LOG.log( Level.SEVERE, ex.getMessage(), ex );
-                MyStrings.exibeMensagem( ex.getMessage() );
             }
         }
     }//GEN-LAST:event_mItemPrepararArqRemessaActionPerformed
