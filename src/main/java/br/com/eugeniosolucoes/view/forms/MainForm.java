@@ -184,12 +184,14 @@ public class MainForm extends BaseForm {
         if ( r == JFileChooser.APPROVE_OPTION ) {
             try {
                 //txtListaDeEmail.setText( arquivo.getSelectedFile().getCanonicalPath() );
+                JOptionPane.showMessageDialog( this, "Favor aguardar a geração do arquivo!" , this.getTitle(), JOptionPane.INFORMATION_MESSAGE );
                 TratadorArquivoRemessa tar = new TratadorArquivoRemessa();
                 File f = arquivo.getSelectedFile();
                 String conteudo = tar.corrigirArquivo( f );
                 String nomeArquivo = tar.criarNovoArquivo( f.getCanonicalPath(), conteudo );
                 MyStrings.exibeMensagem( String.format( "Arquivo de Remessa preparado com sucesso!%nLocal: %s", nomeArquivo ) );
             } catch ( Exception ex ) {
+                JOptionPane.showMessageDialog( this, "Houve erro ao gerar o arquivo!\nSerá exibido o arquivo de log com os problemas!" , this.getTitle(), JOptionPane.ERROR_MESSAGE );
                 exibirLogErroRemessa( ex );
             }
         }
