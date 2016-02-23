@@ -9,11 +9,13 @@ import br.com.eugeniosolucoes.app.Main;
 import br.com.eugeniosolucoes.util.MyFilter;
 import br.com.eugeniosolucoes.util.MyStrings;
 import br.com.eugeniosolucoes.util.TratadorArquivoRemessa;
+import java.awt.Desktop;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +23,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.joda.time.LocalDateTime;
 
 /**
  *
@@ -187,10 +190,25 @@ public class MainForm extends BaseForm {
                 String nomeArquivo = tar.criarNovoArquivo( f.getCanonicalPath(), conteudo );
                 MyStrings.exibeMensagem( String.format( "Arquivo de Remessa preparado com sucesso!%nLocal: %s", nomeArquivo ) );
             } catch ( Exception ex ) {
-                LOG.log( Level.SEVERE, ex.getMessage(), ex );
+                exibirLogErroRemessa( ex );
             }
         }
     }//GEN-LAST:event_mItemPrepararArqRemessaActionPerformed
+
+    private void exibirLogErroRemessa( Exception ex ) {
+        try {
+            LOG.log( Level.SEVERE, ex.getMessage(), ex );
+            String nomeArquivoLog = String.format( "log-arquivo-remessa%s.txt", TratadorArquivoRemessa.SUFIXO_ARQUIVO_LOG.format( LocalDateTime.now().toDate() ) );
+            try ( FileWriter writer = new FileWriter( nomeArquivoLog ) ) {
+                writer.append( ex.getMessage() );
+            } catch ( IOException ex1 ) {
+                LOG.log( Level.SEVERE, ex.getMessage(), ex1 );
+            }
+            Desktop.getDesktop().open( new File( nomeArquivoLog ));
+        } catch ( IOException ex1 ) {
+            LOG.log( Level.SEVERE, ex.getMessage(), ex1 );
+        }
+    }
 
     private void resizeBackGround() throws IOException {
         BufferedImage image = ImageIO.read( getClass().getResourceAsStream( "/imagens/background.jpg" ) );

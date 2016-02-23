@@ -5,6 +5,7 @@
  */
 package br.com.eugeniosolucoes.util;
 
+import br.com.eugeniosolucoes.excecoes.TamanhoLinhaException;
 import br.com.eugeniosolucoes.excecoes.CepException;
 import br.com.eugeniosolucoes.repository.ArquivoRemessaRepository;
 import br.com.eugeniosolucoes.repository.impl.ArquivoRemessaRepositoryImpl;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -167,38 +169,44 @@ public class TratadorArquivoRemessa {
      * @throws java.io.FileNotFoundException
      */
     private static final Logger LOG = Logger.getLogger( TratadorArquivoRemessa.class.getName() );
-    
+
     static final String INICIO_COD_TRANSMISSAO = "34510";
-    
+
     static final String CONTA_CORRENTE = "013003087";
-    
+
     static final String DIGITO_CONTA_CORRENTE = "9";
-    
+
     static final int TAMANHO = 240;
     
+    public static final SimpleDateFormat SUFIXO_ARQUIVO_LOG = new SimpleDateFormat( "_yyyyMMdd_HHmmss" );
+
     ArquivoRemessaRepository repository = new ArquivoRemessaRepositoryImpl();
-    
+
     public String corrigirArquivo( File file ) {
         StringBuilder arquivo = new StringBuilder();
+        StringBuilder erro = new StringBuilder();
         int cont = 0;
         try ( Scanner scanner = new Scanner( file ) ) {
             while (scanner.hasNextLine()) {
                 String linha = scanner.nextLine();
-                if ( cont == 0 ) {
-                    arquivo.append( String.format( "%s%n", tratarLinha1( linha ) ) );
-                } else if ( cont == 1 ) {
-                    arquivo.append( String.format( "%s%n", tratarLinha2( linha ) ) );
-                } else if ( linha.charAt( 13 ) == 'P' ) {
-                    arquivo.append( String.format( "%s%n", tratarLinhaP( linha ) ) );
-                } else if ( linha.charAt( 13 ) == 'R' ) {
-                    arquivo.append( String.format( "%s%n", tratarLinhaR( linha ) ) );
-                } else if ( linha.charAt( 13 ) == 'Q' ) {
-                    try {
-                        arquivo.append( String.format( "%s%n", tratarLinhaQ( linha ) ) );                    
-                    } catch ( Exception e ) {
+                try {
+                    if ( cont == 0 ) {
+                        adicionarLinha( arquivo, tratarLinha1( linha ) );
+                    } else if ( cont == 1 ) {
+                        adicionarLinha( arquivo, tratarLinha2( linha ) );
+                    } else if ( linha.charAt( 13 ) == 'P' ) {
+                        adicionarLinha( arquivo, tratarLinhaP( linha ) );
+                    } else if ( linha.charAt( 13 ) == 'R' ) {
+                        adicionarLinha( arquivo, tratarLinhaR( linha ) );
+                    } else if ( linha.charAt( 13 ) == 'Q' ) {
+                        adicionarLinha( arquivo, tratarLinhaQ( linha ) );
+                    } else {
+                        adicionarLinha( arquivo, linha );
                     }
-                } else {
-                    arquivo.append( String.format( "%s%n", linha ) );
+                } catch ( TamanhoLinhaException e ) {
+                    adicionarLinhaErroTamanho( erro, cont + 1 );
+                } catch ( CepException ex ) {
+                    adicionarLinhaErroCep( erro, cont + 1 );
                 }
                 cont++;
             }
@@ -207,9 +215,28 @@ public class TratadorArquivoRemessa {
             throw new IllegalStateException( "Arquivo não encontrado!" );
         }
         showSizeLine( arquivo );
+        if ( !erro.toString().isEmpty() ) {
+            throw new IllegalStateException( erro.toString() );
+        }
         return arquivo.toString();
     }
-    
+
+    private void adicionarLinha( StringBuilder arquivo, String linhaTratada ) throws TamanhoLinhaException {
+        System.out.println( linhaTratada.length() );
+        if ( linhaTratada.length() != TAMANHO ) {
+            throw new TamanhoLinhaException();
+        }
+        arquivo.append( String.format( "%s%n", linhaTratada ) );
+    }
+
+    private void adicionarLinhaErroTamanho( StringBuilder erro, int linha ) {
+        erro.append( String.format( "Linha nº - %d: Não possui 240 colunas.%n", linha ) );
+    }
+
+    private void adicionarLinhaErroCep( StringBuilder erro, int linha ) {
+        erro.append( String.format( "Linha nº - %d: CEP inválido.%n", linha ) );
+    }
+
     static void showSizeLine( StringBuilder arquivo ) {
         int cont = 0;
         String str = arquivo.toString();
@@ -219,7 +246,7 @@ public class TratadorArquivoRemessa {
             System.out.printf( "%2s %s%n", cont++, linha.length() );
         }
     }
-    
+
     public String criarNovoArquivo( String arquivo, String conteudo ) throws IOException {
         String nomeArquivo = tratarNomeArquivo( arquivo );
         if ( arquivo != null ) {
@@ -231,16 +258,16 @@ public class TratadorArquivoRemessa {
         }
         return nomeArquivo;
     }
-    
+
     static String tratarNomeArquivo( String nome ) {
         int indice = nome.lastIndexOf( ".txt" );
         return nome.substring( 0, indice ).concat( "-sisadonai.txt" );
     }
-    
+
     static String recuperarCampo( String linha, int i, int f ) {
         return linha.substring( i - 1, f - 1 );
     }
-    
+
     static void imprimirMarcadores() {
         int cont = 1;
         for ( int i = 1; i <= TAMANHO; i++ ) {
@@ -289,7 +316,7 @@ public class TratadorArquivoRemessa {
         }
         return linha;
     }
-    
+
     static String tratarLinhaP( String linha ) {
         String dataVencimento = linha.substring( 77, 85 );
         return linha.replaceAll( "13003087-0", "0130030879" )
@@ -298,23 +325,23 @@ public class TratadorArquivoRemessa {
                 .substring( 0, 135 ).concat( "1" )
                 .concat( linha.substring( 136 ) );
     }
-    
+
     static String tratarLinhaR( String linha ) {
         return linha
                 .substring( 0, 65 ).concat( "2" )
                 .concat( linha.substring( 66 ) )
                 .substring( 0, 86 ).concat( "200" ).concat( linha.substring( 89 ) );
     }
-    
+
     String tratarLinhaQ( String linha ) throws CepException {
         String cpf = recuperarCampo( linha, 23, 34 );
         String cep = repository.retornarCepDoAluno( cpf );
-        if( MyStrings.isNullOrEmpty( cep ) || cep.length() != 8 ) {
-            throw new CepException("CEP inválido: " + cep );
+        if ( MyStrings.isNullOrEmpty( cep ) || cep.length() != 8 ) {
+            throw new CepException( "CEP inválido: " + cep );
         }
         return linha.substring( 0, 128 ).concat( cep ).concat( linha.substring( 136 ) );
     }
-    
+
     static void validarLinhas( StringBuilder arquivo ) {
         int cont = 0;
         String str = arquivo.toString();
@@ -329,7 +356,7 @@ public class TratadorArquivoRemessa {
             }
         }
     }
-    
+
     static boolean isArquivoValidado( StringBuilder arquivo ) {
         try {
             validarLinhas( arquivo );
@@ -339,5 +366,5 @@ public class TratadorArquivoRemessa {
         }
         return true;
     }
-    
+
 }
