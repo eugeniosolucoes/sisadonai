@@ -13,4 +13,5 @@ public interface ArquivoRemessaRepository {
 
     String retornarCepDoAluno( String cpf );
 
+    void validarEnderecoDoAluno( String cpf );
 }

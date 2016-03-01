@@ -130,6 +130,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                 sb.append( "AND ( m.Codigo_PFisica LIKE ? OR pf.Nome_PFisica LIKE ? ) " );
             }
             sb.append( "AND m.`Codigo_Situacao_Aluno` = '01' " );
+            sb.append( "AND mens.`Codigo_Situacao_Mensalidade` = '1' " );
             sb.append( "ORDER BY pf.`Nome_PFisica`; " );
             ps = con.prepareStatement( sb.toString() );
             ps.setInt( 1, Integer.valueOf( boletoFiltroDTO.getAno() ) );
