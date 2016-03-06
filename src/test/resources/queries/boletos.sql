@@ -48,7 +48,7 @@ WHERE 1 = 1
 AND YEAR(mens.`Data_Vencimento`) = 2016 
 AND tu.`Codigo_Turma` = '020'
 AND m.`Codigo_Situacao_Aluno` = '01' 
-AND mens.`Codigo_Situacao_Mensalidade` = '1'
+AND mens.`Codigo_Situacao_Mensalidade` = '1' 
 AND MONTH(mens.`Data_Vencimento`) = 3
 ORDER BY pf.`Nome_PFisica`;
 
