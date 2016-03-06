@@ -108,7 +108,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "INNER JOIN `Cursos` c ON c.`Codigo_Curso` = m.`Codigo_Curso`) " );
             sb.append( "INNER JOIN `Series` s ON s.`Codigo_Serie` = m.`Codigo_Serie`) " );
             sb.append( "INNER JOIN `Turnos` t ON t.`Codigo_Turno` = m.`Codigo_Turno`) " );
-            sb.append( "INNER JOIN `EmailSitePFisicas` epf ON epf.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
+            sb.append( "LEFT JOIN `EmailSitePFisicas` epf ON epf.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
             sb.append( "INNER JOIN `TurmasEscola` tu ON tu.`Codigo_Curso` = c.`Codigo_Curso` AND tu.`Codigo_Serie`= s.`Codigo_Serie` AND tu.`Codigo_Turno` = t.`Codigo_Turno`) " );
             sb.append( "INNER JOIN `Mensalidades` mens ON mens.`Codigo_Periodo_Letivo` = pl.`Codigo_Periodo_Letivo`  " );
             sb.append( "AND mens.`Codigo_Curso` = c.`Codigo_Curso`  " );
@@ -130,6 +130,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                 sb.append( "AND ( m.Codigo_PFisica LIKE ? OR pf.Nome_PFisica LIKE ? ) " );
             }
             sb.append( "AND m.`Codigo_Situacao_Aluno` = '01' " );
+            sb.append( "AND mens.`Codigo_Situacao_Mensalidade` = '1' " );
             sb.append( "ORDER BY pf.`Nome_PFisica`; " );
             ps = con.prepareStatement( sb.toString() );
             ps.setInt( 1, Integer.valueOf( boletoFiltroDTO.getAno() ) );
@@ -162,6 +163,64 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                                 rs.getString( "Sigla_Estado" ),
                                 rs.getString( "CEP_Endereco" )
                         ), rs.getString( "Email_Site" ) ) );
+            }
+            return list;
+        } catch ( SQLException ex ) {
+            LOG.log( Level.SEVERE, null, ex );
+        } finally {
+            repository.fechar( con, ps, rs );
+        }
+        return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public List<DadosBoletoModel> listarAlunosPorTurma( DadosBoletoFiltroModel boletoFiltroDTO ) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = repository.getConnection();
+            StringBuilder sb = new StringBuilder();
+            sb.append( "SELECT DISTINCT " );
+            sb.append( "    dp.`CPF_PFisica`, " );
+            sb.append( "    pf.`Nome_PFisica`, " );
+            sb.append( "    pf.`Codigo_PFisica`, " );
+            sb.append( "    tu.`Nome_Turma`, " );
+            sb.append( "    m.`Codigo_Situacao_Aluno` " );
+            sb.append( "FROM ((((((((`PFisicas` pf " );
+            sb.append( "INNER JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
+            sb.append( "INNER JOIN `Matriculas` m ON m.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
+            sb.append( "INNER JOIN `PeriodosLetivos` pl ON pl.`Codigo_Periodo_Letivo` = m.`Codigo_Periodo_Letivo`) " );
+            sb.append( "INNER JOIN `Cursos` c ON c.`Codigo_Curso` = m.`Codigo_Curso`) " );
+            sb.append( "INNER JOIN `Series` s ON s.`Codigo_Serie` = m.`Codigo_Serie`) " );
+            sb.append( "INNER JOIN `Turnos` t ON t.`Codigo_Turno` = m.`Codigo_Turno`) " );
+            sb.append( "INNER JOIN `TurmasEscola` tu ON tu.`Codigo_Curso` = c.`Codigo_Curso` AND tu.`Codigo_Serie`= s.`Codigo_Serie` AND tu.`Codigo_Turno` = t.`Codigo_Turno`) " );
+            sb.append( "INNER JOIN `Mensalidades` mens ON mens.`Codigo_Periodo_Letivo` = pl.`Codigo_Periodo_Letivo`   " );
+            sb.append( "AND mens.`Codigo_Curso` = c.`Codigo_Curso`  " );
+            sb.append( "AND mens.`Codigo_Serie` = s.`Codigo_Serie`  " );
+            sb.append( "AND mens.`Codigo_PFisica` = pf.`Codigo_PFisica` ) " );
+            sb.append( "WHERE 1 = 1  " );
+            sb.append( "AND tu.`Codigo_Turma` = ? " );
+            sb.append( "AND YEAR(mens.`Data_Vencimento`) = ? " );
+            sb.append( "AND MONTH(mens.`Data_Vencimento`) = ? " );
+            sb.append( "AND m.`Codigo_Situacao_Aluno` = '01' " );
+            sb.append( "ORDER BY pf.`Nome_PFisica`;" );
+
+            ps = con.prepareStatement( sb.toString() );
+            ps.setString( 1, boletoFiltroDTO.getTurma() );
+            ps.setInt( 2, Integer.valueOf( boletoFiltroDTO.getAno() ) );
+            ps.setInt( 3, boletoFiltroDTO.getMeses().indexOf( boletoFiltroDTO.getMes() ) + 1 );
+
+            rs = ps.executeQuery();
+            List<DadosBoletoModel> list = new ArrayList<>();
+            while (rs.next()) {
+                DadosBoletoModel dadosBoletoModel = new DadosBoletoModel();
+                dadosBoletoModel.setCpf( rs.getString( "CPF_PFisica" ) );
+                dadosBoletoModel.setAluno( rs.getString( "Nome_PFisica" ) );
+                dadosBoletoModel.setMatricula( rs.getString( "Codigo_PFisica" ) );
+                dadosBoletoModel.setTurma( rs.getString( "Nome_Turma" ) );
+
+                list.add( dadosBoletoModel );
             }
             return list;
         } catch ( SQLException ex ) {

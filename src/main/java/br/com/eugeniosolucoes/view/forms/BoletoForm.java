@@ -450,6 +450,11 @@ public class BoletoForm extends BaseDialog {
             LOG.log( Level.SEVERE, e.getMessage(), e );
         }
         configurarTabela();
+        try {
+            service.validarListaDeBoletos( boletoModel );
+        } catch ( Exception e ) {
+            JOptionPane.showMessageDialog( this, e.getMessage() );
+        }
     }
 
     private Object[][] getDados() {

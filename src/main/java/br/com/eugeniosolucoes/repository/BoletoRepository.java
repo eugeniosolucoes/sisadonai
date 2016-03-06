@@ -21,4 +21,5 @@ public interface BoletoRepository {
 
     List<DadosBoletoModel> listarBoletos( DadosBoletoFiltroModel boletoFiltroDTO );
 
+    List<DadosBoletoModel> listarAlunosPorTurma( DadosBoletoFiltroModel boletoFiltroDTO );    
 }

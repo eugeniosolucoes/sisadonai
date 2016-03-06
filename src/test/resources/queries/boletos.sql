@@ -30,7 +30,7 @@ INNER JOIN `PeriodosLetivos` pl ON pl.`Codigo_Periodo_Letivo` = m.`Codigo_Period
 INNER JOIN `Cursos` c ON c.`Codigo_Curso` = m.`Codigo_Curso`)
 INNER JOIN `Series` s ON s.`Codigo_Serie` = m.`Codigo_Serie`)
 INNER JOIN `Turnos` t ON t.`Codigo_Turno` = m.`Codigo_Turno`)
-INNER JOIN `EmailSitePFisicas` epf ON epf.`Codigo_PFisica` = pf.`Codigo_PFisica` )
+LEFT JOIN `EmailSitePFisicas` epf ON epf.`Codigo_PFisica` = pf.`Codigo_PFisica` )
 INNER JOIN `TurmasEscola` tu ON tu.`Codigo_Curso` = c.`Codigo_Curso` AND tu.`Codigo_Serie`= s.`Codigo_Serie` AND tu.`Codigo_Turno` = t.`Codigo_Turno`)
 INNER JOIN `Mensalidades` mens ON mens.`Codigo_Periodo_Letivo` = pl.`Codigo_Periodo_Letivo`  
 AND mens.`Codigo_Curso` = c.`Codigo_Curso` 
@@ -45,9 +45,10 @@ INNER JOIN `Estados` est ON est.`Codigo_Estado` = ep.`Codigo_Estado`  )
 INNER JOIN `Cidades` cid ON cid.`Codigo_Cidade` = ep.`Codigo_Cidade` AND cid.`Codigo_Estado` = ep.`Codigo_Estado` )
 LEFT  JOIN `Bairros` bai ON bai.`Codigo_Bairro` = ep.`Codigo_Bairro` AND bai.`Codigo_Cidade` = ep.`Codigo_Cidade` AND bai.`Codigo_Estado` = ep.`Codigo_Estado` )
 WHERE 1 = 1 
-AND YEAR(mens.`Data_Vencimento`) = 2015 
-AND tu.`Codigo_Turma` = '008'
+AND YEAR(mens.`Data_Vencimento`) = 2016 
+AND tu.`Codigo_Turma` = '020'
 AND m.`Codigo_Situacao_Aluno` = '01' 
-AND MONTH(mens.`Data_Vencimento`) = 12
+AND mens.`Codigo_Situacao_Mensalidade` = '1'
+AND MONTH(mens.`Data_Vencimento`) = 3
 ORDER BY pf.`Nome_PFisica`;
 

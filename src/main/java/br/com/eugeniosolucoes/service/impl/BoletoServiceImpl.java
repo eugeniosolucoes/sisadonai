@@ -15,6 +15,7 @@ import br.com.eugeniosolucoes.repository.BoletoRepository;
 import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
 import br.com.eugeniosolucoes.service.BoletoService;
 import br.com.eugeniosolucoes.util.MyGeradorDeBoleto;
+import br.com.eugeniosolucoes.util.MyStrings;
 import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.io.InputStream;
@@ -184,7 +185,6 @@ public class BoletoServiceImpl implements BoletoService {
 //                ( dados.getValor() * dados.getPercentualJuros() / 100 ),
 //                ( dados.getValor() * dados.getPercentualMulta() / 100 ) );
 //    }
-
     private static String criarInstrucao1( DadosBoletoModel dados ) {
         return String.format( "Após %s cobrar: Juros de Mora de 1%% Mensal / "
                 + "Multa de 2,00%% ",
@@ -205,4 +205,41 @@ public class BoletoServiceImpl implements BoletoService {
                 dados.getQuantidadeMensalidade(),
                 dados.getValor() );
     }
+
+    @Override
+    public void validarListaDeBoletos( List<DadosBoletoModel> dados ) {
+        StringBuilder sb = new StringBuilder();
+        for ( DadosBoletoModel model : dados ) {
+            Map<String, String> parametros = new HashMap<>();
+            if ( MyStrings.isNullOrEmpty( model.getEmail() ) || !MyStrings.validarEmail( model.getEmail() ) ) {
+                parametros.put( "EMAIL", " E-mail: inválido!" );
+            }
+            if ( MyStrings.isNullOrEmpty( model.getEndereco().getCep() ) || !MyStrings.validarCEP( model.getEndereco().getCep() ) ) {
+                parametros.put( "CEP", " CEP: inválido!" );
+            }
+            if ( MyStrings.isNullOrEmpty( model.getEndereco().getLogradouro() ) ) {
+                parametros.put( "ENDERECO", " Endereço: Não informado!" );
+            }
+            if ( MyStrings.isNullOrEmpty( model.getEndereco().getBairro() ) ) {
+                parametros.put( "BAIRRO", " Bairro: Não informado!" );
+            }
+            if ( MyStrings.isNullOrEmpty( model.getEndereco().getCidade() ) ) {
+                parametros.put( "CIDADE", " Cidade: Não informado!" );
+            }
+            if ( MyStrings.isNullOrEmpty( model.getEndereco().getEstado() ) ) {
+                parametros.put( "ESTADO", " Estado: Não informado!" );
+            }
+            if ( !parametros.isEmpty() ) {
+                sb.append( String.format( "%s - %s: ", model.getMatricula(), model.getAluno() ) );
+                for ( String param : parametros.values() ) {
+                    sb.append( param );
+                }
+                sb.append( String.format( "%n" ) );
+            }
+        }
+        if ( !sb.toString().isEmpty() ) {
+            throw new IllegalStateException( sb.toString() );
+        }
+    }
+
 }

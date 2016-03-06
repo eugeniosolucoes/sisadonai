@@ -62,4 +62,17 @@ public final class MyStrings {
 
         return matchFound;
     }
+    
+    public static boolean validarCEP( String cep ) {
+        //Set the email pattern string
+        Pattern p = Pattern.compile( "\\d\\d\\d\\d\\d\\d\\d\\d" );
+
+        //Match the given string with the pattern
+        Matcher m = p.matcher( cep );
+
+        //check whether match is found
+        boolean matchFound = m.matches();
+
+        return matchFound;
+    }    
 }

@@ -5,7 +5,6 @@
  */
 package br.com.eugeniosolucoes.view.model;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
@@ -215,4 +214,11 @@ public class DadosBoletoModel {
     public boolean isBoletoValido() {
         return Long.valueOf( this.nossoNumero ) != 0L;
     }
+
+    @Override
+    public String toString() {
+        return "DadosBoletoModel{" + "cpf=" + cpf + ", matricula=" + matricula + ", aluno=" + aluno + ", turma=" + turma + '}';
+    }
+    
+    
 }
