@@ -58,7 +58,14 @@ public class BoletoServiceImpl implements BoletoService {
 
     @Override
     public List<DadosBoletoModel> listarBoletos( DadosBoletoFiltroModel dadosBoletoFiltroModel ) {
-        return repository.listarBoletos( dadosBoletoFiltroModel );
+        List<DadosBoletoModel> lista = repository.listarBoletos( dadosBoletoFiltroModel );
+        List<DadosBoletoModel> listarAlunosPorTurma = repository.listarAlunosPorTurma( dadosBoletoFiltroModel );
+        for(DadosBoletoModel alunoComBoleto : lista) {
+            if(!listarAlunosPorTurma.contains( alunoComBoleto )) {
+                System.out.println( alunoComBoleto );
+            }
+        }
+        return lista;
     }
 
     @Override
