@@ -35,7 +35,7 @@ public class PopupForm extends javax.swing.JDialog {
     public PopupForm(java.awt.Frame parent, boolean modal) {
         super(parent, BaseForm.SYSTEM_TITLE, modal);
         initComponents();
-        setEditor();
+        //setEditor();
         configSize();
     }
 
@@ -49,7 +49,8 @@ public class PopupForm extends javax.swing.JDialog {
         super(parent, BaseForm.SYSTEM_TITLE, modal);
         initComponents();
         this.html = html;
-        setEditor();
+        //setEditor();
+        this.epPopup.setText( this.html );
         configCustomSize(largura, altura);
     }
 
@@ -70,13 +71,13 @@ public class PopupForm extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
         epPopup = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
+        epPopup.setEditable(false);
+        epPopup.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         epPopup.setAutoscrolls(false);
         epPopup.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -88,27 +89,17 @@ public class PopupForm extends javax.swing.JDialog {
                 epPopupHyperlinkUpdate(evt);
             }
         });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(epPopup, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(epPopup, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
-        );
+        jScrollPane1.setViewportView(epPopup);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
         );
 
         pack();
@@ -116,7 +107,7 @@ public class PopupForm extends javax.swing.JDialog {
 
     private void epPopupMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_epPopupMouseClicked
     {//GEN-HEADEREND:event_epPopupMouseClicked
-        verificaClickNoLink(evt);
+        //verificaClickNoLink(evt);
     }//GEN-LAST:event_epPopupMouseClicked
 
     private void epPopupHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt)//GEN-FIRST:event_epPopupHyperlinkUpdate
@@ -163,7 +154,7 @@ public class PopupForm extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane epPopup;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
 }

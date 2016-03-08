@@ -40,10 +40,10 @@ INNER JOIN `TabelasMensalidades` tabmens ON tabmens.`Codigo_Periodo_Letivo` = pl
 AND tabmens.`Codigo_Curso` = c.`Codigo_Curso` 
 AND tabmens.`Codigo_Serie` = s.`Codigo_Serie`  )
 INNER JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`)
-INNER JOIN `EnderecosPFisicas` ep ON ep.`Codigo_PFisica` = pf.`Codigo_PFisica` ) 
-INNER JOIN `Estados` est ON est.`Codigo_Estado` = ep.`Codigo_Estado`  )
-INNER JOIN `Cidades` cid ON cid.`Codigo_Cidade` = ep.`Codigo_Cidade` AND cid.`Codigo_Estado` = ep.`Codigo_Estado` )
-LEFT  JOIN `Bairros` bai ON bai.`Codigo_Bairro` = ep.`Codigo_Bairro` AND bai.`Codigo_Cidade` = ep.`Codigo_Cidade` AND bai.`Codigo_Estado` = ep.`Codigo_Estado` )
+LEFT JOIN `EnderecosPFisicas` ep ON ep.`Codigo_PFisica` = pf.`Codigo_PFisica` ) 
+LEFT JOIN `Estados` est ON est.`Codigo_Estado` = ep.`Codigo_Estado`  )
+LEFT JOIN `Cidades` cid ON cid.`Codigo_Cidade` = ep.`Codigo_Cidade` AND cid.`Codigo_Estado` = ep.`Codigo_Estado` )
+LEFT JOIN `Bairros` bai ON bai.`Codigo_Bairro` = ep.`Codigo_Bairro` AND bai.`Codigo_Cidade` = ep.`Codigo_Cidade` AND bai.`Codigo_Estado` = ep.`Codigo_Estado` )
 WHERE 1 = 1 
 AND YEAR(mens.`Data_Vencimento`) = 2016 
 AND tu.`Codigo_Turma` = '020'

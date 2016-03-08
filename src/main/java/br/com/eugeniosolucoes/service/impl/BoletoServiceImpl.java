@@ -230,7 +230,7 @@ public class BoletoServiceImpl implements BoletoService {
                 parametros.put( "ESTADO", " Estado: Não informado!" );
             }
             if ( !parametros.isEmpty() ) {
-                sb.append( String.format( "%s - %s: ", model.getMatricula(), model.getAluno() ) );
+                sb.append( String.format( "%s - %-55s PROBLEMA(S):", model.getMatricula(), model.getAluno() ) );
                 for ( String param : parametros.values() ) {
                     sb.append( param );
                 }

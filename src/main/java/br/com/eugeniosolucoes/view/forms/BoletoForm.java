@@ -33,15 +33,15 @@ import net.sf.jasperreports.view.JasperViewer;
  * @author eugenio
  */
 public class BoletoForm extends BaseDialog {
-
-    static final Logger LOG = Logger.getLogger( BoletoForm.class.getName() );
-
-    private final BoletoService service = new BoletoServiceImpl();
-
-    private DadosBoletoFiltroModel boletoFiltroModel;
-
-    private List<DadosBoletoModel> boletoModel;
     
+    static final Logger LOG = Logger.getLogger( BoletoForm.class.getName() );
+    
+    private final BoletoService service = new BoletoServiceImpl();
+    
+    private DadosBoletoFiltroModel boletoFiltroModel;
+    
+    private List<DadosBoletoModel> boletoModel;
+
     /**
      * Creates new form View1
      *
@@ -58,11 +58,11 @@ public class BoletoForm extends BaseDialog {
         listarBoletos();
         adicionarListeners();
     }
-
+    
     private void carregarFiltros() {
         boletoFiltroModel = service.carregarFiltros();
     }
-
+    
     private void adicionarListeners() {
         tblDados.getSelectionModel().addListSelectionListener( new ListSelectionListener() {
             @Override
@@ -397,7 +397,7 @@ public class BoletoForm extends BaseDialog {
             JOptionPane.showMessageDialog( null, e.getMessage() );
         }
     }//GEN-LAST:event_btnVisualizarBoletosActionPerformed
-
+    
     private List<DadosBoletoModel> getSelecionados() {
         List<DadosBoletoModel> selecionados = new ArrayList<>();
         for ( int i : tblDados.getSelectedRows() ) {
@@ -421,15 +421,15 @@ public class BoletoForm extends BaseDialog {
             }
         } ).start();
     }//GEN-LAST:event_btnEnviarBoletosActionPerformed
-
+    
     private String[] getAnos() {
         return boletoFiltroModel.getAnos().toArray( new String[boletoFiltroModel.getAnos().size()] );
     }
-
+    
     private String[] getTurmas() {
         return boletoFiltroModel.getTurmas().toArray( new String[boletoFiltroModel.getTurmas().size()] );
     }
-
+    
     private void listarBoletos() {
         try {
             boletoModel = service.listarBoletos( boletoFiltroModel );
@@ -439,7 +439,7 @@ public class BoletoForm extends BaseDialog {
                 boolean[] canEdit = new boolean[]{
                     false, false, false, false, false, false
                 };
-
+                
                 @Override
                 public boolean isCellEditable( int rowIndex, int columnIndex ) {
                     return canEdit[columnIndex];
@@ -453,10 +453,10 @@ public class BoletoForm extends BaseDialog {
         try {
             service.validarListaDeBoletos( boletoModel );
         } catch ( Exception e ) {
-            JOptionPane.showMessageDialog( this, e.getMessage() );
+            new PopupForm( null, true, e.getMessage(), 500, 300 ).setVisible( true );
         }
     }
-
+    
     private Object[][] getDados() {
         Object[][] dados = new Object[boletoModel.size()][];
         int i = 0;
@@ -472,27 +472,27 @@ public class BoletoForm extends BaseDialog {
         }
         return dados;
     }
-
+    
     private void configurarTabela() {
         tblDados.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
-
+        
         DefaultTableCellRenderer cellRight = new DefaultTableCellRenderer();
         cellRight.setHorizontalAlignment( SwingConstants.RIGHT );
         DefaultTableCellRenderer cellCenter = new DefaultTableCellRenderer();
         cellCenter.setHorizontalAlignment( SwingConstants.CENTER );
-
+        
         tblDados.getColumnModel().getColumn( 0 ).setCellRenderer( cellCenter );
         tblDados.getColumnModel().getColumn( 2 ).setCellRenderer( cellCenter );
         tblDados.getColumnModel().getColumn( 3 ).setCellRenderer( cellCenter );
         tblDados.getColumnModel().getColumn( 4 ).setCellRenderer( cellRight );
         tblDados.getColumnModel().getColumn( 5 ).setCellRenderer( cellCenter );
-
+        
         tblDados.getColumnModel().getColumn( 0 ).setPreferredWidth( 60 );
         tblDados.getColumnModel().getColumn( 1 ).setPreferredWidth( 400 );
         tblDados.getColumnModel().getColumn( 2 ).setPreferredWidth( 110 );
         tblDados.getColumnModel().getColumn( 3 ).setPreferredWidth( 100 );
         tblDados.getColumnModel().getColumn( 5 ).setPreferredWidth( 80 );
-
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
