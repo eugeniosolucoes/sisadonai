@@ -59,12 +59,6 @@ public class BoletoServiceImpl implements BoletoService {
     @Override
     public List<DadosBoletoModel> listarBoletos( DadosBoletoFiltroModel dadosBoletoFiltroModel ) {
         List<DadosBoletoModel> lista = repository.listarBoletos( dadosBoletoFiltroModel );
-        List<DadosBoletoModel> listarAlunosPorTurma = repository.listarAlunosPorTurma( dadosBoletoFiltroModel );
-        for(DadosBoletoModel alunoComBoleto : lista) {
-            if(!listarAlunosPorTurma.contains( alunoComBoleto )) {
-                System.out.println( alunoComBoleto );
-            }
-        }
         return lista;
     }
 
@@ -237,11 +231,31 @@ public class BoletoServiceImpl implements BoletoService {
                 parametros.put( "ESTADO", " Estado: Não informado!" );
             }
             if ( !parametros.isEmpty() ) {
-                sb.append( String.format( "%s - %-55s PROBLEMA(S):", model.getMatricula(), model.getAluno() ) );
+                sb.append( String.format( "%s - %-55s OBS:", model.getMatricula(), model.getAluno() ) );
                 for ( String param : parametros.values() ) {
                     sb.append( param );
                 }
                 sb.append( String.format( "%n" ) );
+            }
+        }
+        if ( !sb.toString().isEmpty() ) {
+            throw new IllegalStateException( sb.toString() );
+        }
+    }
+
+    @Override
+    public void validarListaDeBoletos( List<DadosBoletoModel> lista, DadosBoletoFiltroModel boletoFiltroModel ) {
+        
+        StringBuilder sb = new StringBuilder();
+        try {
+            validarListaDeBoletos( lista );
+        } catch ( Exception e ) {
+            sb.append( e.getMessage() );
+        }
+        List<DadosBoletoModel> listarAlunosPorTurma = repository.listarAlunosPorTurma( boletoFiltroModel );
+        for ( DadosBoletoModel aluno : listarAlunosPorTurma ) {
+            if ( !lista.contains( aluno ) ) {
+                sb.append( String.format( "%s - %-55s OBS: ALUNO NÃO ESTÁ NA LISTA! %n", aluno.getMatricula(), aluno.getAluno() ) );
             }
         }
         if ( !sb.toString().isEmpty() ) {

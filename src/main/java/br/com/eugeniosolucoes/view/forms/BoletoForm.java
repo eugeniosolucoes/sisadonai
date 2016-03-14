@@ -451,9 +451,9 @@ public class BoletoForm extends BaseDialog {
         }
         configurarTabela();
         try {
-            service.validarListaDeBoletos( boletoModel );
+            service.validarListaDeBoletos( boletoModel, boletoFiltroModel );
         } catch ( Exception e ) {
-            new PopupForm( null, true, e.getMessage(), 500, 300 ).setVisible( true );
+            new PopupForm( null, true, BaseForm.SYSTEM_TITLE + " - Observações", e.getMessage(), 900, 300 ).setVisible( true );
         }
     }
     

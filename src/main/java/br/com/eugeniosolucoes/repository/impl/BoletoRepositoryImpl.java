@@ -195,12 +195,12 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "INNER JOIN `Series` s ON s.`Codigo_Serie` = m.`Codigo_Serie`) " );
             sb.append( "INNER JOIN `Turnos` t ON t.`Codigo_Turno` = m.`Codigo_Turno`) " );
             sb.append( "INNER JOIN `TurmasEscola` tu ON tu.`Codigo_Curso` = c.`Codigo_Curso` AND tu.`Codigo_Serie`= s.`Codigo_Serie` AND tu.`Codigo_Turno` = t.`Codigo_Turno`) " );
-            sb.append( "INNER JOIN `Mensalidades` mens ON mens.`Codigo_Periodo_Letivo` = pl.`Codigo_Periodo_Letivo`   " );
-            sb.append( "AND mens.`Codigo_Curso` = c.`Codigo_Curso`  " );
-            sb.append( "AND mens.`Codigo_Serie` = s.`Codigo_Serie`  " );
-            sb.append( "AND mens.`Codigo_PFisica` = pf.`Codigo_PFisica` ) " );
+            sb.append( "LEFT  JOIN `Mensalidades` mens ON mens.`Codigo_Periodo_Letivo` = pl.`Codigo_Periodo_Letivo` )  " );
+//            sb.append( "AND mens.`Codigo_Curso` = c.`Codigo_Curso`  " );
+//            sb.append( "AND mens.`Codigo_Serie` = s.`Codigo_Serie`  " );
+//            sb.append( "AND mens.`Codigo_PFisica` = pf.`Codigo_PFisica` ) " );
             sb.append( "WHERE 1 = 1  " );
-            sb.append( "AND tu.`Codigo_Turma` = ? " );
+            sb.append( "AND tu.`Nome_Turma` = ? " );
             sb.append( "AND YEAR(mens.`Data_Vencimento`) = ? " );
             sb.append( "AND MONTH(mens.`Data_Vencimento`) = ? " );
             sb.append( "AND m.`Codigo_Situacao_Aluno` = '01' " );

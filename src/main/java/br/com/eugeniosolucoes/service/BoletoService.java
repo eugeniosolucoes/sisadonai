@@ -33,4 +33,6 @@ public interface BoletoService {
     byte[] criarBoletoPDF( DadosBoletoModel dados );
     
     void validarListaDeBoletos( List<DadosBoletoModel> dados );
+
+    public void validarListaDeBoletos( List<DadosBoletoModel> boletoModel, DadosBoletoFiltroModel boletoFiltroModel );
 }

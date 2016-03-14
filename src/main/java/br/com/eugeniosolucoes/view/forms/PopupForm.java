@@ -53,6 +53,15 @@ public class PopupForm extends javax.swing.JDialog {
         this.epPopup.setText( this.html );
         configCustomSize(largura, altura);
     }
+    
+    public PopupForm(java.awt.Frame parent, boolean modal, String title, String html, int largura, int altura) {
+        super(parent, title, modal);
+        initComponents();
+        this.html = html;
+        //setEditor();
+        this.epPopup.setText( this.html );
+        configCustomSize(largura, altura);
+    }
 
     private void configCustomSize( int largura, int altura ) throws HeadlessException {
         this.setSize(largura, altura);

@@ -13,8 +13,8 @@ SELECT DISTINCT
     pf.`Nome_PFisica`, 
     pf.`Codigo_PFisica`, 
     tu.`Nome_Turma`, 
-    m.`Codigo_Situacao_Aluno`,
-    mens.`Data_Vencimento`
+    m.`Codigo_Situacao_Aluno`
+--    mens.`Data_Vencimento`
 FROM ((((((((`PFisicas` pf
 INNER JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`)
 INNER JOIN `Matriculas` m ON m.`Codigo_PFisica` = pf.`Codigo_PFisica`)
@@ -23,12 +23,12 @@ INNER JOIN `Cursos` c ON c.`Codigo_Curso` = m.`Codigo_Curso`)
 INNER JOIN `Series` s ON s.`Codigo_Serie` = m.`Codigo_Serie`)
 INNER JOIN `Turnos` t ON t.`Codigo_Turno` = m.`Codigo_Turno`)
 INNER JOIN `TurmasEscola` tu ON tu.`Codigo_Curso` = c.`Codigo_Curso` AND tu.`Codigo_Serie`= s.`Codigo_Serie` AND tu.`Codigo_Turno` = t.`Codigo_Turno`)
-INNER JOIN `Mensalidades` mens ON mens.`Codigo_Periodo_Letivo` = pl.`Codigo_Periodo_Letivo`  
-AND mens.`Codigo_Curso` = c.`Codigo_Curso` 
-AND mens.`Codigo_Serie` = s.`Codigo_Serie` 
-AND mens.`Codigo_PFisica` = pf.`Codigo_PFisica` )
+LEFT JOIN `Mensalidades` mens ON mens.`Codigo_Periodo_Letivo` = pl.`Codigo_Periodo_Letivo`  )
+--AND mens.`Codigo_Curso` = c.`Codigo_Curso` 
+--AND mens.`Codigo_Serie` = s.`Codigo_Serie` 
+-- AND mens.`Codigo_PFisica` = pf.`Codigo_PFisica` )
 WHERE 1 = 1 
-AND tu.`Codigo_Turma` = '020'
+AND tu.`Codigo_Turma` = '008'
 AND YEAR(mens.`Data_Vencimento`) = 2016 
 AND MONTH(mens.`Data_Vencimento`) = 3 
 AND m.`Codigo_Situacao_Aluno` = '01'

@@ -220,5 +220,4 @@ public class DadosBoletoModel {
         return "DadosBoletoModel{" + "cpf=" + cpf + ", matricula=" + matricula + ", aluno=" + aluno + ", turma=" + turma + '}';
     }
     
-    
 }
