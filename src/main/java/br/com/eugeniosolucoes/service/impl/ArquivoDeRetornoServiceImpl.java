@@ -5,10 +5,7 @@
  */
 package br.com.eugeniosolucoes.service.impl;
 
-import br.com.eugeniosolucoes.excecoes.CepException;
-import br.com.eugeniosolucoes.excecoes.TamanhoLinhaException;
 import br.com.eugeniosolucoes.service.ArquivoDeRetornoService;
-import br.com.eugeniosolucoes.util.TratadorArquivoRemessa;
 import br.com.eugeniosolucoes.view.model.DadosBoletoPagoModel;
 import java.io.File;
 import java.io.FileNotFoundException;
