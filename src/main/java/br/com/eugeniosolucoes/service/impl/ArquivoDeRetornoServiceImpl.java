@@ -47,18 +47,9 @@ public class ArquivoDeRetornoServiceImpl implements ArquivoDeRetornoService {
         StringBuilder arquivo = new StringBuilder();
         StringBuilder erro = new StringBuilder();
         int cont = 0;
-        List<String> lista = new ArrayList<>( 
-                Arrays.asList( 
-                        "003876-06", 
-                        "004038-06", 
-                        "003352-06", 
-                        "004178-04",
-                        "003986-06",
-                        "003945-06",
-                        "003965-06" ));
         while (scanner.hasNextLine()) {
             String linha = scanner.nextLine();
-            if ( linha.charAt( 13 ) == 'T' && lista.contains( linha.substring( 54, 63 ) ) ) {
+            if ( linha.charAt( 13 ) == 'T' && linha.substring( 15, 17 ).equals( "06" ) ) {
                 System.out.println( linha );
                 System.out.println( scanner.nextLine() );
             }
