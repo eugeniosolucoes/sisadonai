@@ -49,7 +49,7 @@ public class BoletoRepositoryImplTest {
         DadosBoletoFiltroModel boletoFiltroDTO = new DadosBoletoFiltroModel();
 
         // CODIGO DA TURMA 
-        boletoFiltroDTO.setTurma( "008" );
+        boletoFiltroDTO.setTurma( "QC/ADM III/SAB" );
         // ANO DO BOLETO
         boletoFiltroDTO.setAno( "2016" );
         // MES DO BOLETO
@@ -63,7 +63,7 @@ public class BoletoRepositoryImplTest {
         }
 
         // 32 ALUNOS NA TURMA QC/ADM III/SAB
-        Assert.assertEquals( 30, result.size() );
+        Assert.assertEquals( 32, result.size() );
 
     }
 

@@ -4,6 +4,7 @@
  */
 package br.com.eugeniosolucoes.util;
 
+import java.text.Normalizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -62,10 +63,10 @@ public final class MyStrings {
 
         return matchFound;
     }
-    
+
     public static boolean validarCEP( String cep ) {
         //Set the email pattern string
-        Pattern p = Pattern.compile( "\\d\\d\\d\\d\\d\\d\\d\\d" );
+        Pattern p = Pattern.compile( "\\d{8}" );
 
         //Match the given string with the pattern
         Matcher m = p.matcher( cep );
@@ -74,5 +75,15 @@ public final class MyStrings {
         boolean matchFound = m.matches();
 
         return matchFound;
-    }    
+    }
+
+    public static String removerAcentos( String str ) {
+        if ( str == null ) {
+            return null;
+        }
+        if ( str.equals( "" ) ) {
+            return str;
+        }
+        return Normalizer.normalize( str, Normalizer.Form.NFD ).replaceAll( "[^\\p{ASCII}]", "" );
+    }
 }

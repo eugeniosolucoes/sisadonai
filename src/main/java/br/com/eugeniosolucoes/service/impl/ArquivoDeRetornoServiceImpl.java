@@ -9,6 +9,9 @@ import br.com.eugeniosolucoes.service.ArquivoDeRetornoService;
 import br.com.eugeniosolucoes.view.model.DadosBoletoPagoModel;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
@@ -25,19 +28,44 @@ public class ArquivoDeRetornoServiceImpl implements ArquivoDeRetornoService {
 
     @Override
     public List<DadosBoletoPagoModel> lerArquivoDeRetorno( File file ) {
-        StringBuilder arquivo = new StringBuilder();
-        StringBuilder erro = new StringBuilder();
-        int cont = 0;
         try ( Scanner scanner = new Scanner( file ) ) {
-            while (scanner.hasNextLine()) {
-                String linha = scanner.nextLine();
-                cont++;
-            }
+            return criarLista( scanner );
         } catch ( FileNotFoundException ex ) {
             LOG.log( Level.SEVERE, ex.getMessage(), ex );
             throw new IllegalStateException( "Arquivo não encontrado!" );
         }
-        return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public List<DadosBoletoPagoModel> lerArquivoDeRetorno( InputStream file ) {
+        Scanner scanner = new Scanner( file );
+        return criarLista( scanner );
+    }
+
+    private List<DadosBoletoPagoModel> criarLista( Scanner scanner ) {
+        List<DadosBoletoPagoModel> model = new ArrayList<>();
+        StringBuilder arquivo = new StringBuilder();
+        StringBuilder erro = new StringBuilder();
+        int cont = 0;
+        List<String> lista = new ArrayList<>( 
+                Arrays.asList( 
+                        "003876-06", 
+                        "004038-06", 
+                        "003352-06", 
+                        "004178-04",
+                        "003986-06",
+                        "003945-06",
+                        "003965-06" ));
+        while (scanner.hasNextLine()) {
+            String linha = scanner.nextLine();
+            if ( linha.charAt( 13 ) == 'T' && lista.contains( linha.substring( 54, 63 ) ) ) {
+                System.out.println( linha );
+                System.out.println( scanner.nextLine() );
+            }
+            cont++;
+        }
+        return model;
+
     }
 
     @Override

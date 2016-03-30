@@ -53,8 +53,4 @@ public class ArquivoRemessaRepositoryImpl implements ArquivoRemessaRepository {
         return cep;
     }
 
-    @Override
-    public void validarEnderecoDoAluno( String cpf ) {
-        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
-    }
 }

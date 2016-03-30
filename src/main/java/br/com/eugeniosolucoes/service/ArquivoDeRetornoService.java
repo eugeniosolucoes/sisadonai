@@ -7,6 +7,7 @@ package br.com.eugeniosolucoes.service;
 
 import br.com.eugeniosolucoes.view.model.DadosBoletoPagoModel;
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -23,6 +24,13 @@ public interface ArquivoDeRetornoService {
      */
     List<DadosBoletoPagoModel> lerArquivoDeRetorno( File file );
 
+    /**
+     * Ler arquivo de Retorno e criar uma lista de boletos pagos.
+     * 
+     * @param file Arquivo de Retorno.
+     * @return Lista de boletos pagos.
+     */
+    List<DadosBoletoPagoModel> lerArquivoDeRetorno( InputStream file );
     /**
      * Processar a baixa de um boleto pago no sistema.
      * 

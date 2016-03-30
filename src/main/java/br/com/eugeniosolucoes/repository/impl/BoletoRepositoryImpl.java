@@ -162,7 +162,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                                 rs.getString( "Nome_Cidade" ),
                                 rs.getString( "Sigla_Estado" ),
                                 rs.getString( "CEP_Endereco" )
-                        ), rs.getString( "Email_Site" ) ) );
+                        ), rs.getString( MyStrings.removerAcentos( "Email_Site" ) ) ) );
             }
             return list;
         } catch ( SQLException ex ) {
