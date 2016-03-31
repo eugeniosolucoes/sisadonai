@@ -5,6 +5,7 @@
  */
 package br.com.eugeniosolucoes.view.model;
 
+import br.com.eugeniosolucoes.util.MyStrings;
 import java.util.Date;
 import java.util.Objects;
 
@@ -14,8 +15,6 @@ import java.util.Objects;
  */
 public class DadosBoletoPagoModel {
 
-    private String cpf;
-
     private String matricula;
 
     private String aluno;
@@ -24,37 +23,22 @@ public class DadosBoletoPagoModel {
 
     private Double valor;
 
-    private Date vencimento;
-
-    private String situacaoMensalidade;
+    private Date pagamento;
 
     private String numeroMensalidade;
-
-    private String quantidadeMensalidade;
-
-    private Double percentualMulta;
-
-    private Double percentualJuros;
-
 
     public DadosBoletoPagoModel() {
     }
 
-    public DadosBoletoPagoModel( String cpf, String matricula, String aluno, 
-            String nossoNumero, Double valor, Date vencimento,
-            String situacaoMensalidade, String numeroMensalidade, String quantidadeMensalidade,
-            Double percentualMulta, Double percentualJuros ) {
-        this.cpf = cpf;
+    public DadosBoletoPagoModel( String matricula, String aluno, 
+            String nossoNumero, Double valor, Date pagamento,
+            String numeroMensalidade ) {
         this.matricula = matricula;
         this.aluno = aluno;
         this.nossoNumero = nossoNumero;
         this.valor = valor;
-        this.vencimento = vencimento;
-        this.situacaoMensalidade = situacaoMensalidade;
+        this.pagamento = pagamento;
         this.numeroMensalidade = numeroMensalidade;
-        this.quantidadeMensalidade = quantidadeMensalidade;
-        this.percentualMulta = percentualMulta;
-        this.percentualJuros = percentualJuros;
     }
 
     public String getMatricula() {
@@ -78,7 +62,8 @@ public class DadosBoletoPagoModel {
     }
 
     public void setNossoNumero( String nossoNumero ) {
-        this.nossoNumero = nossoNumero;
+        Integer numero = Integer.valueOf( nossoNumero );
+        this.nossoNumero = MyStrings.padLeft( 10, numero );
     }
 
     public String getNumeroDocumento() {
@@ -93,38 +78,14 @@ public class DadosBoletoPagoModel {
         this.valor = valor;
     }
 
-    public Date getVencimento() {
-        return vencimento;
+    public Date getPagamento() {
+        return pagamento;
     }
 
-    public void setVencimento( Date vencimento ) {
-        this.vencimento = vencimento;
+    public void setPagamento( Date pagamento ) {
+        this.pagamento = pagamento;
     }
-
-    public String getSituacaoMensalidade() {
-        return situacaoMensalidade;
-    }
-
-    public void setSituacaoMensalidade( String situacaoMensalidade ) {
-        this.situacaoMensalidade = situacaoMensalidade;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public String getCpfFormatado() {
-        StringBuilder sb = new StringBuilder( cpf );
-        sb.insert( 3, "." );
-        sb.insert( 7, "." );
-        sb.insert( 11, "-" );
-        return sb.toString();
-    }
-
-    public void setCpf( String cpf ) {
-        this.cpf = cpf;
-    }
-
+    
     public String getNumeroMensalidade() {
         return numeroMensalidade;
     }
@@ -133,36 +94,15 @@ public class DadosBoletoPagoModel {
         this.numeroMensalidade = numeroMensalidade;
     }
 
-    public String getQuantidadeMensalidade() {
-        return quantidadeMensalidade;
-    }
-
-    public void setQuantidadeMensalidade( String quantidadeMensalidade ) {
-        this.quantidadeMensalidade = quantidadeMensalidade;
-    }
-
-    public Double getPercentualMulta() {
-        return percentualMulta;
-    }
-
-    public void setPercentualMulta( Double percentualMulta ) {
-        this.percentualMulta = percentualMulta;
-    }
-
-    public Double getPercentualJuros() {
-        return percentualJuros;
-    }
-
-    public void setPercentualJuros( Double percentualJuros ) {
-        this.percentualJuros = percentualJuros;
+    public boolean isBoletoValido() {
+        return Long.valueOf( this.nossoNumero ) != 0L;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 29 * hash + Objects.hashCode( this.cpf );
+        int hash = 7;
         hash = 29 * hash + Objects.hashCode( this.matricula );
-        hash = 29 * hash + Objects.hashCode( this.numeroMensalidade );
+        hash = 29 * hash + Objects.hashCode( this.nossoNumero );
         return hash;
     }
 
@@ -178,25 +118,15 @@ public class DadosBoletoPagoModel {
             return false;
         }
         final DadosBoletoPagoModel other = (DadosBoletoPagoModel) obj;
-        if ( !Objects.equals( this.cpf, other.cpf ) ) {
-            return false;
-        }
         if ( !Objects.equals( this.matricula, other.matricula ) ) {
             return false;
         }
-        return Objects.equals( this.numeroMensalidade, other.numeroMensalidade );
-    }
-
-    
-
-    public boolean isBoletoValido() {
-        return Long.valueOf( this.nossoNumero ) != 0L;
+        return Objects.equals( this.nossoNumero, other.nossoNumero );
     }
 
     @Override
     public String toString() {
-        return "DadosBoletoPagoModel{" + "cpf=" + cpf + ", matricula=" + matricula + ", aluno=" + aluno + ", numeroMensalidade=" + numeroMensalidade + '}';
+        return "DadosBoletoPagoModel{" + "matricula=" + matricula + ", aluno=" + aluno + ", nossoNumero=" + nossoNumero + ", valor=" + valor + ", pagamento=" + pagamento + ", numeroMensalidade=" + numeroMensalidade + '}';
     }
 
-    
 }

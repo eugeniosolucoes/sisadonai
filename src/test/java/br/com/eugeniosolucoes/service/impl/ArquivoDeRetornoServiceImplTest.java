@@ -32,14 +32,16 @@ public class ArquivoDeRetornoServiceImplTest {
     @Test
     public void testLerArquivoDeRetorno() {
         System.out.println( "lerArquivoDeRetorno" );
+        ArquivoDeRetornoServiceImpl instance = new ArquivoDeRetornoServiceImpl();
         String[] arquivos = {ARQUIVO, ARQUIVO1, ARQUIVO2};
         for ( String arquivo : arquivos ) {
             System.out.println( arquivo );
             InputStream file = this.getClass().getResourceAsStream( arquivo );
-            ArquivoDeRetornoServiceImpl instance = new ArquivoDeRetornoServiceImpl();
-            instance.lerArquivoDeRetorno( file );
+            List<DadosBoletoPagoModel> lerArquivoDeRetorno = instance.lerArquivoDeRetorno( file );
+            for ( DadosBoletoPagoModel model : lerArquivoDeRetorno ) {
+                System.out.println( model );
+            }
         }
-
     }
 
     /**

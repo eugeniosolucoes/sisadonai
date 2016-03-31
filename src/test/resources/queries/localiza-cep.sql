@@ -28,7 +28,8 @@ AND cid.`Codigo_Estado` = ep.`Codigo_Estado` )
 LEFT  JOIN `Bairros` bai ON bai.`Codigo_Bairro` = ep.`Codigo_Bairro` 
 AND bai.`Codigo_Cidade` = ep.`Codigo_Cidade` AND bai.`Codigo_Estado` = ep.`Codigo_Estado` )
 WHERE 1 = 1 
-AND pf.`Codigo_PFisica` = '004073'
+AND pf.`Codigo_PFisica` = '003945'
+
 ORDER BY pf.`Codigo_PFisica`;
 
 SELECT DISTINCT 

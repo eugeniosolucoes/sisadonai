@@ -10,9 +10,9 @@ import br.com.eugeniosolucoes.view.model.DadosBoletoPagoModel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -25,6 +25,8 @@ import java.util.logging.Logger;
 public class ArquivoDeRetornoServiceImpl implements ArquivoDeRetornoService {
 
     private static final Logger LOG = Logger.getLogger( ArquivoDeRetornoServiceImpl.class.getName() );
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "ddMMyyyy" );
 
     @Override
     public List<DadosBoletoPagoModel> lerArquivoDeRetorno( File file ) {
@@ -42,21 +44,26 @@ public class ArquivoDeRetornoServiceImpl implements ArquivoDeRetornoService {
         return criarLista( scanner );
     }
 
+    /**
+     * Layout Cobrança CNAB 240  versao  junho 2015 v 2.7.pdf
+     * 014 - 014 Cód. segmento do registro detalhe A 001 T 13
+     * 016 - 017 Código de movimento (ocorrência) A 002 40
+     * 
+     * @param scanner
+     * @return 
+     */
     private List<DadosBoletoPagoModel> criarLista( Scanner scanner ) {
-        List<DadosBoletoPagoModel> model = new ArrayList<>();
-        StringBuilder arquivo = new StringBuilder();
-        StringBuilder erro = new StringBuilder();
-        int cont = 0;
+        List<DadosBoletoPagoModel> lista = new ArrayList<>();
         while (scanner.hasNextLine()) {
             String linha = scanner.nextLine();
             if ( linha.charAt( 13 ) == 'T' && linha.substring( 15, 17 ).equals( "06" ) ) {
-                System.out.println( linha );
-                System.out.println( scanner.nextLine() );
+                String linhaT = linha;
+                String linhaU = scanner.nextLine();
+                DadosBoletoPagoModel boletoPago = criarDadosBoletoPago( linhaT, linhaU );
+                lista.add( boletoPago );
             }
-            cont++;
         }
-        return model;
-
+        return lista;
     }
 
     @Override
@@ -67,6 +74,23 @@ public class ArquivoDeRetornoServiceImpl implements ArquivoDeRetornoService {
     @Override
     public void processarBaixaDeBoleto( List<DadosBoletoPagoModel> boletoPagoModels ) {
         throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private DadosBoletoPagoModel criarDadosBoletoPago( String linhaT, String linhaU ) {
+        DadosBoletoPagoModel dadosBoletoPagoModel = new DadosBoletoPagoModel();
+        dadosBoletoPagoModel.setAluno( linhaT.substring( 143, 183 ).trim() );
+        dadosBoletoPagoModel.setMatricula( linhaT.substring( 54, 60 ).trim() );
+        dadosBoletoPagoModel.setNossoNumero( linhaT.substring( 40, 52 ).trim() );
+        dadosBoletoPagoModel.setNumeroMensalidade( linhaT.substring( 61, 63 ).trim() );
+        try {
+            dadosBoletoPagoModel.setPagamento( DATE_FORMAT.parse( linhaU.substring( 137, 144 ) ) );
+            String valorPago = linhaU.substring( 77, 92 );
+            double valor = Double.parseDouble( valorPago ) / 100;
+            dadosBoletoPagoModel.setValor( valor );
+        } catch ( ParseException ex ) {
+            LOG.log( Level.SEVERE, ex.getMessage(), ex );
+        }
+        return dadosBoletoPagoModel;
     }
 
 }
