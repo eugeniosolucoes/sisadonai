@@ -73,6 +73,7 @@ public class MainForm extends BaseForm {
         jMenuTesouraria = new javax.swing.JMenu();
         mItemEnvioBoletos = new javax.swing.JMenuItem();
         mItemPrepararArqRemessa = new javax.swing.JMenuItem();
+        mItemProcessarArqRetorno = new javax.swing.JMenuItem();
         jMenuSistema = new javax.swing.JMenu();
         jMenuConfiguracoes = new javax.swing.JMenu();
         mItemConfigEnvioDeBoletos = new javax.swing.JMenuItem();
@@ -114,6 +115,14 @@ public class MainForm extends BaseForm {
             }
         });
         jMenuTesouraria.add(mItemPrepararArqRemessa);
+
+        mItemProcessarArqRetorno.setText("Processar Arquivo de Retorno");
+        mItemProcessarArqRetorno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mItemProcessarArqRetornoActionPerformed(evt);
+            }
+        });
+        jMenuTesouraria.add(mItemProcessarArqRetorno);
 
         jMenuBarMain.add(jMenuTesouraria);
 
@@ -197,6 +206,10 @@ public class MainForm extends BaseForm {
         }
     }//GEN-LAST:event_mItemPrepararArqRemessaActionPerformed
 
+    private void mItemProcessarArqRetornoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemProcessarArqRetornoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mItemProcessarArqRetornoActionPerformed
+
     private void exibirLogErroRemessa( Exception ex ) {
         try {
             LOG.log( Level.SEVERE, ex.getMessage(), ex );
@@ -238,6 +251,7 @@ public class MainForm extends BaseForm {
     private javax.swing.JMenuItem mItemConfigEnvioDeBoletos;
     private javax.swing.JMenuItem mItemEnvioBoletos;
     private javax.swing.JMenuItem mItemPrepararArqRemessa;
+    private javax.swing.JMenuItem mItemProcessarArqRetorno;
     private javax.swing.JMenuItem mItemSair;
     // End of variables declaration//GEN-END:variables
 }

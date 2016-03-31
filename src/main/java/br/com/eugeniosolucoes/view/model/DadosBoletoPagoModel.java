@@ -26,6 +26,8 @@ public class DadosBoletoPagoModel {
     private Date pagamento;
 
     private String numeroMensalidade;
+    
+    private boolean atualizado;
 
     public DadosBoletoPagoModel() {
     }
@@ -94,6 +96,14 @@ public class DadosBoletoPagoModel {
         this.numeroMensalidade = numeroMensalidade;
     }
 
+    public boolean isAtualizado() {
+        return atualizado;
+    }
+
+    public void setAtualizado( boolean atualizado ) {
+        this.atualizado = atualizado;
+    }
+
     public boolean isBoletoValido() {
         return Long.valueOf( this.nossoNumero ) != 0L;
     }
@@ -126,7 +136,6 @@ public class DadosBoletoPagoModel {
 
     @Override
     public String toString() {
-        return "DadosBoletoPagoModel{" + "matricula=" + matricula + ", aluno=" + aluno + ", nossoNumero=" + nossoNumero + ", valor=" + valor + ", pagamento=" + pagamento + ", numeroMensalidade=" + numeroMensalidade + '}';
+        return "DadosBoletoPagoModel{" + "matricula=" + matricula + ", aluno=" + aluno + ", nossoNumero=" + nossoNumero + ", valor=" + valor + ", pagamento=" + pagamento + ", numeroMensalidade=" + numeroMensalidade + ", atualizado=" + atualizado + '}';
     }
-
 }

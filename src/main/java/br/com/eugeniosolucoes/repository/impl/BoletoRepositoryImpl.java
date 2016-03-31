@@ -260,7 +260,8 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             ps.setDouble( 2, boletoPagoModels.getValor() );
             ps.setString( 3, boletoPagoModels.getMatricula() );
             ps.setString( 4, boletoPagoModels.getNossoNumero() );
-            ps.executeUpdate();
+            int resultado = ps.executeUpdate();
+            boletoPagoModels.setAtualizado( resultado != 0 ) ;
         } catch ( SQLException ex ) {
             LOG.log( Level.SEVERE, null, ex );
         } finally {

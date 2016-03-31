@@ -39,7 +39,6 @@ public class ArquivoDeRetornoServiceImplTest {
             InputStream file = this.getClass().getResourceAsStream( arquivo );
             List<DadosBoletoPagoModel> lerArquivoDeRetorno = instance.lerArquivoDeRetorno( file );
             for ( DadosBoletoPagoModel model : lerArquivoDeRetorno ) {
-                System.out.println( model );
                 instance.processarBaixaDeBoleto( model );
             }
         }

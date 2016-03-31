@@ -73,6 +73,7 @@ public class ArquivoDeRetornoServiceImpl implements ArquivoDeRetornoService {
     @Override
     public void processarBaixaDeBoleto( DadosBoletoPagoModel boletoPagoModels ) {
         repository.processarBaixaDeBoleto( boletoPagoModels );
+        LOG.info( boletoPagoModels.toString() );
     }
 
     @Override
