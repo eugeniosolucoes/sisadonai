@@ -9,14 +9,19 @@ import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.repository.BoletoRepository;
 import br.com.eugeniosolucoes.util.MyStrings;
+import br.com.eugeniosolucoes.view.model.DadosBoletoPagoModel;
 import br.com.eugeniosolucoes.view.model.EnderecoModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +34,8 @@ public class BoletoRepositoryImpl implements BoletoRepository {
     static final Logger LOG = Logger.getLogger( BoletoRepositoryImpl.class.getName() );
 
     AbstractRepository repository = AbstractRepository.getInstance();
+
+    static final SimpleDateFormat DB_DATE_FORMAT = new SimpleDateFormat( "MM/dd/yyyy hh:mm a" );
 
     @Override
     public List<String> listarAnos() {
@@ -229,6 +236,36 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             repository.fechar( con, ps, rs );
         }
         return Collections.EMPTY_LIST;
+    }
+
+    /**
+     *
+     * @param boletoPagoModels
+     */
+    @Override
+    public void processarBaixaDeBoleto( DadosBoletoPagoModel boletoPagoModels ) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = repository.getConnection();
+            StringBuilder sb = new StringBuilder();
+            sb.append( "UPDATE `Mensalidades` SET " );
+            sb.append( "`Codigo_Situacao_Mensalidade` = '2', " );
+            sb.append( "`Data_Pagamento` = ?, " );
+            sb.append( "`Valor_Baixa` = ? " );
+            sb.append( "WHERE `Codigo_PFisica` = ? " );
+            sb.append( "AND `Nosso_Numero` = ?" );
+            ps = con.prepareStatement( sb.toString() );
+            ps.setTimestamp( 1, new java.sql.Timestamp( boletoPagoModels.getPagamento().getTime() ) );
+            ps.setDouble( 2, boletoPagoModels.getValor() );
+            ps.setString( 3, boletoPagoModels.getMatricula() );
+            ps.setString( 4, boletoPagoModels.getNossoNumero() );
+            ps.executeUpdate();
+        } catch ( SQLException ex ) {
+            LOG.log( Level.SEVERE, null, ex );
+        } finally {
+            repository.fechar( con, ps );
+        }
     }
 
 }

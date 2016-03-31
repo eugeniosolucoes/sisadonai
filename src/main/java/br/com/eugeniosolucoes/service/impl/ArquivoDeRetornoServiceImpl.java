@@ -5,6 +5,8 @@
  */
 package br.com.eugeniosolucoes.service.impl;
 
+import br.com.eugeniosolucoes.repository.BoletoRepository;
+import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
 import br.com.eugeniosolucoes.service.ArquivoDeRetornoService;
 import br.com.eugeniosolucoes.view.model.DadosBoletoPagoModel;
 import java.io.File;
@@ -27,6 +29,8 @@ public class ArquivoDeRetornoServiceImpl implements ArquivoDeRetornoService {
     private static final Logger LOG = Logger.getLogger( ArquivoDeRetornoServiceImpl.class.getName() );
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "ddMMyyyy" );
+    
+    BoletoRepository repository = new BoletoRepositoryImpl();
 
     @Override
     public List<DadosBoletoPagoModel> lerArquivoDeRetorno( File file ) {
@@ -68,12 +72,14 @@ public class ArquivoDeRetornoServiceImpl implements ArquivoDeRetornoService {
 
     @Override
     public void processarBaixaDeBoleto( DadosBoletoPagoModel boletoPagoModels ) {
-        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+        repository.processarBaixaDeBoleto( boletoPagoModels );
     }
 
     @Override
     public void processarBaixaDeBoleto( List<DadosBoletoPagoModel> boletoPagoModels ) {
-        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+        for(DadosBoletoPagoModel model : boletoPagoModels) {
+            processarBaixaDeBoleto( model );
+        }
     }
 
     private DadosBoletoPagoModel criarDadosBoletoPago( String linhaT, String linhaU ) {
@@ -83,7 +89,7 @@ public class ArquivoDeRetornoServiceImpl implements ArquivoDeRetornoService {
         dadosBoletoPagoModel.setNossoNumero( linhaT.substring( 40, 52 ).trim() );
         dadosBoletoPagoModel.setNumeroMensalidade( linhaT.substring( 61, 63 ).trim() );
         try {
-            dadosBoletoPagoModel.setPagamento( DATE_FORMAT.parse( linhaU.substring( 137, 144 ) ) );
+            dadosBoletoPagoModel.setPagamento( DATE_FORMAT.parse( linhaU.substring( 137, 145 ) ) );
             String valorPago = linhaU.substring( 77, 92 );
             double valor = Double.parseDouble( valorPago ) / 100;
             dadosBoletoPagoModel.setValor( valor );

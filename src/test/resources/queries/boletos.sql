@@ -52,3 +52,5 @@ AND mens.`Codigo_Situacao_Mensalidade` = '1'
 AND MONTH(mens.`Data_Vencimento`) = 3
 ORDER BY pf.`Nome_PFisica`;
 
+-- UPDATE `Mensalidades` SET `Codigo_Situacao_Mensalidade` = '2', `Data_Pagamento` = ?, `Valor_Baixa` = ?
+-- WHERE `Codigo_PFisica` = ? AND `Nosso_Numero` = ?;
