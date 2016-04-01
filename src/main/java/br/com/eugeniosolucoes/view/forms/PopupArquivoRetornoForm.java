@@ -11,12 +11,8 @@
 package br.com.eugeniosolucoes.view.forms;
 
 import br.com.eugeniosolucoes.service.ArquivoDeRetornoService;
-import br.com.eugeniosolucoes.service.BoletoService;
 import br.com.eugeniosolucoes.service.impl.ArquivoDeRetornoServiceImpl;
-import br.com.eugeniosolucoes.service.impl.BoletoServiceImpl;
 import br.com.eugeniosolucoes.util.MyFilter;
-import br.com.eugeniosolucoes.util.MyStrings;
-import br.com.eugeniosolucoes.util.TratadorArquivoRemessa;
 import br.com.eugeniosolucoes.view.model.DadosBoletoPagoModel;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
@@ -49,7 +45,6 @@ public class PopupArquivoRetornoForm extends javax.swing.JDialog {
     public PopupArquivoRetornoForm( java.awt.Frame parent, boolean modal ) {
         super( parent, BaseForm.SYSTEM_TITLE, modal );
         initComponents();
-        //setEditor();
         configSize();
     }
 
@@ -65,6 +60,12 @@ public class PopupArquivoRetornoForm extends javax.swing.JDialog {
         configCustomSize( largura, altura );
     }
 
+    public PopupArquivoRetornoForm( java.awt.Frame parent, boolean modal, String title, int largura, int altura ) {
+        super( parent, title, modal );
+        initComponents();
+        configCustomSize( largura, altura );
+    }    
+    
     private void configCustomSize( int largura, int altura ) throws HeadlessException {
         this.setSize( largura, altura );
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
@@ -117,10 +118,7 @@ public class PopupArquivoRetornoForm extends javax.swing.JDialog {
             pnlLogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 325, Short.MAX_VALUE)
             .addGroup(pnlLogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLogLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(scrollLog, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
-                    .addContainerGap()))
+                .addComponent(scrollLog, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -171,14 +169,27 @@ public class PopupArquivoRetornoForm extends javax.swing.JDialog {
                         try {
                             File[] files = arquivo.getSelectedFiles();
                             for ( File file : files ) {
-                                sb.append( String.format( "ARQUIVO: %s%n", file.getName() ) );
-                                jta.setText( sb.toString() );
                                 List<DadosBoletoPagoModel> boletosPagos = service.lerArquivoDeRetorno( file );
+                                sb.append( String.format( "Arquivo: %s%n%s", file.getName(), 
+                                        boletosPagos.isEmpty() ? 
+                                                "OBS: O referido arquivo não possui boletos pagos.\n" : 
+                                                "Matrícula | Nosso Número | Mensalidade |    Data    |   Valor   | Nome\n" ) );
+                                jta.setText( sb.toString() );
                                 for ( DadosBoletoPagoModel boletoPago : boletosPagos ) {
                                     service.processarBaixaDeBoleto( boletoPago );
-                                    sb.append( String.format( "BOLETO: %s%n", boletoPago ) );
+                                    sb.append( String.format( "%-11s %-14s %-12s  %td/%tm/%tY     %.2f    %-50s%n", 
+                                            boletoPago.getMatricula(), 
+                                            boletoPago.getNossoNumero(),
+                                            boletoPago.getNumeroMensalidade(),
+                                            boletoPago.getPagamento(),
+                                            boletoPago.getPagamento(),
+                                            boletoPago.getPagamento(),
+                                            boletoPago.getValor(), 
+                                            boletoPago.getAluno() ) );
                                     jta.setText( sb.toString() );
                                 }
+                                sb.append( "\n" );
+                                jta.setText( sb.toString() );
                             }
                         } catch ( Exception ex ) {
                             LOG.log( Level.SEVERE, ex.getMessage(), ex );

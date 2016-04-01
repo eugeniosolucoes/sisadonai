@@ -11,6 +11,7 @@ import br.com.caelum.stella.boleto.Datas;
 import br.com.caelum.stella.boleto.Endereco;
 import br.com.caelum.stella.boleto.Pagador;
 import br.com.caelum.stella.boleto.bancos.Santander;
+import br.com.eugeniosolucoes.modelo.SituacaoMatricula;
 import br.com.eugeniosolucoes.repository.BoletoRepository;
 import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
 import br.com.eugeniosolucoes.service.BoletoService;
@@ -38,9 +39,9 @@ import org.joda.time.LocalDate;
 public class BoletoServiceImpl implements BoletoService {
 
     static final Logger LOG = Logger.getLogger( BoletoServiceImpl.class.getName() );
-
+    
     BoletoRepository repository = new BoletoRepositoryImpl();
-
+    
     @Override
     public DadosBoletoFiltroModel carregarFiltros() {
         LocalDate dataCorrente = LocalDate.now();
@@ -254,7 +255,7 @@ public class BoletoServiceImpl implements BoletoService {
         }
         List<DadosBoletoModel> listarAlunosPorTurma = repository.listarAlunosPorTurma( boletoFiltroModel );
         for ( DadosBoletoModel aluno : listarAlunosPorTurma ) {
-            if ( !lista.contains( aluno ) ) {
+            if ( !lista.contains( aluno ) && SituacaoMatricula.ABERTA.getCodigo().equals( aluno.getSituacaoMensalidade() ) ) {
                 sb.append( String.format( "%s - %-55s OBS: ALUNO NÃO ESTÁ NA LISTA! %n", aluno.getMatricula(), aluno.getAluno() ) );
             }
         }

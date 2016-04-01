@@ -226,6 +226,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                 dadosBoletoModel.setAluno( rs.getString( "Nome_PFisica" ) );
                 dadosBoletoModel.setMatricula( rs.getString( "Codigo_PFisica" ) );
                 dadosBoletoModel.setTurma( rs.getString( "Nome_Turma" ) );
+                dadosBoletoModel.setSituacaoMensalidade( "Codigo_Situacao_Mensalidade" );
 
                 list.add( dadosBoletoModel );
             }

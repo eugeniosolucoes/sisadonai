@@ -193,14 +193,14 @@ public class MainForm extends BaseForm {
         if ( r == JFileChooser.APPROVE_OPTION ) {
             try {
                 //txtListaDeEmail.setText( arquivo.getSelectedFile().getCanonicalPath() );
-                JOptionPane.showMessageDialog( this, "Favor aguardar a geração do arquivo!" , this.getTitle(), JOptionPane.INFORMATION_MESSAGE );
+                JOptionPane.showMessageDialog( this, "Favor aguardar a geração do arquivo!", this.getTitle(), JOptionPane.INFORMATION_MESSAGE );
                 TratadorArquivoRemessa tar = new TratadorArquivoRemessa();
                 File f = arquivo.getSelectedFile();
                 String conteudo = tar.corrigirArquivo( f );
                 String nomeArquivo = tar.criarNovoArquivo( f.getCanonicalPath(), conteudo );
                 MyStrings.exibeMensagem( String.format( "Arquivo de Remessa preparado com sucesso!%nLocal: %s", nomeArquivo ) );
             } catch ( Exception ex ) {
-                JOptionPane.showMessageDialog( this, "Houve erro ao gerar o arquivo!\nSerá exibido o arquivo de log com os problemas!" , this.getTitle(), JOptionPane.ERROR_MESSAGE );
+                JOptionPane.showMessageDialog( this, "Houve erro ao gerar o arquivo!\nSerá exibido o arquivo de log com os problemas!", this.getTitle(), JOptionPane.ERROR_MESSAGE );
                 exibirLogErroRemessa( ex );
             }
         }
@@ -208,9 +208,9 @@ public class MainForm extends BaseForm {
 
     private void mItemProcessarArqRetornoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemProcessarArqRetornoActionPerformed
         // TODO add your handling code here:
-        PopupArquivoRetornoForm popup = new PopupArquivoRetornoForm(null, true, 800, 600);
+        PopupArquivoRetornoForm popup = new PopupArquivoRetornoForm( null, true, "Processar Arquivo de Retorno", 800, 600 );
         popup.setVisible( true );
-        
+
     }//GEN-LAST:event_mItemProcessarArqRetornoActionPerformed
 
     private void exibirLogErroRemessa( Exception ex ) {
@@ -222,7 +222,7 @@ public class MainForm extends BaseForm {
             } catch ( IOException ex1 ) {
                 LOG.log( Level.SEVERE, ex.getMessage(), ex1 );
             }
-            Desktop.getDesktop().open( new File( nomeArquivoLog ));
+            Desktop.getDesktop().open( new File( nomeArquivoLog ) );
         } catch ( IOException ex1 ) {
             LOG.log( Level.SEVERE, ex.getMessage(), ex1 );
         }
