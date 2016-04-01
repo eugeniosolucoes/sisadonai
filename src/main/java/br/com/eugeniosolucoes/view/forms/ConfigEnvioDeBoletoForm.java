@@ -266,7 +266,6 @@ public class ConfigEnvioDeBoletoForm extends BaseDialog {
     }//GEN-LAST:event_btnSalvarDadosActionPerformed
 
     private void btnSalvarEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarEmailActionPerformed
-        // TODO add your handling code here:
         this.btnSalvarDadosActionPerformed( evt );
     }//GEN-LAST:event_btnSalvarEmailActionPerformed
 

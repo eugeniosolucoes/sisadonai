@@ -208,6 +208,9 @@ public class MainForm extends BaseForm {
 
     private void mItemProcessarArqRetornoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemProcessarArqRetornoActionPerformed
         // TODO add your handling code here:
+        PopupArquivoRetornoForm popup = new PopupArquivoRetornoForm(null, true, 800, 600);
+        popup.setVisible( true );
+        
     }//GEN-LAST:event_mItemProcessarArqRetornoActionPerformed
 
     private void exibirLogErroRemessa( Exception ex ) {
