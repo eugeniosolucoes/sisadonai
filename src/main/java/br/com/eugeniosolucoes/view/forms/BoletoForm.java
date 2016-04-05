@@ -384,6 +384,7 @@ public class BoletoForm extends BaseDialog {
     private void btnVisualizarBoletosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarBoletosActionPerformed
         List<DadosBoletoModel> selecionados = getSelecionados();
         try {
+            MainForm.setWaitCursor( this );
             JasperPrint jasperPrint = service.visualizarBoletos( selecionados );
             if ( jasperPrint != null ) {
                 JDialog viewer = new JDialog( new javax.swing.JFrame(), "Visualização dos Boletos", true );
@@ -395,6 +396,8 @@ public class BoletoForm extends BaseDialog {
             }
         } catch ( Exception e ) {
             JOptionPane.showMessageDialog( null, e.getMessage() );
+        } finally {
+            MainForm.setDefaultCursor( this );
         }
     }//GEN-LAST:event_btnVisualizarBoletosActionPerformed
     
@@ -431,8 +434,8 @@ public class BoletoForm extends BaseDialog {
     }
     
     private void listarBoletos() {
-        MainForm.setWaitCursor( this );
         try {
+            MainForm.setWaitCursor( this );
             boletoModel = service.listarBoletos( boletoFiltroModel );
             Object[][] dados = getDados();
             tblDados.setModel( new javax.swing.table.DefaultTableModel( dados,
@@ -449,14 +452,19 @@ public class BoletoForm extends BaseDialog {
             lblTotal.setText( String.format( "Total: %d", dados.length ) );
         } catch ( Exception e ) {
             LOG.log( Level.SEVERE, e.getMessage(), e );
+        } finally {
+            MainForm.setDefaultCursor( this );
         }
         configurarTabela();
         try {
+            MainForm.setWaitCursor( this );
             service.validarListaDeBoletos( boletoModel, boletoFiltroModel );
         } catch ( Exception e ) {
             new PopupForm( null, true, BaseForm.SYSTEM_TITLE + " - Observações", e.getMessage(), 900, 300 ).setVisible( true );
+        } finally {
+            MainForm.setDefaultCursor( this );
         }
-        MainForm.setDefaultCursor( this );
+        
     }
     
     private Object[][] getDados() {
