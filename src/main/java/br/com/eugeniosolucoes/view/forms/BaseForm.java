@@ -19,9 +19,7 @@ import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 
@@ -42,6 +40,7 @@ public class BaseForm extends JFrame implements IAjuda {
 
     final void setupView() {
         setTitle( SYSTEM_TITLE );
+        mostrarAjuda( rootPane );
         try {
             javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
         } catch ( ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex ) {

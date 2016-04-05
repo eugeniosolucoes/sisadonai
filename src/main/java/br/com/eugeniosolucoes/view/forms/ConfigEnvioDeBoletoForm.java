@@ -16,7 +16,6 @@ import br.com.eugeniosolucoes.modelo.Remetente;
 import java.awt.Frame;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /**
@@ -37,7 +36,6 @@ public class ConfigEnvioDeBoletoForm extends BaseDialog {
     public ConfigEnvioDeBoletoForm( Frame owner, String title, boolean modal ) {
         super( owner, title, modal );
         initComponents();
-        mostrarAjuda( this.tabEmail  );
         obj = new Remetente();
         retornarRemetente();
     }

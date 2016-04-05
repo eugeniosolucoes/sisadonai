@@ -30,7 +30,7 @@ import javax.swing.JTextArea;
  *
  * @author eugenio
  */
-public class PopupArquivoRetornoForm extends javax.swing.JDialog {
+public class PopupArquivoRetornoForm extends BaseDialog {
 
     static final Logger LOG = Logger.getLogger( PopupArquivoRetornoForm.class.getName() );
 

@@ -9,6 +9,7 @@ import br.com.eugeniosolucoes.app.Main;
 import br.com.eugeniosolucoes.util.MyFilter;
 import br.com.eugeniosolucoes.util.MyStrings;
 import br.com.eugeniosolucoes.util.TratadorArquivoRemessa;
+import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -23,6 +24,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.RootPaneContainer;
 import org.joda.time.LocalDateTime;
 
 /**
@@ -42,7 +44,6 @@ public class MainForm extends BaseForm {
     }
 
     private void setup() {
-        mostrarAjuda( jpConteudo );
         exibirModoTeste();
         setExtendedState( MAXIMIZED_BOTH );
         try {
@@ -165,7 +166,9 @@ public class MainForm extends BaseForm {
     }//GEN-LAST:event_mItemSairActionPerformed
 
     private void mItemEnvioBoletosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemEnvioBoletosActionPerformed
+        setWaitCursor( this );
         new BoletoForm( this, "Envio de Boletos", true ).setVisible( true );
+        setDefaultCursor( this );
     }//GEN-LAST:event_mItemEnvioBoletosActionPerformed
 
     private void mItemConfigEnvioDeBoletosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemConfigEnvioDeBoletosActionPerformed
@@ -242,7 +245,22 @@ public class MainForm extends BaseForm {
         g2.dispose();
         return resizedimage;
     }
+    
+   public static void setWaitCursor(RootPaneContainer frame) {
+        if (frame != null) {
+            RootPaneContainer root = (RootPaneContainer) frame.getRootPane().getTopLevelAncestor();
+            root.getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            root.getGlassPane().setVisible(true);
+        }
+    }    
 
+    public static void setDefaultCursor(RootPaneContainer frame) {
+        if (frame != null) {
+            RootPaneContainer root = (RootPaneContainer) frame.getRootPane().getTopLevelAncestor();
+            root.getGlassPane().setCursor(Cursor.getDefaultCursor());
+        }
+    }   
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBarMain;

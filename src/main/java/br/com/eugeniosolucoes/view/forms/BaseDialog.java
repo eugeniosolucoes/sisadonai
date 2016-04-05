@@ -31,6 +31,7 @@ public class BaseDialog extends JDialog implements IAjuda {
 
     public BaseDialog( Frame owner, String title, boolean modal ) {
         super( owner, title, modal );
+        mostrarAjuda( rootPane );
     }
 
     @Override

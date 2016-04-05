@@ -12,6 +12,7 @@ import br.com.eugeniosolucoes.service.impl.BoletoServiceImpl;
 import br.com.eugeniosolucoes.util.MyStrings;
 import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
+import java.awt.Cursor;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -53,7 +54,6 @@ public class BoletoForm extends BaseDialog {
         super( owner, title, modal );
         carregarFiltros();
         initComponents();
-        mostrarAjuda( plConteudo );
         jpbEnvio.setVisible( false );
         listarBoletos();
         adicionarListeners();
@@ -431,6 +431,7 @@ public class BoletoForm extends BaseDialog {
     }
     
     private void listarBoletos() {
+        MainForm.setWaitCursor( this );
         try {
             boletoModel = service.listarBoletos( boletoFiltroModel );
             Object[][] dados = getDados();
@@ -455,6 +456,7 @@ public class BoletoForm extends BaseDialog {
         } catch ( Exception e ) {
             new PopupForm( null, true, BaseForm.SYSTEM_TITLE + " - Observações", e.getMessage(), 900, 300 ).setVisible( true );
         }
+        MainForm.setDefaultCursor( this );
     }
     
     private Object[][] getDados() {
