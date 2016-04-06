@@ -12,6 +12,7 @@ import br.com.eugeniosolucoes.util.TratadorArquivoRemessa;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Graphics2D;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -189,11 +190,11 @@ public class MainForm extends BaseForm {
         arquivo.setDialogType( JFileChooser.OPEN_DIALOG );
         arquivo.setFileFilter( new MyFilter( "txt" ) );
         arquivo.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
-        arquivo.setApproveButtonText( "Abrir" );
 
-        int r = arquivo.showOpenDialog( null );
+        int r = arquivo.showDialog( null, "Selecionar" );
 
         if ( r == JFileChooser.APPROVE_OPTION ) {
+
             try {
                 //txtListaDeEmail.setText( arquivo.getSelectedFile().getCanonicalPath() );
                 JOptionPane.showMessageDialog( this, "Favor aguardar a geração do arquivo!", this.getTitle(), JOptionPane.INFORMATION_MESSAGE );
@@ -202,7 +203,7 @@ public class MainForm extends BaseForm {
                 String conteudo = tar.corrigirArquivo( f );
                 String nomeArquivo = tar.criarNovoArquivo( f.getCanonicalPath(), conteudo );
                 MyStrings.exibeMensagem( String.format( "Arquivo de Remessa preparado com sucesso!%nLocal: %s", nomeArquivo ) );
-            } catch ( Exception ex ) {
+            } catch ( HeadlessException | IOException ex ) {
                 JOptionPane.showMessageDialog( this, "Houve erro ao gerar o arquivo!\nSerá exibido o arquivo de log com os problemas!", this.getTitle(), JOptionPane.ERROR_MESSAGE );
                 exibirLogErroRemessa( ex );
             }
@@ -245,22 +246,22 @@ public class MainForm extends BaseForm {
         g2.dispose();
         return resizedimage;
     }
-    
-   public static void setWaitCursor(RootPaneContainer frame) {
-        if (frame != null) {
-            RootPaneContainer root = (RootPaneContainer) frame.getRootPane().getTopLevelAncestor();
-            root.getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            root.getGlassPane().setVisible(true);
-        }
-    }    
 
-    public static void setDefaultCursor(RootPaneContainer frame) {
-        if (frame != null) {
+    public static void setWaitCursor( RootPaneContainer frame ) {
+        if ( frame != null ) {
             RootPaneContainer root = (RootPaneContainer) frame.getRootPane().getTopLevelAncestor();
-            root.getGlassPane().setCursor(Cursor.getDefaultCursor());
+            root.getGlassPane().setCursor( Cursor.getPredefinedCursor( Cursor.WAIT_CURSOR ) );
+            root.getGlassPane().setVisible( true );
         }
-    }   
-   
+    }
+
+    public static void setDefaultCursor( RootPaneContainer frame ) {
+        if ( frame != null ) {
+            RootPaneContainer root = (RootPaneContainer) frame.getRootPane().getTopLevelAncestor();
+            root.getGlassPane().setCursor( Cursor.getDefaultCursor() );
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBarMain;

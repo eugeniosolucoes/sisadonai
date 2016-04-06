@@ -161,9 +161,8 @@ public class PopupArquivoRetornoForm extends BaseDialog {
                     arquivo.setDialogType( JFileChooser.OPEN_DIALOG );
                     arquivo.setFileFilter( new MyFilter( "txt" ) );
                     arquivo.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
-                    arquivo.setApproveButtonText( "Abrir" );
 
-                    int r = arquivo.showOpenDialog( null );
+                    int r = arquivo.showDialog( null, "Selecionar" );
 
                     if ( r == JFileChooser.APPROVE_OPTION ) {
                         try {
