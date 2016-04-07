@@ -25,6 +25,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
@@ -436,6 +437,7 @@ public class BoletoForm extends BaseDialog {
     private void listarBoletos() {
         try {
             MainForm.setWaitCursor( this );
+            chkTodos.setSelected( false );
             boletoModel = service.listarBoletos( boletoFiltroModel );
             Object[][] dados = getDados();
             tblDados.setModel( new javax.swing.table.DefaultTableModel( dados,
