@@ -91,6 +91,8 @@ public class ArquivoDeRetornoServiceImpl implements ArquivoDeRetornoService {
         dadosBoletoPagoModel.setNumeroMensalidade( linhaT.substring( 61, 63 ).trim() );
         try {
             dadosBoletoPagoModel.setPagamento( DATE_FORMAT.parse( linhaU.substring( 137, 145 ) ) );
+            dadosBoletoPagoModel.setVencimento(DATE_FORMAT.parse( linhaT.substring( 69, 77 ) ) );
+            
             String valorPago = linhaU.substring( 77, 92 );
             double valor = Double.parseDouble( valorPago ) / 100;
             dadosBoletoPagoModel.setValor( valor );

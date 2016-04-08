@@ -23,6 +23,8 @@ public class DadosBoletoPagoModel {
 
     private Double valor;
 
+    private Date vencimento;
+    
     private Date pagamento;
 
     private String numeroMensalidade;
@@ -33,12 +35,13 @@ public class DadosBoletoPagoModel {
     }
 
     public DadosBoletoPagoModel( String matricula, String aluno, 
-            String nossoNumero, Double valor, Date pagamento,
+            String nossoNumero, Double valor, Date vencimento, Date pagamento,
             String numeroMensalidade ) {
         this.matricula = matricula;
         this.aluno = aluno;
         this.nossoNumero = nossoNumero;
         this.valor = valor;
+        this.vencimento = vencimento;
         this.pagamento = pagamento;
         this.numeroMensalidade = numeroMensalidade;
     }
@@ -86,6 +89,14 @@ public class DadosBoletoPagoModel {
 
     public void setPagamento( Date pagamento ) {
         this.pagamento = pagamento;
+    }
+
+    public Date getVencimento() {
+        return vencimento;
+    }
+
+    public void setVencimento( Date vencimento ) {
+        this.vencimento = vencimento;
     }
     
     public String getNumeroMensalidade() {

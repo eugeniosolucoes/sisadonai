@@ -255,9 +255,9 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "`Data_Pagamento` = ?, " );
             sb.append( "`Valor_Baixa` = ? " );
             sb.append( "WHERE `Codigo_PFisica` = ? " );
-            sb.append( "AND `Nosso_Numero` = ?" );
+            sb.append( "AND `Nosso_Numero` = ? " );
             ps = con.prepareStatement( sb.toString() );
-            ps.setTimestamp( 1, new java.sql.Timestamp( boletoPagoModels.getPagamento().getTime() ) );
+            ps.setDate( 1, new java.sql.Date( boletoPagoModels.getPagamento().getTime() ) );
             ps.setDouble( 2, boletoPagoModels.getValor() );
             ps.setString( 3, boletoPagoModels.getMatricula() );
             ps.setString( 4, boletoPagoModels.getNossoNumero() );
