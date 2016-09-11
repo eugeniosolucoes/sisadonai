@@ -10,6 +10,7 @@ import br.com.eugeniosolucoes.nfse.model.ConsultarLoteRpsResposta;
 import br.com.eugeniosolucoes.nfse.model.ConsultarSituacaoLoteRpsEnvio;
 import br.com.eugeniosolucoes.nfse.model.ConsultarSituacaoLoteRpsResposta;
 import br.com.eugeniosolucoes.nfse.model.EnviarLoteRpsEnvio;
+import br.com.eugeniosolucoes.nfse.model.EnviarLoteRpsResposta;
 import br.com.eugeniosolucoes.nfse.model.TcContato;
 import br.com.eugeniosolucoes.nfse.model.TcCpfCnpj;
 import br.com.eugeniosolucoes.nfse.model.TcDadosServico;
@@ -36,6 +37,7 @@ import static br.com.eugeniosolucoes.nfse.util.XmlUtils.*;
 import br.com.eugeniosolucoes.repository.BoletoRepository;
 import br.com.eugeniosolucoes.repository.impl.AbstractRepository;
 import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
+import br.com.eugeniosolucoes.util.MyStrings;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -76,8 +78,9 @@ public class NfseTest {
 
         EnviarLoteRpsEnvio loteRpsEnvio = enviarLoteRps();
 
-        //EnviarLoteRpsResposta enviarLoteRps = servico.enviarLoteRps( loteRpsEnvio );
-        String xml = XmlUtils.createXmlFromObject( loteRpsEnvio );
+        EnviarLoteRpsResposta resposta = servico.enviarLoteRps( loteRpsEnvio );
+        
+        String xml = XmlUtils.createXmlFromObject( resposta );
 
         System.out.println( xml );
 
@@ -168,8 +171,8 @@ public class NfseTest {
                     tcEndereco.setBairro( dados.getEndereco().getBairro() );
                     tcEndereco.setCep( Integer.valueOf( dados.getEndereco().getCep() ) );
                     tcEndereco.setCodigoMunicipio( MunicipioRJ.getMunicipio( dados.getEndereco().getCidade() ).getCodigo() );
-                    tcEndereco.setComplemento( dados.getEndereco().getComplemento() );
-                    tcEndereco.setNumero( dados.getEndereco().getComplemento() );
+                    tcEndereco.setComplemento( MyStrings.isNullOrEmpty( dados.getEndereco().getComplemento() ) ? "N/A" : dados.getEndereco().getComplemento() );
+                    tcEndereco.setNumero( MyStrings.isNullOrEmpty( dados.getEndereco().getComplemento() ) ? "S/N" : dados.getEndereco().getComplemento() );
                     tcEndereco.setUf( dados.getEndereco().getEstado() );
                     tcDadosTomador.setEndereco( tcEndereco );
                     tcInfRps.setTomador( tcDadosTomador );
@@ -211,12 +214,6 @@ public class NfseTest {
         String xml = XmlUtils.createXmlFromObject( resposta );
 
         System.out.println( xml );
-    }
-
-    @Test
-    public void testCreateTableNotaCarioca() {
-        AbstractRepository repository = AbstractRepository.getInstance();
-        repository.criarTabelaNotaCarioca();
     }
 
 }
