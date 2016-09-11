@@ -34,6 +34,7 @@ import br.com.eugeniosolucoes.nfse.util.MunicipioRJ;
 import br.com.eugeniosolucoes.nfse.util.XmlUtils;
 import static br.com.eugeniosolucoes.nfse.util.XmlUtils.*;
 import br.com.eugeniosolucoes.repository.BoletoRepository;
+import br.com.eugeniosolucoes.repository.impl.AbstractRepository;
 import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.math.BigDecimal;
@@ -57,8 +58,6 @@ public class NfseTest {
 
     public static final String CODIGO_TRIBUTACAO_MUNICIPIO = "080214";
 
-    public static final int CODIGO_MUNICIPIO_RJ = 3304557;
-
     public static final String ITEM_LISTA_SERVICO = "0802";
 
     static final String ARQUIVO = "/arquivos/COBST_L4GR_02_240216P_MOV.TXT";
@@ -78,7 +77,6 @@ public class NfseTest {
         EnviarLoteRpsEnvio loteRpsEnvio = enviarLoteRps();
 
         //EnviarLoteRpsResposta enviarLoteRps = servico.enviarLoteRps( loteRpsEnvio );
-
         String xml = XmlUtils.createXmlFromObject( loteRpsEnvio );
 
         System.out.println( xml );
@@ -144,7 +142,7 @@ public class NfseTest {
                             + "\n"
                             + "\n"
                             + "                            PERCENTUAL DE IMPOSTOS - 12,42%" );
-                    tcDadosServico.setCodigoMunicipio( CODIGO_MUNICIPIO_RJ );
+                    tcDadosServico.setCodigoMunicipio( MunicipioRJ.RIO_DE_JANEIRO.getCodigo() );
                     tcInfRps.setServico( tcDadosServico );
                     tcInfRps.setStatus( (byte) 1 );
 
@@ -213,6 +211,12 @@ public class NfseTest {
         String xml = XmlUtils.createXmlFromObject( resposta );
 
         System.out.println( xml );
+    }
+
+    @Test
+    public void testCreateTableNotaCarioca() {
+        AbstractRepository repository = AbstractRepository.getInstance();
+        repository.criarTabelaNotaCarioca();
     }
 
 }

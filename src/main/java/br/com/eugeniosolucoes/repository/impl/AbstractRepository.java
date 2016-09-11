@@ -8,11 +8,12 @@ package br.com.eugeniosolucoes.repository.impl;
 import br.com.eugeniosolucoes.app.Main;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class AbstractRepository {
 
-    static final Logger LOG = Logger.getLogger( AbstractRepository.class.getName() );
+    private static final Logger LOG = LoggerFactory.getLogger( AbstractRepository.class );
 
     static final String ULR = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=C:/Virtual/Virtual.mdb";
 
@@ -30,7 +31,7 @@ public class AbstractRepository {
         try {
             sun.jdbc.odbc.JdbcOdbcDriver.class.newInstance();
         } catch ( InstantiationException | IllegalAccessException ex ) {
-            LOG.log( Level.SEVERE, null, ex );
+            LOG.error( ex.getMessage(), ex );
         }
     }
 
@@ -51,7 +52,7 @@ public class AbstractRepository {
             try {
                 con.close();
             } catch ( SQLException ex ) {
-                LOG.log( Level.SEVERE, null, ex );
+                LOG.error( ex.getMessage(), ex );
             }
         }
     }
@@ -61,7 +62,7 @@ public class AbstractRepository {
             try {
                 s.close();
             } catch ( SQLException ex ) {
-                LOG.log( Level.SEVERE, null, ex );
+                LOG.error( ex.getMessage(), ex );
             }
         }
         fechar( con );
@@ -72,7 +73,7 @@ public class AbstractRepository {
             try {
                 rs.close();
             } catch ( SQLException ex ) {
-                LOG.log( Level.SEVERE, null, ex );
+                LOG.error( ex.getMessage(), ex );
             }
         }
         fechar( con, s );
@@ -80,6 +81,27 @@ public class AbstractRepository {
 
     public static AbstractRepository getInstance() {
         return AbstractRepositoryHolder.INSTANCE;
+    }
+
+    public void criarTabelaNotaCarioca() {
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = this.getConnection();
+            String sql = "CREATE TABLE NotaCarioca\n" 
+                    + "(\n" + "NossoNumero CHAR(10) NOT NULL,\n" 
+                    + "NumeroRps INT NOT NULL,\n" 
+                    + "NumeroLoteRps INT,\n" 
+                    + "DataEmissao DATETIME,\n" 
+                    + "Protocolo CHAR(255),\n" 
+                    + "CONSTRAINT pk_NossoNumero PRIMARY KEY (NossoNumero) );";
+            ps = con.prepareStatement( sql );
+            ps.execute();
+        } catch ( SQLException ex ) {
+            LOG.info( ex.getMessage() );
+        } finally {
+            this.fechar( con, ps );
+        }
     }
 
     private static class AbstractRepositoryHolder {
