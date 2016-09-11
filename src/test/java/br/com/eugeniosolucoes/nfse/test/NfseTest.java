@@ -10,7 +10,6 @@ import br.com.eugeniosolucoes.nfse.model.ConsultarLoteRpsResposta;
 import br.com.eugeniosolucoes.nfse.model.ConsultarSituacaoLoteRpsEnvio;
 import br.com.eugeniosolucoes.nfse.model.ConsultarSituacaoLoteRpsResposta;
 import br.com.eugeniosolucoes.nfse.model.EnviarLoteRpsEnvio;
-import br.com.eugeniosolucoes.nfse.model.EnviarLoteRpsResposta;
 import br.com.eugeniosolucoes.nfse.model.TcContato;
 import br.com.eugeniosolucoes.nfse.model.TcCpfCnpj;
 import br.com.eugeniosolucoes.nfse.model.TcDadosServico;
@@ -31,11 +30,14 @@ import java.io.InputStream;
 import java.util.List;
 import org.junit.Test;
 import static br.com.eugeniosolucoes.nfse.util.Config.PROP;
+import br.com.eugeniosolucoes.nfse.util.MunicipioRJ;
 import br.com.eugeniosolucoes.nfse.util.XmlUtils;
 import static br.com.eugeniosolucoes.nfse.util.XmlUtils.*;
+import br.com.eugeniosolucoes.repository.BoletoRepository;
+import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
+import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import javax.xml.datatype.XMLGregorianCalendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,9 +79,9 @@ public class NfseTest {
 
         //EnviarLoteRpsResposta enviarLoteRps = servico.enviarLoteRps( loteRpsEnvio );
 
-        //String xmlResposta = XmlUtils.createXmlFromObject( enviarLoteRps );
+        String xml = XmlUtils.createXmlFromObject( loteRpsEnvio );
 
-        //System.out.println( xmlResposta );
+        System.out.println( xml );
 
     }
 
@@ -93,6 +95,7 @@ public class NfseTest {
     }
 
     public EnviarLoteRpsEnvio processarLoteRps( int indexLote, String[] arquivos, ArquivoDeRetornoServiceImpl instance, int indexRps ) {
+        BoletoRepository repository = new BoletoRepositoryImpl();
         EnviarLoteRpsEnvio loteRpsEnvio = new EnviarLoteRpsEnvio();
         TcLoteRps loteRps = loteRpsEnvio.getLoteRps();
         loteRps.setId( LOTE_RPS + indexLote );
@@ -108,6 +111,7 @@ public class NfseTest {
             for ( DadosBoletoPagoModel model : lerArquivoDeRetorno ) {
                 instance.processarBaixaDeBoleto( model );
                 if ( model.isAtualizado() ) {
+                    DadosBoletoModel dados = repository.retornarBoletoPago( model );
                     TcRps tcRps = new TcRps();
                     TcInfRps tcInfRps = new TcInfRps();
 
@@ -117,7 +121,7 @@ public class NfseTest {
                     tcIdentificacaoRps.setTipo( (byte) 1 );
                     tcInfRps.setIdentificacaoRps( tcIdentificacaoRps );
 
-                    tcInfRps.setDataEmissao( createDataXml( model.getPagamento() ) );
+                    tcInfRps.setDataEmissao( createDataXml( dados.getVencimento() ) );
                     tcInfRps.setId( INF_RPS + indexRps );
                     tcInfRps.setNaturezaOperacao( (byte) 1 );
                     tcInfRps.setOptanteSimplesNacional( (byte) 2 );
@@ -126,10 +130,10 @@ public class NfseTest {
                     TcDadosServico tcDadosServico = new TcDadosServico();
                     TcValores tcValores = new TcValores();
 
-                    tcValores.setValorServicos( new BigDecimal( model.getValor() ) );
+                    tcValores.setValorServicos( new BigDecimal( dados.getValor() ) );
                     tcValores.setIssRetido( (byte) 2 );
-                    tcValores.setBaseCalculo( new BigDecimal( model.getValor() ) );
-                    tcValores.setValorLiquidoNfse( new BigDecimal( model.getValor() ) );
+                    tcValores.setBaseCalculo( new BigDecimal( dados.getValor() ) );
+                    tcValores.setValorLiquidoNfse( new BigDecimal( dados.getValor() ) );
 
                     tcDadosServico.setValores( tcValores );
                     tcDadosServico.setItemListaServico( ITEM_LISTA_SERVICO );
@@ -154,21 +158,21 @@ public class NfseTest {
                     TcDadosTomador tcDadosTomador = new TcDadosTomador();
                     tcDadosTomador.setRazaoSocial( model.getAluno() );
                     TcContato tcContato = new TcContato();
-                    tcContato.setEmail( "meuemail@web.com.br" );
+                    tcContato.setEmail( dados.getEmail() );
                     tcDadosTomador.setContato( tcContato );
                     TcIdentificacaoTomador tcIdentificacaoTomador = new TcIdentificacaoTomador();
                     TcCpfCnpj tcCpfCnpj = new TcCpfCnpj();
-                    tcCpfCnpj.setCpf( "00000000000" );
+                    tcCpfCnpj.setCpf( dados.getCpf() );
                     tcIdentificacaoTomador.setCpfCnpj( tcCpfCnpj );
                     tcDadosTomador.setIdentificacaoTomador( tcIdentificacaoTomador );
                     TcEndereco tcEndereco = new TcEndereco();
-                    tcEndereco.setEndereco( "Av. Rio Branco" );
-                    tcEndereco.setBairro( "Centro" );
-                    tcEndereco.setCep( 20040001 );
-                    tcEndereco.setCodigoMunicipio( 3304557 );
-                    tcEndereco.setComplemento( "Andar 1" );
-                    tcEndereco.setNumero( "123" );
-                    tcEndereco.setUf( "RJ" );
+                    tcEndereco.setEndereco( dados.getEndereco().getLogradouro() );
+                    tcEndereco.setBairro( dados.getEndereco().getBairro() );
+                    tcEndereco.setCep( Integer.valueOf( dados.getEndereco().getCep() ) );
+                    tcEndereco.setCodigoMunicipio( MunicipioRJ.getMunicipio( dados.getEndereco().getCidade() ).getCodigo() );
+                    tcEndereco.setComplemento( dados.getEndereco().getComplemento() );
+                    tcEndereco.setNumero( dados.getEndereco().getComplemento() );
+                    tcEndereco.setUf( dados.getEndereco().getEstado() );
                     tcDadosTomador.setEndereco( tcEndereco );
                     tcInfRps.setTomador( tcDadosTomador );
 

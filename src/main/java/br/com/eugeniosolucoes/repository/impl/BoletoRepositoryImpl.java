@@ -15,13 +15,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -270,4 +267,89 @@ public class BoletoRepositoryImpl implements BoletoRepository {
         }
     }
 
+    @Override
+    public DadosBoletoModel retornarBoletoPago( DadosBoletoPagoModel boletoPagoModels ) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = repository.getConnection();
+            StringBuilder sb = new StringBuilder();
+            sb.append( "SELECT DISTINCT " );
+            sb.append( "dp.CPF_PFisica, " );
+            sb.append( "pf.`Nome_PFisica`, " );
+            sb.append( "epf.`Email_Site`, " );
+            sb.append( "pf.`Codigo_PFisica`, " );
+            sb.append( "tu.`Nome_Turma`, " );
+            sb.append( "mens.`Data_Vencimento`, " );
+            sb.append( "mens.`Valor_Mensalidade`, " );
+            sb.append( "mens.`Nosso_Numero`, " );
+            sb.append( "mens.`Codigo_Situacao_Mensalidade`, " );
+            sb.append( "mens.`Numero_Mensalidade`,  " );
+            sb.append( "tabmens.`Qtde_Mensalidades`, " );
+            sb.append( "mens.`Percentual_Multa`,  " );
+            sb.append( "mens.`Percentual_Juros`,  " );
+            sb.append( "ep.`Endereco`,   " );
+            sb.append( "ep.`Complemento_Endereco`,   " );
+            sb.append( "bai.`Nome_Bairro`,   " );
+            sb.append( "cid.`Nome_Cidade`,   " );
+            sb.append( "est.`Sigla_Estado`,  " );
+            sb.append( "ep.`CEP_Endereco`  " );
+            sb.append( "FROM ((((((((((((((`PFisicas` pf " );
+            sb.append( "INNER JOIN `Matriculas` m ON m.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
+            sb.append( "INNER JOIN `PeriodosLetivos` pl ON pl.`Codigo_Periodo_Letivo` = m.`Codigo_Periodo_Letivo`) " );
+            sb.append( "INNER JOIN `Cursos` c ON c.`Codigo_Curso` = m.`Codigo_Curso`) " );
+            sb.append( "INNER JOIN `Series` s ON s.`Codigo_Serie` = m.`Codigo_Serie`) " );
+            sb.append( "INNER JOIN `Turnos` t ON t.`Codigo_Turno` = m.`Codigo_Turno`) " );
+            sb.append( "LEFT JOIN `EmailSitePFisicas` epf ON epf.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
+            sb.append( "INNER JOIN `TurmasEscola` tu ON tu.`Codigo_Curso` = c.`Codigo_Curso` AND tu.`Codigo_Serie`= s.`Codigo_Serie` AND tu.`Codigo_Turno` = t.`Codigo_Turno`) " );
+            sb.append( "INNER JOIN `Mensalidades` mens ON mens.`Codigo_Periodo_Letivo` = pl.`Codigo_Periodo_Letivo`  " );
+            sb.append( "AND mens.`Codigo_Curso` = c.`Codigo_Curso`  " );
+            sb.append( "AND mens.`Codigo_Serie` = s.`Codigo_Serie`  " );
+            sb.append( "AND mens.`Codigo_PFisica` = pf.`Codigo_PFisica` ) " );
+            sb.append( "INNER JOIN `TabelasMensalidades` tabmens ON tabmens.`Codigo_Periodo_Letivo` = pl.`Codigo_Periodo_Letivo` " );
+            sb.append( "AND tabmens.`Codigo_Curso` = c.`Codigo_Curso` " );
+            sb.append( "AND tabmens.`Codigo_Serie` = s.`Codigo_Serie` ) " );
+            sb.append( "INNER JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
+            sb.append( "LEFT JOIN `EnderecosPFisicas` ep ON ep.`Codigo_PFisica` = pf.`Codigo_PFisica` ) " );
+            sb.append( "LEFT JOIN `Estados` est ON est.`Codigo_Estado` = ep.`Codigo_Estado`  ) " );
+            sb.append( "LEFT JOIN `Cidades` cid ON cid.`Codigo_Cidade` = ep.`Codigo_Cidade` AND cid.`Codigo_Estado` = ep.`Codigo_Estado` ) " );
+            sb.append( "LEFT JOIN `Bairros` bai ON bai.`Codigo_Bairro` = ep.`Codigo_Bairro` AND bai.`Codigo_Cidade` = ep.`Codigo_Cidade` AND bai.`Codigo_Estado` = ep.`Codigo_Estado` ) " );
+            sb.append( "WHERE mens.`Codigo_PFisica` = ? " );
+            sb.append( "AND mens.`Nosso_Numero` = ? " );
+            ps = con.prepareStatement( sb.toString() );
+            ps.setString( 1, boletoPagoModels.getMatricula() );
+            ps.setString( 2, boletoPagoModels.getNossoNumero() );
+            rs = ps.executeQuery();
+            List<DadosBoletoModel> list = new ArrayList<>();
+            while (rs.next()) {
+                list.add( new DadosBoletoModel(
+                        rs.getString( "CPF_PFisica" ),
+                        rs.getString( "Codigo_PFisica" ),
+                        rs.getString( "Nome_PFisica" ), rs.getString( "Nome_Turma" ),
+                        rs.getString( "Nosso_Numero" ),
+                        rs.getDouble( "Valor_Mensalidade" ),
+                        rs.getDate( "Data_Vencimento" ),
+                        rs.getString( "Codigo_Situacao_Mensalidade" ),
+                        rs.getString( "Numero_Mensalidade" ),
+                        rs.getString( "Qtde_Mensalidades" ),
+                        rs.getDouble( "Percentual_Multa" ),
+                        rs.getDouble( "Percentual_Juros" ),
+                        new EnderecoModel(
+                                rs.getString( "Endereco" ),
+                                rs.getString( "Complemento_Endereco" ),
+                                rs.getString( "Nome_Bairro" ),
+                                rs.getString( "Nome_Cidade" ),
+                                rs.getString( "Sigla_Estado" ),
+                                rs.getString( "CEP_Endereco" )
+                        ), rs.getString( MyStrings.removerAcentos( "Email_Site" ) ) ) );
+            }
+            return list.get( 0 );
+        } catch ( SQLException ex ) {
+            LOG.log( Level.SEVERE, null, ex );
+        } finally {
+            repository.fechar( con, ps, rs );
+        }
+        return null;
+    }
 }

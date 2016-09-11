@@ -25,4 +25,7 @@ public interface BoletoRepository {
     List<DadosBoletoModel> listarAlunosPorTurma( DadosBoletoFiltroModel boletoFiltroDTO );    
     
     void processarBaixaDeBoleto( DadosBoletoPagoModel boletoPagoModels );
+    
+    DadosBoletoModel retornarBoletoPago( DadosBoletoPagoModel boletoPagoModels );
+
 }
