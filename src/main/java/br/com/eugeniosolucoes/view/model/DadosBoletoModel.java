@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author eugenio
  */
-public class DadosBoletoModel {
+public class DadosBoletoModel implements Comparable<DadosBoletoModel> {
 
     private String cpf;
 
@@ -218,6 +218,11 @@ public class DadosBoletoModel {
     @Override
     public String toString() {
         return "DadosBoletoModel{" + "cpf=" + cpf + ", matricula=" + matricula + ", aluno=" + aluno + ", turma=" + turma + '}';
+    }
+
+    @Override
+    public int compareTo( DadosBoletoModel o ) {
+        return this.matricula.compareTo( o.matricula );
     }
     
 }

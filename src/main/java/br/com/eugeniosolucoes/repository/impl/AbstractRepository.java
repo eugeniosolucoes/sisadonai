@@ -41,11 +41,7 @@ public class AbstractRepository {
     public Connection getConnection() throws SQLException {
         // TODO - REMOVER APOS TESTE DE HOMOLOGACAO
         if ( !Main.isTestMode() ) {
-            java.util.Properties prop = new java.util.Properties();
-            prop.put( "charSet", "UTF-8" );
-            prop.put( "user", "" );
-            prop.put( "password", "" );
-            return DriverManager.getConnection( ULR, prop );
+            return DriverManager.getConnection( ULR, "", "" );
         } else {
             return DriverManager.getConnection( ULR_TESTE + Main.getDBTest(), "", "" );
         }

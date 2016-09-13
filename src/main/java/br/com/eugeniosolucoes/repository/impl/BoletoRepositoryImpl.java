@@ -18,7 +18,9 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -145,7 +147,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                 ps.setString( 5, String.format( "%s", "%" + boletoFiltroDTO.getMatriculaAluno().trim().toUpperCase() + "%" ) );
             }
             rs = ps.executeQuery();
-            List<DadosBoletoModel> list = new ArrayList<>();
+            Set<DadosBoletoModel> list = new HashSet<>();
             while (rs.next()) {
                 list.add( new DadosBoletoModel(
                         rs.getString( "CPF_PFisica" ),
@@ -168,7 +170,9 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                                 rs.getString( "CEP_Endereco" )
                         ), rs.getString( MyStrings.removerAcentos( "Email_Site" ) ) ) );
             }
-            return list;
+            List<DadosBoletoModel> result = new ArrayList<>(list );
+            Collections.sort( result );
+            return result;
         } catch ( SQLException ex ) {
             LOG.log( Level.SEVERE, null, ex );
         } finally {

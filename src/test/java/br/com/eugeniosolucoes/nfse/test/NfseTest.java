@@ -87,8 +87,8 @@ public class NfseTest {
     }
 
     public EnviarLoteRpsEnvio enviarLoteRps() {
-        int indexLote = 2; //00000000000000000000000000000000000000000001642771
-        int indexRps = 3;
+        int indexLote = 3; //00000000000000000000000000000000000000000001642771
+        int indexRps = 5;
         System.out.println( "lerArquivoDeRetorno" );
         ArquivoDeRetornoServiceImpl instance = new ArquivoDeRetornoServiceImpl();
         String[] arquivos = {ARQUIVO, ARQUIVO1, ARQUIVO2};
@@ -168,7 +168,7 @@ public class NfseTest {
                     tcDadosTomador.setIdentificacaoTomador( tcIdentificacaoTomador );
                     TcEndereco tcEndereco = new TcEndereco();
                     tcEndereco.setEndereco( dados.getEndereco().getLogradouro() );
-                    tcEndereco.setBairro( MyStrings.removerAcentos( dados.getEndereco().getBairro().replace( "?", "e") )  );
+                    tcEndereco.setBairro( MyStrings.removerAcentos( dados.getEndereco().getBairro() )  );
                     tcEndereco.setCep( Integer.valueOf( dados.getEndereco().getCep() ) );
                     tcEndereco.setCodigoMunicipio( MunicipioRJ.getMunicipio( dados.getEndereco().getCidade() ).getCodigo() );
                     tcEndereco.setComplemento( MyStrings.isNullOrEmpty( dados.getEndereco().getComplemento() ) ? "N/A" : dados.getEndereco().getComplemento() );
