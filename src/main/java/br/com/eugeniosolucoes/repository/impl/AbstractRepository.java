@@ -41,7 +41,11 @@ public class AbstractRepository {
     public Connection getConnection() throws SQLException {
         // TODO - REMOVER APOS TESTE DE HOMOLOGACAO
         if ( !Main.isTestMode() ) {
-            return DriverManager.getConnection( ULR, "", "" );
+            java.util.Properties prop = new java.util.Properties();
+            prop.put( "charSet", "UTF-8" );
+            prop.put( "user", "" );
+            prop.put( "password", "" );
+            return DriverManager.getConnection( ULR, prop );
         } else {
             return DriverManager.getConnection( ULR_TESTE + Main.getDBTest(), "", "" );
         }
@@ -88,12 +92,12 @@ public class AbstractRepository {
         PreparedStatement ps = null;
         try {
             con = this.getConnection();
-            String sql = "CREATE TABLE NotaCarioca\n" 
-                    + "(\n" + "NossoNumero CHAR(10) NOT NULL,\n" 
-                    + "NumeroRps INT NOT NULL,\n" 
-                    + "NumeroLoteRps INT,\n" 
-                    + "DataEmissao DATETIME,\n" 
-                    + "Protocolo CHAR(255),\n" 
+            String sql = "CREATE TABLE NotaCarioca\n"
+                    + "(\n" + "NossoNumero CHAR(10) NOT NULL,\n"
+                    + "NumeroRps INT NOT NULL,\n"
+                    + "NumeroLoteRps INT,\n"
+                    + "DataEmissao DATETIME,\n"
+                    + "Protocolo CHAR(255),\n"
                     + "CONSTRAINT pk_NossoNumero PRIMARY KEY (NossoNumero) );";
             ps = con.prepareStatement( sql );
             ps.execute();

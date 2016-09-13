@@ -87,8 +87,8 @@ public class NfseTest {
     }
 
     public EnviarLoteRpsEnvio enviarLoteRps() {
-        int indexLote = 1;
-        int indexRps = 1;
+        int indexLote = 2; //00000000000000000000000000000000000000000001642771
+        int indexRps = 3;
         System.out.println( "lerArquivoDeRetorno" );
         ArquivoDeRetornoServiceImpl instance = new ArquivoDeRetornoServiceImpl();
         String[] arquivos = {ARQUIVO, ARQUIVO1, ARQUIVO2};
@@ -122,7 +122,7 @@ public class NfseTest {
                     tcIdentificacaoRps.setTipo( (byte) 1 );
                     tcInfRps.setIdentificacaoRps( tcIdentificacaoRps );
 
-                    tcInfRps.setDataEmissao( createDataXml( dados.getVencimento() ) );
+                    tcInfRps.setDataEmissao( createDataXml() );
                     tcInfRps.setId( INF_RPS + indexRps );
                     tcInfRps.setNaturezaOperacao( (byte) 1 );
                     tcInfRps.setOptanteSimplesNacional( (byte) 2 );
@@ -168,7 +168,7 @@ public class NfseTest {
                     tcDadosTomador.setIdentificacaoTomador( tcIdentificacaoTomador );
                     TcEndereco tcEndereco = new TcEndereco();
                     tcEndereco.setEndereco( dados.getEndereco().getLogradouro() );
-                    tcEndereco.setBairro( dados.getEndereco().getBairro() );
+                    tcEndereco.setBairro( MyStrings.removerAcentos( dados.getEndereco().getBairro().replace( "?", "e") )  );
                     tcEndereco.setCep( Integer.valueOf( dados.getEndereco().getCep() ) );
                     tcEndereco.setCodigoMunicipio( MunicipioRJ.getMunicipio( dados.getEndereco().getCidade() ).getCodigo() );
                     tcEndereco.setComplemento( MyStrings.isNullOrEmpty( dados.getEndereco().getComplemento() ) ? "N/A" : dados.getEndereco().getComplemento() );
@@ -194,7 +194,7 @@ public class NfseTest {
         prestador.setCnpj( PROP.getProperty( "Prestardor.Cnpj" ) );
         prestador.setInscricaoMunicipal( PROP.getProperty( "Prestardor.InscricaoMunicipal" ) );
         envio.setPrestador( prestador );
-        envio.setProtocolo( "00000000000000000000000000000000000000000001642641" );
+        envio.setProtocolo( "00000000000000000000000000000000000000000001642771" );
         ConsultarSituacaoLoteRpsResposta resposta = servico.consultarSituacaoLoteRps( envio );
 
         String xml = XmlUtils.createXmlFromObject( resposta );
@@ -209,7 +209,7 @@ public class NfseTest {
         prestador.setCnpj( PROP.getProperty( "Prestardor.Cnpj" ) );
         prestador.setInscricaoMunicipal( PROP.getProperty( "Prestardor.InscricaoMunicipal" ) );
         envio.setPrestador( prestador );
-        envio.setProtocolo( "00000000000000000000000000000000000000000001642641" );
+        envio.setProtocolo( "00000000000000000000000000000000000000000001642771" );
         ConsultarLoteRpsResposta resposta = servico.consultarLoteRps( envio );
         String xml = XmlUtils.createXmlFromObject( resposta );
 
