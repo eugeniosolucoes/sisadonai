@@ -349,11 +349,10 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                         ), rs.getString( MyStrings.removerAcentos( "Email_Site" ) ) ) );
             }
             return list.get( 0 );
-        } catch ( SQLException ex ) {
-            LOG.log( Level.SEVERE, null, ex );
+        } catch ( Exception ex ) {
+            throw new IllegalStateException( ex );
         } finally {
             repository.fechar( con, ps, rs );
         }
-        return null;
     }
 }

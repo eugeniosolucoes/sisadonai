@@ -83,26 +83,6 @@ public class AbstractRepository {
         return AbstractRepositoryHolder.INSTANCE;
     }
 
-    public void criarTabelaNotaCarioca() {
-        Connection con = null;
-        PreparedStatement ps = null;
-        try {
-            con = this.getConnection();
-            String sql = "CREATE TABLE NotaCarioca\n"
-                    + "(\n" + "NossoNumero CHAR(10) NOT NULL,\n"
-                    + "NumeroRps INT NOT NULL,\n"
-                    + "NumeroLoteRps INT,\n"
-                    + "DataEmissao DATETIME,\n"
-                    + "Protocolo CHAR(255),\n"
-                    + "CONSTRAINT pk_NossoNumero PRIMARY KEY (NossoNumero) );";
-            ps = con.prepareStatement( sql );
-            ps.execute();
-        } catch ( SQLException ex ) {
-            LOG.info( ex.getMessage() );
-        } finally {
-            this.fechar( con, ps );
-        }
-    }
 
     private static class AbstractRepositoryHolder {
 
