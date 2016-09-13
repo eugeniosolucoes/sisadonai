@@ -11,11 +11,9 @@ import br.com.eugeniosolucoes.nfse.model.ConsultarSituacaoLoteRpsEnvio;
 import br.com.eugeniosolucoes.nfse.model.ConsultarSituacaoLoteRpsResposta;
 import br.com.eugeniosolucoes.nfse.model.EnviarLoteRpsEnvio;
 import br.com.eugeniosolucoes.nfse.model.EnviarLoteRpsResposta;
-import br.com.eugeniosolucoes.nfse.model.TcContato;
 import br.com.eugeniosolucoes.nfse.model.TcCpfCnpj;
 import br.com.eugeniosolucoes.nfse.model.TcDadosServico;
 import br.com.eugeniosolucoes.nfse.model.TcDadosTomador;
-import br.com.eugeniosolucoes.nfse.model.TcEndereco;
 import br.com.eugeniosolucoes.nfse.model.TcIdentificacaoPrestador;
 import br.com.eugeniosolucoes.nfse.model.TcIdentificacaoRps;
 import br.com.eugeniosolucoes.nfse.model.TcIdentificacaoTomador;
@@ -35,9 +33,7 @@ import br.com.eugeniosolucoes.nfse.util.MunicipioRJ;
 import br.com.eugeniosolucoes.nfse.util.XmlUtils;
 import static br.com.eugeniosolucoes.nfse.util.XmlUtils.*;
 import br.com.eugeniosolucoes.repository.BoletoRepository;
-import br.com.eugeniosolucoes.repository.impl.AbstractRepository;
 import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
-import br.com.eugeniosolucoes.util.MyStrings;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -79,7 +75,7 @@ public class NfseTest {
         EnviarLoteRpsEnvio loteRpsEnvio = enviarLoteRps();
 
         EnviarLoteRpsResposta resposta = servico.enviarLoteRps( loteRpsEnvio );
-        
+
         String xml = XmlUtils.createXmlFromObject( resposta );
 
         System.out.println( xml );
@@ -87,8 +83,8 @@ public class NfseTest {
     }
 
     public EnviarLoteRpsEnvio enviarLoteRps() {
-        int indexLote = 3; //00000000000000000000000000000000000000000001642771
-        int indexRps = 5;
+        int indexLote = 10; 
+        int indexRps = indexLote * 2 - 1;
         System.out.println( "lerArquivoDeRetorno" );
         ArquivoDeRetornoServiceImpl instance = new ArquivoDeRetornoServiceImpl();
         String[] arquivos = {ARQUIVO, ARQUIVO1, ARQUIVO2};
@@ -139,12 +135,7 @@ public class NfseTest {
                     tcDadosServico.setValores( tcValores );
                     tcDadosServico.setItemListaServico( ITEM_LISTA_SERVICO );
                     tcDadosServico.setCodigoTributacaoMunicipio( CODIGO_TRIBUTACAO_MUNICIPIO );
-                    tcDadosServico.setDiscriminacao( "MENSALIDADE - COMPLEMENTO\n"
-                            + "\n"
-                            + "\n"
-                            + "\n"
-                            + "\n"
-                            + "                            PERCENTUAL DE IMPOSTOS - 12,42%" );
+                    tcDadosServico.setDiscriminacao( PROP.getProperty( "Rps.DadosServico.Discriminacao" ) );
                     tcDadosServico.setCodigoMunicipio( MunicipioRJ.RIO_DE_JANEIRO.getCodigo() );
                     tcInfRps.setServico( tcDadosServico );
                     tcInfRps.setStatus( (byte) 1 );
@@ -158,23 +149,11 @@ public class NfseTest {
 
                     TcDadosTomador tcDadosTomador = new TcDadosTomador();
                     tcDadosTomador.setRazaoSocial( model.getAluno() );
-                    TcContato tcContato = new TcContato();
-                    tcContato.setEmail( dados.getEmail() );
-                    tcDadosTomador.setContato( tcContato );
                     TcIdentificacaoTomador tcIdentificacaoTomador = new TcIdentificacaoTomador();
                     TcCpfCnpj tcCpfCnpj = new TcCpfCnpj();
                     tcCpfCnpj.setCpf( dados.getCpf() );
                     tcIdentificacaoTomador.setCpfCnpj( tcCpfCnpj );
                     tcDadosTomador.setIdentificacaoTomador( tcIdentificacaoTomador );
-                    TcEndereco tcEndereco = new TcEndereco();
-                    tcEndereco.setEndereco( dados.getEndereco().getLogradouro() );
-                    tcEndereco.setBairro( MyStrings.removerAcentos( dados.getEndereco().getBairro() )  );
-                    tcEndereco.setCep( Integer.valueOf( dados.getEndereco().getCep() ) );
-                    tcEndereco.setCodigoMunicipio( MunicipioRJ.getMunicipio( dados.getEndereco().getCidade() ).getCodigo() );
-                    tcEndereco.setComplemento( MyStrings.isNullOrEmpty( dados.getEndereco().getComplemento() ) ? "N/A" : dados.getEndereco().getComplemento() );
-                    tcEndereco.setNumero( MyStrings.isNullOrEmpty( dados.getEndereco().getComplemento() ) ? "S/N" : dados.getEndereco().getComplemento() );
-                    tcEndereco.setUf( dados.getEndereco().getEstado() );
-                    tcDadosTomador.setEndereco( tcEndereco );
                     tcInfRps.setTomador( tcDadosTomador );
 
                     tcRps.setInfRps( tcInfRps );
@@ -194,7 +173,7 @@ public class NfseTest {
         prestador.setCnpj( PROP.getProperty( "Prestardor.Cnpj" ) );
         prestador.setInscricaoMunicipal( PROP.getProperty( "Prestardor.InscricaoMunicipal" ) );
         envio.setPrestador( prestador );
-        envio.setProtocolo( "00000000000000000000000000000000000000000001642771" );
+        envio.setProtocolo( "00000000000000000000000000000000000000000001642782" );
         ConsultarSituacaoLoteRpsResposta resposta = servico.consultarSituacaoLoteRps( envio );
 
         String xml = XmlUtils.createXmlFromObject( resposta );
@@ -209,7 +188,7 @@ public class NfseTest {
         prestador.setCnpj( PROP.getProperty( "Prestardor.Cnpj" ) );
         prestador.setInscricaoMunicipal( PROP.getProperty( "Prestardor.InscricaoMunicipal" ) );
         envio.setPrestador( prestador );
-        envio.setProtocolo( "00000000000000000000000000000000000000000001642771" );
+        envio.setProtocolo( "00000000000000000000000000000000000000000001642782" );
         ConsultarLoteRpsResposta resposta = servico.consultarLoteRps( envio );
         String xml = XmlUtils.createXmlFromObject( resposta );
 
