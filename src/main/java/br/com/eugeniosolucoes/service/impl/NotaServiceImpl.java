@@ -21,23 +21,26 @@ import br.com.eugeniosolucoes.nfse.servico.NsfeServico;
 import br.com.eugeniosolucoes.nfse.servico.impl.NsfeServicoImpl;
 import static br.com.eugeniosolucoes.nfse.util.Config.PROP;
 import br.com.eugeniosolucoes.nfse.util.MunicipioRJ;
-import static br.com.eugeniosolucoes.nfse.util.XmlUtils.createDataXml;
 import br.com.eugeniosolucoes.repository.BoletoRepository;
-import br.com.eugeniosolucoes.repository.NfseRepository;
 import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
-import br.com.eugeniosolucoes.repository.impl.NfseRepositoryImpl;
-import br.com.eugeniosolucoes.service.NfseService;
+import br.com.eugeniosolucoes.repository.impl.NotaRepositoryImpl;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
+import br.com.eugeniosolucoes.view.model.NotaCariocaModel;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static br.com.eugeniosolucoes.nfse.util.XmlUtils.*;
+import javax.xml.datatype.XMLGregorianCalendar;
+import br.com.eugeniosolucoes.service.NotaService;
+import br.com.eugeniosolucoes.repository.NotaRepository;
 
-public class NfseServiceImpl implements NfseService {
+public class NotaServiceImpl implements NotaService {
 
-    private static final Logger LOG = LoggerFactory.getLogger( NfseServiceImpl.class );
+    private static final Logger LOG = LoggerFactory.getLogger( NotaServiceImpl.class );
 
     public static final String INF_RPS = "InfRps";
 
@@ -50,8 +53,8 @@ public class NfseServiceImpl implements NfseService {
     public static final String ITEM_LISTA_SERVICO = "0802";
 
     private final NsfeServico servico = new NsfeServicoImpl();
-    
-    private final NfseRepository repository = new NfseRepositoryImpl();
+
+    private final NotaRepository repository = new NotaRepositoryImpl();
 
     private final BoletoRepository boletoRepository = new BoletoRepositoryImpl();
 
@@ -60,18 +63,34 @@ public class NfseServiceImpl implements NfseService {
         int ano = LocalDate.now().getYear();
         int mes = LocalDate.now().getMonthOfYear();
         try {
-            List<DadosBoletoModel> boletosPagos = boletoRepository.retornarBoletosPagos( ano, mes );
-            int indexLote = repository.retornarMaiorNumeroLote();
-            int indexRps = repository.retornarMaiorNumeroRps();
-            EnviarLoteRpsEnvio envio = processarLoteRps( indexLote, indexRps, boletosPagos );
-            EnviarLoteRpsResposta resposta = servico.enviarLoteRps( envio );
-            //TODO:
+            enviarNsfe( ano, mes );
         } catch ( Exception e ) {
             throw new Exception( e );
         }
     }
 
-    public EnviarLoteRpsEnvio processarLoteRps( int indexLote, int indexRps, List<DadosBoletoModel> boletosPagos ) {
+    @Override
+    public void enviarNsfe( int ano, int mes ) throws Exception {
+        try {
+            List<DadosBoletoModel> boletosPagos = boletoRepository.retornarBoletosPagos( ano, mes );
+            if ( !boletosPagos.isEmpty() ) {
+                List<NotaCariocaModel> notas = new ArrayList<>();
+                int indexLote = repository.retornarProximoNumeroLote();
+                int indexRps = repository.retornarProximoNumeroRps();
+                XMLGregorianCalendar dataEmissao = createDataXml();
+                EnviarLoteRpsEnvio envio = processarLoteRps( dataEmissao, indexLote, indexRps, boletosPagos, notas );
+                EnviarLoteRpsResposta resposta = servico.enviarLoteRps( envio );
+                for ( NotaCariocaModel nota : notas ) {
+                    nota.setProtocolo( resposta.getProtocolo() );
+                    repository.registrarEnvio( nota );
+                }
+            }
+        } catch ( Exception e ) {
+            throw new Exception( e );
+        }
+    }
+
+    private EnviarLoteRpsEnvio processarLoteRps( XMLGregorianCalendar dataEmissao, int indexLote, int indexRps, List<DadosBoletoModel> boletosPagos, List<NotaCariocaModel> notas ) {
         EnviarLoteRpsEnvio loteRpsEnvio = new EnviarLoteRpsEnvio();
         TcLoteRps loteRps = loteRpsEnvio.getLoteRps();
         loteRps.setId( LOTE_RPS + indexLote );
@@ -89,7 +108,7 @@ public class NfseServiceImpl implements NfseService {
             tcIdentificacaoRps.setTipo( (byte) 1 );
             tcInfRps.setIdentificacaoRps( tcIdentificacaoRps );
 
-            tcInfRps.setDataEmissao( createDataXml() );
+            tcInfRps.setDataEmissao( dataEmissao );
             tcInfRps.setId( INF_RPS + indexRps );
             tcInfRps.setNaturezaOperacao( (byte) 1 );
             tcInfRps.setOptanteSimplesNacional( (byte) 2 );
@@ -129,6 +148,8 @@ public class NfseServiceImpl implements NfseService {
 
             tcRps.setInfRps( tcInfRps );
             rps.add( tcRps );
+            NotaCariocaModel nota = new NotaCariocaModel( model.getNossoNumero(), indexRps, indexLote, dataEmissao.toGregorianCalendar().getTime(), null );
+            notas.add( nota );
             indexRps++;
         }
         loteRps.setQuantidadeRps( loteRpsEnvio.getLoteRps().getListaRps().getRps().size() );

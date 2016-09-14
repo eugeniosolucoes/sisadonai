@@ -33,15 +33,18 @@ import br.com.eugeniosolucoes.nfse.util.MunicipioRJ;
 import br.com.eugeniosolucoes.nfse.util.XmlUtils;
 import static br.com.eugeniosolucoes.nfse.util.XmlUtils.*;
 import br.com.eugeniosolucoes.repository.BoletoRepository;
-import br.com.eugeniosolucoes.repository.NfseRepository;
 import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
-import br.com.eugeniosolucoes.repository.impl.NfseRepositoryImpl;
+import br.com.eugeniosolucoes.repository.impl.NotaRepositoryImpl;
+import br.com.eugeniosolucoes.service.NotaService;
+import br.com.eugeniosolucoes.service.impl.NotaServiceImpl;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.logging.Level;
 import static org.junit.Assert.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import br.com.eugeniosolucoes.repository.NotaRepository;
 
 /**
  *
@@ -176,7 +179,7 @@ public class NfseTest {
         prestador.setCnpj( PROP.getProperty( "Prestardor.Cnpj" ) );
         prestador.setInscricaoMunicipal( PROP.getProperty( "Prestardor.InscricaoMunicipal" ) );
         envio.setPrestador( prestador );
-        envio.setProtocolo( "00000000000000000000000000000000000000000001642782" );
+        envio.setProtocolo( "00000000000000000000000000000000000000000001642988" );
         ConsultarSituacaoLoteRpsResposta resposta = servico.consultarSituacaoLoteRps( envio );
 
         String xml = XmlUtils.createXmlFromObject( resposta );
@@ -191,7 +194,7 @@ public class NfseTest {
         prestador.setCnpj( PROP.getProperty( "Prestardor.Cnpj" ) );
         prestador.setInscricaoMunicipal( PROP.getProperty( "Prestardor.InscricaoMunicipal" ) );
         envio.setPrestador( prestador );
-        envio.setProtocolo( "00000000000000000000000000000000000000000001642782" );
+        envio.setProtocolo( "00000000000000000000000000000000000000000001642988" );
         ConsultarLoteRpsResposta resposta = servico.consultarLoteRps( envio );
         String xml = XmlUtils.createXmlFromObject( resposta );
 
@@ -200,14 +203,20 @@ public class NfseTest {
 
     @Test
     public void testProximoNumeroLote() {
-        NfseRepository repository = new NfseRepositoryImpl();
-        assertEquals( 1, repository.retornarMaiorNumeroLote() );
+        NotaRepository repository = new NotaRepositoryImpl();
+        assertEquals( 1, repository.retornarProximoNumeroLote() );
     }
-    
+
     @Test
     public void testProximoNumeroRps() {
-        NfseRepository repository = new NfseRepositoryImpl();
-        assertEquals( 13620, repository.retornarMaiorNumeroRps() );
+        NotaRepository repository = new NotaRepositoryImpl();
+        assertEquals( 13620, repository.retornarProximoNumeroRps() );
     }
-    
+
+    @Test
+    public void testNotaServico() throws Exception {
+        NotaService notaService = new NotaServiceImpl();
+        notaService.enviarNsfe( 2015, 5 );
+    }
+
 }

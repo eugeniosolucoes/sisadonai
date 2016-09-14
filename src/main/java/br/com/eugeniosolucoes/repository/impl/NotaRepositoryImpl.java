@@ -6,7 +6,6 @@
 package br.com.eugeniosolucoes.repository.impl;
 
 import br.com.eugeniosolucoes.nfse.util.Config;
-import br.com.eugeniosolucoes.repository.NfseRepository;
 import br.com.eugeniosolucoes.view.model.NotaCariocaModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,20 +13,37 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import br.com.eugeniosolucoes.repository.NotaRepository;
 
-public class NfseRepositoryImpl implements NfseRepository {
+public class NotaRepositoryImpl implements NotaRepository {
 
-    private static final Logger LOG = LoggerFactory.getLogger( NfseRepositoryImpl.class );
+    private static final Logger LOG = LoggerFactory.getLogger( NotaRepositoryImpl.class );
 
     AbstractRepository repository = AbstractRepository.getInstance();
 
-    public NfseRepositoryImpl() {
+    public NotaRepositoryImpl() {
         criarTabelaNotaCarioca();
     }
 
     @Override
     public void registrarEnvio( NotaCariocaModel notaCariocaModel ) {
-        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = repository.getConnection();
+            String sql = "INSERT INTO nota_carioca(numero_boleto, numero_rps, numero_lote_rps, data_emissao, protocolo) VALUES(?,?,?,?,?)";
+            ps = con.prepareStatement(sql);
+            ps.setString( 1, notaCariocaModel.getNumeroBoleto() );
+            ps.setInt( 2, notaCariocaModel.getNumeroRps() );
+            ps.setInt( 3, notaCariocaModel.getNumeroLoteRps() );
+            ps.setDate( 4, new java.sql.Date( notaCariocaModel.getDataEmissao().getTime() ) );
+            ps.setString( 5, notaCariocaModel.getProtocolo() );
+            ps.executeUpdate();
+        } catch ( Exception ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps );
+        }
     }
 
     private void criarTabelaNotaCarioca() {
@@ -40,8 +56,8 @@ public class NfseRepositoryImpl implements NfseRepository {
                     .append( "numero_rps INT NOT NULL,\n" )
                     .append( "numero_lote_rps INT NOT NULL,\n" )
                     .append( "data_emissao DATETIME NOT NULL,\n" )
-                    .append( "protocolo CHAR(255) NOT NULL,\n" )
-                    .append( "situacao INT NOT NULL,\n" )
+                    .append( "protocolo TEXT NOT NULL,\n" )
+                    .append( "situacao INT,\n" )
                     .append( "codigo_verificacao CHAR(255),\n" )
                     .append( "link_nota TEXT,\n" )
                     .append( "CONSTRAINT pk_NossoNumero PRIMARY KEY (numero_boleto) );" );
@@ -55,7 +71,7 @@ public class NfseRepositoryImpl implements NfseRepository {
     }
 
     @Override
-    public int retornarMaiorNumeroLote() {
+    public int retornarProximoNumeroLote() {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -68,7 +84,7 @@ public class NfseRepositoryImpl implements NfseRepository {
             while (rs.next()) {
                 result = rs.getObject( "MAX_NUM_LOT_RPS" );
             }
-            return result == null ? 1 : (int) result;
+            return result == null ? 1 : (int) result + 1;
         } catch ( Exception ex ) {
             throw new IllegalStateException( ex );
         } finally {
@@ -77,7 +93,7 @@ public class NfseRepositoryImpl implements NfseRepository {
     }
 
     @Override
-    public int retornarMaiorNumeroRps() {
+    public int retornarProximoNumeroRps() {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -90,7 +106,7 @@ public class NfseRepositoryImpl implements NfseRepository {
             while (rs.next()) {
                 result = rs.getObject( "MAX_NUM_RPS" );
             }
-            return result == null ? Integer.parseInt( Config.PROP.getProperty( "Numero.Rps.Inicial" ) ) : (int) result;
+            return result == null ? Integer.parseInt( Config.PROP.getProperty( "Numero.Rps.Inicial" ) ) : (int) result + 1;
         } catch ( Exception ex ) {
             throw new IllegalStateException( ex );
         } finally {

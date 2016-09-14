@@ -9,7 +9,9 @@ package br.com.eugeniosolucoes.service;
  *
  * @author eugenio
  */
-public interface NfseService {
-    
+public interface NotaService {
+
     void enviarNsfe() throws Exception;
+
+    void enviarNsfe( int ano, int mes ) throws Exception;
 }

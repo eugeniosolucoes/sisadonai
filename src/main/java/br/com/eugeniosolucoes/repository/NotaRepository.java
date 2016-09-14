@@ -11,12 +11,12 @@ import br.com.eugeniosolucoes.view.model.NotaCariocaModel;
  *
  * @author eugenio
  */
-public interface NfseRepository {
+public interface NotaRepository {
     
     void registrarEnvio(NotaCariocaModel notaCariocaModel);
 
-    public int retornarMaiorNumeroLote();
+    public int retornarProximoNumeroLote();
 
-    public int retornarMaiorNumeroRps();
+    public int retornarProximoNumeroRps();
 
 }

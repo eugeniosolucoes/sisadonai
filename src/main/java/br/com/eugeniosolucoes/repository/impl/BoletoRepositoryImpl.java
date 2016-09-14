@@ -395,13 +395,14 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                 list.add( new DadosBoletoModel(
                         rs.getString( "CPF_PFisica" ),
                         rs.getString( "Codigo_PFisica" ),
-                        rs.getString( "Nome_PFisica" ), rs.getString( "Nome_Turma" ),
+                        rs.getString( "Nome_PFisica" ), 
+                        null,
                         rs.getString( "Nosso_Numero" ),
                         rs.getDouble( "Valor_Mensalidade" ),
                         rs.getDate( "Data_Vencimento" ),
                         rs.getString( "Codigo_Situacao_Mensalidade" ),
                         rs.getString( "Numero_Mensalidade" ),
-                        rs.getString( "Qtde_Mensalidades" ),
+                        null,
                         rs.getDouble( "Percentual_Multa" ),
                         rs.getDouble( "Percentual_Juros" ), null, rs.getString( MyStrings.removerAcentos( "Email_Site" ) ) ) );
             }
