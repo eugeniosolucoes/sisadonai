@@ -33,10 +33,13 @@ import br.com.eugeniosolucoes.nfse.util.MunicipioRJ;
 import br.com.eugeniosolucoes.nfse.util.XmlUtils;
 import static br.com.eugeniosolucoes.nfse.util.XmlUtils.*;
 import br.com.eugeniosolucoes.repository.BoletoRepository;
+import br.com.eugeniosolucoes.repository.NfseRepository;
 import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
+import br.com.eugeniosolucoes.repository.impl.NfseRepositoryImpl;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import static org.junit.Assert.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +72,7 @@ public class NfseTest {
     public NfseTest() {
     }
 
-    @Test
+    //@Test
     public void testEnviarLoteRps() throws Exception {
 
         EnviarLoteRpsEnvio loteRpsEnvio = enviarLoteRps();
@@ -83,7 +86,7 @@ public class NfseTest {
     }
 
     public EnviarLoteRpsEnvio enviarLoteRps() {
-        int indexLote = 10; 
+        int indexLote = 10;
         int indexRps = indexLote * 2 - 1;
         System.out.println( "lerArquivoDeRetorno" );
         ArquivoDeRetornoServiceImpl instance = new ArquivoDeRetornoServiceImpl();
@@ -195,4 +198,16 @@ public class NfseTest {
         System.out.println( xml );
     }
 
+    @Test
+    public void testProximoNumeroLote() {
+        NfseRepository repository = new NfseRepositoryImpl();
+        assertEquals( 1, repository.retornarMaiorNumeroLote() );
+    }
+    
+    @Test
+    public void testProximoNumeroRps() {
+        NfseRepository repository = new NfseRepositoryImpl();
+        assertEquals( 13620, repository.retornarMaiorNumeroRps() );
+    }
+    
 }

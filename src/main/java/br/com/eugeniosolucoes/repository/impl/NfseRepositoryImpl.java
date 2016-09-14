@@ -5,20 +5,13 @@
  */
 package br.com.eugeniosolucoes.repository.impl;
 
+import br.com.eugeniosolucoes.nfse.util.Config;
 import br.com.eugeniosolucoes.repository.NfseRepository;
-import static br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl.LOG;
-import br.com.eugeniosolucoes.util.MyStrings;
-import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
-import br.com.eugeniosolucoes.view.model.DadosBoletoPagoModel;
-import br.com.eugeniosolucoes.view.model.EnderecoModel;
 import br.com.eugeniosolucoes.view.model.NotaCariocaModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,4 +53,49 @@ public class NfseRepositoryImpl implements NfseRepository {
             repository.fechar( con, ps );
         }
     }
+
+    @Override
+    public int retornarMaiorNumeroLote() {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = repository.getConnection();
+            String sql = "SELECT MAX(`numero_lote_rps`) AS MAX_NUM_LOT_RPS FROM `nota_carioca`;";
+            ps = con.prepareStatement( sql );
+            rs = ps.executeQuery();
+            Object result = null;
+            while (rs.next()) {
+                result = rs.getObject( "MAX_NUM_LOT_RPS" );
+            }
+            return result == null ? 1 : (int) result;
+        } catch ( Exception ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps, rs );
+        }
+    }
+
+    @Override
+    public int retornarMaiorNumeroRps() {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = repository.getConnection();
+            String sql = "SELECT MAX(`numero_rps`) AS MAX_NUM_RPS FROM `nota_carioca`;";
+            ps = con.prepareStatement( sql );
+            rs = ps.executeQuery();
+            Object result = null;
+            while (rs.next()) {
+                result = rs.getObject( "MAX_NUM_RPS" );
+            }
+            return result == null ? Integer.parseInt( Config.PROP.getProperty( "Numero.Rps.Inicial" ) ) : (int) result;
+        } catch ( Exception ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps, rs );
+        }
+    }
+
 }

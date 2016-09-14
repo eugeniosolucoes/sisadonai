@@ -6,6 +6,7 @@
 package br.com.eugeniosolucoes.service.impl;
 
 import br.com.eugeniosolucoes.nfse.model.EnviarLoteRpsEnvio;
+import br.com.eugeniosolucoes.nfse.model.EnviarLoteRpsResposta;
 import br.com.eugeniosolucoes.nfse.model.TcCpfCnpj;
 import br.com.eugeniosolucoes.nfse.model.TcDadosServico;
 import br.com.eugeniosolucoes.nfse.model.TcDadosTomador;
@@ -16,6 +17,8 @@ import br.com.eugeniosolucoes.nfse.model.TcInfRps;
 import br.com.eugeniosolucoes.nfse.model.TcLoteRps;
 import br.com.eugeniosolucoes.nfse.model.TcRps;
 import br.com.eugeniosolucoes.nfse.model.TcValores;
+import br.com.eugeniosolucoes.nfse.servico.NsfeServico;
+import br.com.eugeniosolucoes.nfse.servico.impl.NsfeServicoImpl;
 import static br.com.eugeniosolucoes.nfse.util.Config.PROP;
 import br.com.eugeniosolucoes.nfse.util.MunicipioRJ;
 import static br.com.eugeniosolucoes.nfse.util.XmlUtils.createDataXml;
@@ -25,11 +28,10 @@ import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
 import br.com.eugeniosolucoes.repository.impl.NfseRepositoryImpl;
 import br.com.eugeniosolucoes.service.NfseService;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
-import br.com.eugeniosolucoes.view.model.DadosBoletoPagoModel;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,16 +49,29 @@ public class NfseServiceImpl implements NfseService {
 
     public static final String ITEM_LISTA_SERVICO = "0802";
 
+    private final NsfeServico servico = new NsfeServicoImpl();
+    
     private final NfseRepository repository = new NfseRepositoryImpl();
-    
+
     private final BoletoRepository boletoRepository = new BoletoRepositoryImpl();
-    
+
     @Override
     public void enviarNsfe() throws Exception {
-        throw new UnsupportedOperationException( "Not supported yet." ); //To change body of generated methods, choose Tools | Templates.
+        int ano = LocalDate.now().getYear();
+        int mes = LocalDate.now().getMonthOfYear();
+        try {
+            List<DadosBoletoModel> boletosPagos = boletoRepository.retornarBoletosPagos( ano, mes );
+            int indexLote = repository.retornarMaiorNumeroLote();
+            int indexRps = repository.retornarMaiorNumeroRps();
+            EnviarLoteRpsEnvio envio = processarLoteRps( indexLote, indexRps, boletosPagos );
+            EnviarLoteRpsResposta resposta = servico.enviarLoteRps( envio );
+            //TODO:
+        } catch ( Exception e ) {
+            throw new Exception( e );
+        }
     }
 
-    public EnviarLoteRpsEnvio processarLoteRps( int indexLote, int indexRps, List<DadosBoletoPagoModel> boletosPagos ) {
+    public EnviarLoteRpsEnvio processarLoteRps( int indexLote, int indexRps, List<DadosBoletoModel> boletosPagos ) {
         EnviarLoteRpsEnvio loteRpsEnvio = new EnviarLoteRpsEnvio();
         TcLoteRps loteRps = loteRpsEnvio.getLoteRps();
         loteRps.setId( LOTE_RPS + indexLote );
@@ -65,8 +80,7 @@ public class NfseServiceImpl implements NfseService {
         loteRps.setInscricaoMunicipal( PROP.getProperty( "Prestardor.InscricaoMunicipal" ) );
         TcLoteRps.ListaRps listaRps = loteRps.getListaRps();
         List<TcRps> rps = listaRps.getRps();
-        for ( DadosBoletoPagoModel model : boletosPagos ) {
-            DadosBoletoModel dados = boletoRepository.retornarBoletoPago( model );
+        for ( DadosBoletoModel model : boletosPagos ) {
             TcRps tcRps = new TcRps();
             TcInfRps tcInfRps = new TcInfRps();
             TcIdentificacaoRps tcIdentificacaoRps = new TcIdentificacaoRps();
@@ -84,10 +98,10 @@ public class NfseServiceImpl implements NfseService {
             TcDadosServico tcDadosServico = new TcDadosServico();
             TcValores tcValores = new TcValores();
 
-            tcValores.setValorServicos( new BigDecimal( dados.getValor() ) );
+            tcValores.setValorServicos( new BigDecimal( model.getValor() ) );
             tcValores.setIssRetido( (byte) 2 );
-            tcValores.setBaseCalculo( new BigDecimal( dados.getValor() ) );
-            tcValores.setValorLiquidoNfse( new BigDecimal( dados.getValor() ) );
+            tcValores.setBaseCalculo( new BigDecimal( model.getValor() ) );
+            tcValores.setValorLiquidoNfse( new BigDecimal( model.getValor() ) );
 
             tcDadosServico.setValores( tcValores );
             tcDadosServico.setItemListaServico( ITEM_LISTA_SERVICO );
@@ -108,7 +122,7 @@ public class NfseServiceImpl implements NfseService {
             tcDadosTomador.setRazaoSocial( model.getAluno() );
             TcIdentificacaoTomador tcIdentificacaoTomador = new TcIdentificacaoTomador();
             TcCpfCnpj tcCpfCnpj = new TcCpfCnpj();
-            tcCpfCnpj.setCpf( dados.getCpf() );
+            tcCpfCnpj.setCpf( model.getCpf() );
             tcIdentificacaoTomador.setCpfCnpj( tcCpfCnpj );
             tcDadosTomador.setIdentificacaoTomador( tcIdentificacaoTomador );
             tcInfRps.setTomador( tcDadosTomador );

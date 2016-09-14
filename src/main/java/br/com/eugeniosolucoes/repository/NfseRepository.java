@@ -15,4 +15,8 @@ public interface NfseRepository {
     
     void registrarEnvio(NotaCariocaModel notaCariocaModel);
 
+    public int retornarMaiorNumeroLote();
+
+    public int retornarMaiorNumeroRps();
+
 }

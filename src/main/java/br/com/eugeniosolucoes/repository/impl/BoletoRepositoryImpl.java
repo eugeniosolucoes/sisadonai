@@ -170,7 +170,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                                 rs.getString( "CEP_Endereco" )
                         ), rs.getString( MyStrings.removerAcentos( "Email_Site" ) ) ) );
             }
-            List<DadosBoletoModel> result = new ArrayList<>(list );
+            List<DadosBoletoModel> result = new ArrayList<>( list );
             Collections.sort( result );
             return result;
         } catch ( SQLException ex ) {
@@ -263,7 +263,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             ps.setString( 3, boletoPagoModels.getMatricula() );
             ps.setString( 4, boletoPagoModels.getNossoNumero() );
             int resultado = ps.executeUpdate();
-            boletoPagoModels.setAtualizado( resultado != 0 ) ;
+            boletoPagoModels.setAtualizado( resultado != 0 );
         } catch ( SQLException ex ) {
             LOG.log( Level.SEVERE, null, ex );
         } finally {
@@ -319,7 +319,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "LEFT JOIN `Estados` est ON est.`Codigo_Estado` = ep.`Codigo_Estado`  ) " );
             sb.append( "LEFT JOIN `Cidades` cid ON cid.`Codigo_Cidade` = ep.`Codigo_Cidade` AND cid.`Codigo_Estado` = ep.`Codigo_Estado` ) " );
             sb.append( "LEFT JOIN `Bairros` bai ON bai.`Codigo_Bairro` = ep.`Codigo_Bairro` AND bai.`Codigo_Cidade` = ep.`Codigo_Cidade` AND bai.`Codigo_Estado` = ep.`Codigo_Estado` ) " );
-            sb.append( "WHERE mens.`Codigo_PFisica` = ? " );
+            sb.append( "WHERE mens.`Codigo_Situacao_Mensalidade` = '2' " );
             sb.append( "AND mens.`Nosso_Numero` = ? " );
             ps = con.prepareStatement( sb.toString() );
             ps.setString( 1, boletoPagoModels.getMatricula() );
@@ -355,4 +355,62 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             repository.fechar( con, ps, rs );
         }
     }
+
+    @Override
+    public List<DadosBoletoModel> retornarBoletosPagos( int ano, int mes ) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = repository.getConnection();
+            String sql = "SELECT DISTINCT TOP 100 dp.CPF_PFisica, \n"
+                    + "            pf.`Nome_PFisica`, \n"
+                    + "            epf.`Email_Site`, \n"
+                    + "            pf.`Codigo_PFisica`, \n"
+                    + "            mens.`Data_Vencimento`,\n"
+                    + "            mens.`Data_Pagamento`,\n"
+                    + "            mens.`Valor_Mensalidade`, \n"
+                    + "            mens.`Nosso_Numero`, \n"
+                    + "            mens.`Codigo_Situacao_Mensalidade`, \n"
+                    + "            mens.`Numero_Mensalidade`,  \n"
+                    + "            mens.`Percentual_Multa`,  \n"
+                    + "            mens.`Percentual_Juros`  \n"
+                    + "            FROM ((((`PFisicas` pf \n"
+                    + "            INNER JOIN `Matriculas` m ON m.`Codigo_PFisica` = pf.`Codigo_PFisica`) \n"
+                    + "            LEFT JOIN `EmailSitePFisicas` epf ON epf.`Codigo_PFisica` = pf.`Codigo_PFisica`) \n"
+                    + "            INNER JOIN `Mensalidades` mens ON mens.`Codigo_PFisica` = pf.`Codigo_PFisica` ) \n"
+                    + "            INNER JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`) \n"
+                    + "            WHERE mens.`Codigo_Situacao_Mensalidade` = '2' \n"
+                    + "            AND mens.`Nosso_Numero` <> '0000000000'\n"
+                    + "            AND mens.`Data_Pagamento` IS NOT NULL\n"
+                    + "            AND YEAR(mens.`Data_Vencimento`) = ?\n"
+                    + "            AND MONTH(mens.`Data_Vencimento`) = ?\n"
+                    + "            AND mens.`Nosso_Numero` NOT IN (SELECT `numero_boleto` FROM `nota_carioca`); ";
+            ps = con.prepareStatement( sql );
+            ps.setInt( 1, ano );
+            ps.setInt( 2, mes );
+            rs = ps.executeQuery();
+            List<DadosBoletoModel> list = new ArrayList<>();
+            while (rs.next()) {
+                list.add( new DadosBoletoModel(
+                        rs.getString( "CPF_PFisica" ),
+                        rs.getString( "Codigo_PFisica" ),
+                        rs.getString( "Nome_PFisica" ), rs.getString( "Nome_Turma" ),
+                        rs.getString( "Nosso_Numero" ),
+                        rs.getDouble( "Valor_Mensalidade" ),
+                        rs.getDate( "Data_Vencimento" ),
+                        rs.getString( "Codigo_Situacao_Mensalidade" ),
+                        rs.getString( "Numero_Mensalidade" ),
+                        rs.getString( "Qtde_Mensalidades" ),
+                        rs.getDouble( "Percentual_Multa" ),
+                        rs.getDouble( "Percentual_Juros" ), null, rs.getString( MyStrings.removerAcentos( "Email_Site" ) ) ) );
+            }
+            return list;
+        } catch ( Exception ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps, rs );
+        }
+    }
+
 }

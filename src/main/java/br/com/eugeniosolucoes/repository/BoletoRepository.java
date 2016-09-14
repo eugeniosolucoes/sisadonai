@@ -22,10 +22,12 @@ public interface BoletoRepository {
 
     List<DadosBoletoModel> listarBoletos( DadosBoletoFiltroModel boletoFiltroDTO );
 
-    List<DadosBoletoModel> listarAlunosPorTurma( DadosBoletoFiltroModel boletoFiltroDTO );    
-    
+    List<DadosBoletoModel> listarAlunosPorTurma( DadosBoletoFiltroModel boletoFiltroDTO );
+
     void processarBaixaDeBoleto( DadosBoletoPagoModel boletoPagoModels );
-    
+
     DadosBoletoModel retornarBoletoPago( DadosBoletoPagoModel boletoPagoModels );
+
+    List<DadosBoletoModel> retornarBoletosPagos( int ano, int mes );
 
 }
