@@ -114,4 +114,7 @@ public class NotaRepositoryImpl implements NotaRepository {
         }
     }
 
+    public static void main( String[] args ) {
+        new NotaRepositoryImpl();
+    }
 }

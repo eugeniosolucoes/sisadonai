@@ -45,6 +45,8 @@ import static org.junit.Assert.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import br.com.eugeniosolucoes.repository.NotaRepository;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -204,19 +206,29 @@ public class NfseTest {
     @Test
     public void testProximoNumeroLote() {
         NotaRepository repository = new NotaRepositoryImpl();
-        assertEquals( 1, repository.retornarProximoNumeroLote() );
+        assertNotNull( repository.retornarProximoNumeroLote() );
     }
 
     @Test
     public void testProximoNumeroRps() {
         NotaRepository repository = new NotaRepositoryImpl();
-        assertEquals( 13620, repository.retornarProximoNumeroRps() );
+        assertNotNull( repository.retornarProximoNumeroRps() );
     }
 
-    @Test
+    //@Test
     public void testNotaServico() throws Exception {
         NotaService notaService = new NotaServiceImpl();
         notaService.enviarNsfe( 2015, 5 );
+    }
+
+    @Test
+    public void testretornarBoletosPagos() throws ParseException {
+        BoletoRepository repository = new BoletoRepositoryImpl();
+        SimpleDateFormat sdf = new SimpleDateFormat( "dd/MM/yyyy" );
+        List<DadosBoletoModel> lista = repository.retornarBoletosPagos( sdf.parse( "01/09/2016" ) );
+        for ( DadosBoletoModel model : lista ) {
+            System.out.println( model );
+        }
     }
 
 }

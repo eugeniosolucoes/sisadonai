@@ -8,6 +8,7 @@ package br.com.eugeniosolucoes.repository;
 import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoPagoModel;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,5 +30,7 @@ public interface BoletoRepository {
     DadosBoletoModel retornarBoletoPago( DadosBoletoPagoModel boletoPagoModels );
 
     List<DadosBoletoModel> retornarBoletosPagos( int ano, int mes );
+
+    List<DadosBoletoModel> retornarBoletosPagos( Date data );
 
 }
