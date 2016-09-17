@@ -51,17 +51,16 @@ public class NotaRepositoryImpl implements NotaRepository {
         PreparedStatement ps = null;
         try {
             con = repository.getConnection();
-            StringBuilder sql = new StringBuilder( "CREATE TABLE nota_carioca" )
-                    .append( "( numero_boleto CHAR(10) NOT NULL,\n" )
-                    .append( "numero_rps INT NOT NULL,\n" )
-                    .append( "numero_lote_rps INT NOT NULL,\n" )
-                    .append( "data_emissao DATETIME NOT NULL,\n" )
-                    .append( "protocolo TEXT NOT NULL,\n" )
-                    .append( "situacao INT,\n" )
-                    .append( "codigo_verificacao CHAR(255),\n" )
-                    .append( "link_nota TEXT,\n" )
-                    .append( "CONSTRAINT pk_NossoNumero PRIMARY KEY (numero_boleto) );" );
-            ps = con.prepareStatement( sql.toString() );
+            String sql = "CREATE TABLE nota_carioca( numero_boleto CHAR(10) NOT NULL,\n"
+                    + "numero_rps INT NOT NULL,\n"
+                    + "numero_lote_rps INT NOT NULL,\n"
+                    + "data_emissao DATETIME NOT NULL,\n"
+                    + "protocolo TEXT NOT NULL,\n"
+                    + "situacao INT,\n"
+                    + "codigo_verificacao CHAR(255),\n"
+                    + "link_nota TEXT,\n"
+                    + "CONSTRAINT pk_NossoNumero PRIMARY KEY (numero_boleto) );";
+            ps = con.prepareStatement(sql);
             ps.execute();
         } catch ( SQLException ex ) {
             LOG.info( ex.getMessage() );
@@ -107,14 +106,10 @@ public class NotaRepositoryImpl implements NotaRepository {
                 result = rs.getObject( "MAX_NUM_RPS" );
             }
             return result == null ? Integer.parseInt( Config.PROP.getProperty( "Numero.Rps.Inicial" ) ) : (int) result + 1;
-        } catch ( Exception ex ) {
+        } catch ( SQLException | NumberFormatException ex ) {
             throw new IllegalStateException( ex );
         } finally {
             repository.fechar( con, ps, rs );
         }
-    }
-
-    public static void main( String[] args ) {
-        new NotaRepositoryImpl();
     }
 }

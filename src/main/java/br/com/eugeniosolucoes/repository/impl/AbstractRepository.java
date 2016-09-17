@@ -8,10 +8,10 @@ package br.com.eugeniosolucoes.repository.impl;
 import br.com.eugeniosolucoes.app.Main;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,10 +40,12 @@ public class AbstractRepository {
 
     public Connection getConnection() throws SQLException {
         // TODO - REMOVER APOS TESTE DE HOMOLOGACAO
+        Properties properties = new Properties();
+        properties.put( "charSet", "Windows-1252" );
         if ( !Main.isTestMode() ) {
-            return DriverManager.getConnection( ULR, "", "" );
+            return DriverManager.getConnection( ULR, properties );
         } else {
-            return DriverManager.getConnection( ULR_TESTE + Main.getDBTest(), "", "" );
+            return DriverManager.getConnection( ULR_TESTE + Main.getDBTest(), properties );
         }
     }
 
@@ -82,7 +84,6 @@ public class AbstractRepository {
     public static AbstractRepository getInstance() {
         return AbstractRepositoryHolder.INSTANCE;
     }
-
 
     private static class AbstractRepositoryHolder {
 

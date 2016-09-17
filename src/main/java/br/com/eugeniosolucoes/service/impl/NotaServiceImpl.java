@@ -80,12 +80,14 @@ public class NotaServiceImpl implements NotaService {
                 XMLGregorianCalendar dataEmissao = createDataXml();
                 EnviarLoteRpsEnvio envio = processarLoteRps( dataEmissao, indexLote, indexRps, boletosPagos, notas );
                 EnviarLoteRpsResposta resposta = servico.enviarLoteRps( envio );
+                LOG.info( resposta.getProtocolo() );
                 for ( NotaCariocaModel nota : notas ) {
                     nota.setProtocolo( resposta.getProtocolo() );
                     repository.registrarEnvio( nota );
                 }
             }
         } catch ( Exception e ) {
+            LOG.error( e.getMessage(), e );
             throw new Exception( e );
         }
     }

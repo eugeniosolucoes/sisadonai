@@ -28,6 +28,7 @@ public class ActionSalvarRemetente extends ActionComand implements IAction {
         super( comando, parametros );
     }
 
+    @Override
     public void execute() {
         Remetente obj = (Remetente) this.getParametro( 0 );
         try {
