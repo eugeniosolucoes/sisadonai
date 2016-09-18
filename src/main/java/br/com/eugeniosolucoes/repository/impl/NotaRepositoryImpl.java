@@ -14,6 +14,10 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import br.com.eugeniosolucoes.repository.NotaRepository;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 public class NotaRepositoryImpl implements NotaRepository {
 
@@ -31,11 +35,11 @@ public class NotaRepositoryImpl implements NotaRepository {
         PreparedStatement ps = null;
         try {
             con = repository.getConnection();
-            String sql = "INSERT INTO nota_carioca(numero_boleto, numero_rps, numero_lote_rps, data_emissao, protocolo) VALUES(?,?,?,?,?)";
-            ps = con.prepareStatement(sql);
+            String sql = "INSERT INTO nota_carioca(numero_boleto, numero_lote_rps, numero_rps, data_emissao, protocolo) VALUES(?,?,?,?,?)";
+            ps = con.prepareStatement( sql );
             ps.setString( 1, notaCariocaModel.getNumeroBoleto() );
-            ps.setInt( 2, notaCariocaModel.getNumeroRps() );
-            ps.setInt( 3, notaCariocaModel.getNumeroLoteRps() );
+            ps.setInt( 2, notaCariocaModel.getNumeroLoteRps() );
+            ps.setInt( 3, notaCariocaModel.getNumeroRps() );
             ps.setDate( 4, new java.sql.Date( notaCariocaModel.getDataEmissao().getTime() ) );
             ps.setString( 5, notaCariocaModel.getProtocolo() );
             ps.executeUpdate();
@@ -52,20 +56,45 @@ public class NotaRepositoryImpl implements NotaRepository {
         try {
             con = repository.getConnection();
             String sql = "CREATE TABLE nota_carioca( numero_boleto CHAR(10) NOT NULL,\n"
-                    + "numero_rps INT NOT NULL,\n"
                     + "numero_lote_rps INT NOT NULL,\n"
+                    + "numero_rps INT NOT NULL,\n"
                     + "data_emissao DATETIME NOT NULL,\n"
                     + "protocolo TEXT NOT NULL,\n"
-                    + "situacao INT,\n"
-                    + "codigo_verificacao CHAR(255),\n"
-                    + "link_nota TEXT,\n"
                     + "CONSTRAINT pk_NossoNumero PRIMARY KEY (numero_boleto) );";
-            ps = con.prepareStatement(sql);
+            ps = con.prepareStatement( sql );
             ps.execute();
         } catch ( SQLException ex ) {
-            LOG.info( ex.getMessage() );
+            LOG.debug( ex.getMessage() );
         } finally {
             repository.fechar( con, ps );
+        }
+    }
+
+    @Override
+    public List<NotaCariocaModel> listarRspEnviados( Date data ) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = repository.getConnection();
+            String sql = "SELECT * FROM `nota_carioca` WHERE data_emissao = ?;";
+            ps = con.prepareStatement( sql );
+            ps.setDate( 1, new java.sql.Date( data.getTime() ) );
+            rs = ps.executeQuery();
+            List<NotaCariocaModel> list = new ArrayList<>();
+            while (rs.next()) {
+                list.add( new NotaCariocaModel(
+                        rs.getString( "numero_boleto" ),
+                        rs.getInt( "numero_lote_rps" ),
+                        rs.getInt( "numero_rps" ),
+                        rs.getDate( "data_emissao" ),
+                        rs.getString( "protocolo" ) ) );
+            }
+            return list;
+        } catch ( Exception ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps, rs );
         }
     }
 

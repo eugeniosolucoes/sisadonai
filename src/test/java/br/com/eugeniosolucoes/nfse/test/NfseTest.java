@@ -20,6 +20,12 @@ import static org.junit.Assert.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import br.com.eugeniosolucoes.repository.NotaRepository;
+import br.com.eugeniosolucoes.service.NotaService;
+import br.com.eugeniosolucoes.service.impl.NotaServiceImpl;
+import br.com.eugeniosolucoes.view.model.NotaCariocaModel;
+import java.util.List;
+import org.joda.time.LocalDate;
+import org.joda.time.format.ISODateTimeFormat;
 
 /**
  *
@@ -39,17 +45,23 @@ public class NfseTest {
 
     public static final String ITEM_LISTA_SERVICO = "0802";
 
-
     private final NsfeServico servico = new NsfeServicoImpl();
+
+    private final NotaService notaService = new NotaServiceImpl();
+
+    @Test
+    public void testEnviarNsfe() throws Exception {
+        notaService.enviarNsfe( LocalDate.parse( "20160901", ISODateTimeFormat.basicDate() ).toDate() );
+    }
 
     @Test
     public void testConsultaSituacaoLoteRps() {
         ConsultarSituacaoLoteRpsEnvio envio = new ConsultarSituacaoLoteRpsEnvio();
         TcIdentificacaoPrestador prestador = new TcIdentificacaoPrestador();
-        prestador.setCnpj( PROP.getProperty( "Prestardor.Cnpj" ) );
-        prestador.setInscricaoMunicipal( PROP.getProperty( "Prestardor.InscricaoMunicipal" ) );
+        prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
+        prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
         envio.setPrestador( prestador );
-        envio.setProtocolo( "00000000000000000000000000000000000000000001642988" );
+        envio.setProtocolo( "00000000000000000000000000000000000000000001643714" );
         ConsultarSituacaoLoteRpsResposta resposta = servico.consultarSituacaoLoteRps( envio );
 
         String xml = XmlUtils.createXmlFromObject( resposta );
@@ -61,10 +73,10 @@ public class NfseTest {
     public void testConsultaLoteRps() {
         ConsultarLoteRpsEnvio envio = new ConsultarLoteRpsEnvio();
         TcIdentificacaoPrestador prestador = new TcIdentificacaoPrestador();
-        prestador.setCnpj( PROP.getProperty( "Prestardor.Cnpj" ) );
-        prestador.setInscricaoMunicipal( PROP.getProperty( "Prestardor.InscricaoMunicipal" ) );
+        prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
+        prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
         envio.setPrestador( prestador );
-        envio.setProtocolo( "00000000000000000000000000000000000000000001642988" );
+        envio.setProtocolo( "00000000000000000000000000000000000000000001643721" );
         ConsultarLoteRpsResposta resposta = servico.consultarLoteRps( envio );
         String xml = XmlUtils.createXmlFromObject( resposta );
 
@@ -83,4 +95,12 @@ public class NfseTest {
         assertNotNull( repository.retornarProximoNumeroRps() );
     }
 
+    @Test
+    public void testlistarRspEnviados() throws Exception {
+        List<NotaCariocaModel> listarRspEnviados = notaService.listarRspEnviados( LocalDate.parse( "20160918", ISODateTimeFormat.basicDate() ).toDate() );
+        for(NotaCariocaModel ncm : listarRspEnviados){
+            System.out.println( ncm );
+        }
+    }
+    
 }

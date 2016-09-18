@@ -6,6 +6,8 @@
 package br.com.eugeniosolucoes.repository;
 
 import br.com.eugeniosolucoes.view.model.NotaCariocaModel;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -18,5 +20,7 @@ public interface NotaRepository {
     public int retornarProximoNumeroLote();
 
     public int retornarProximoNumeroRps();
+
+    List<NotaCariocaModel> listarRspEnviados( Date data );
 
 }

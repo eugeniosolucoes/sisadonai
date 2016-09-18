@@ -15,6 +15,12 @@ import java.util.Objects;
 public class NotaCariocaModel {
 
     private String numeroBoleto;
+    
+    private String nome;
+    
+    private String dataPagamento;
+    
+    private String total;
 
     private int numeroRps;
 
@@ -23,12 +29,6 @@ public class NotaCariocaModel {
     private Date dataEmissao;
 
     private String protocolo;
-
-    private int situacao;
-
-    private String codigoVerificacao;
-
-    private String linkNota;
 
     public NotaCariocaModel() {
     }
@@ -40,7 +40,6 @@ public class NotaCariocaModel {
         this.dataEmissao = dataEmissao;
         this.protocolo = protocolo;
     }
-
     
     
     public String getNumeroBoleto() {
@@ -83,28 +82,28 @@ public class NotaCariocaModel {
         this.protocolo = protocolo;
     }
 
-    public int getSituacao() {
-        return situacao;
+    public String getNome() {
+        return nome;
     }
 
-    public void setSituacao( int situacao ) {
-        this.situacao = situacao;
+    public void setNome( String nome ) {
+        this.nome = nome;
     }
 
-    public String getCodigoVerificacao() {
-        return codigoVerificacao;
+    public String getDataPagamento() {
+        return dataPagamento;
     }
 
-    public void setCodigoVerificacao( String codigoVerificacao ) {
-        this.codigoVerificacao = codigoVerificacao;
+    public void setDataPagamento( String dataPagamento ) {
+        this.dataPagamento = dataPagamento;
     }
 
-    public String getLinkNota() {
-        return linkNota;
+    public String getTotal() {
+        return total;
     }
 
-    public void setLinkNota( String linkNota ) {
-        this.linkNota = linkNota;
+    public void setTotal( String total ) {
+        this.total = total;
     }
 
     @Override
@@ -133,7 +132,5 @@ public class NotaCariocaModel {
     public String toString() {
         return "NotaCariocaModel{" + "numeroBoleto=" + numeroBoleto + ", numeroRps=" + numeroRps + ", numeroLoteRps=" + numeroLoteRps + ", dataEmissao=" + dataEmissao + ", protocolo=" + protocolo + '}';
     }
-    
-    
     
 }

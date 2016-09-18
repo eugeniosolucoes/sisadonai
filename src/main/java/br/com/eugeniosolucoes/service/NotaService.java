@@ -5,6 +5,10 @@
  */
 package br.com.eugeniosolucoes.service;
 
+import br.com.eugeniosolucoes.view.model.NotaCariocaModel;
+import java.util.Date;
+import java.util.List;
+
 /**
  *
  * @author eugenio
@@ -13,5 +17,7 @@ public interface NotaService {
 
     void enviarNsfe() throws Exception;
 
-    void enviarNsfe( int ano, int mes ) throws Exception;
+    void enviarNsfe( Date data ) throws Exception;
+
+    public List<NotaCariocaModel> listarRspEnviados( Date data );
 }

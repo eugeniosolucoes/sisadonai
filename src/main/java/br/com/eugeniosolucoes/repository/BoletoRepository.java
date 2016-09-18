@@ -29,8 +29,8 @@ public interface BoletoRepository {
 
     DadosBoletoModel retornarBoletoPago( DadosBoletoPagoModel boletoPagoModels );
 
-    List<DadosBoletoModel> retornarBoletosPagos( int ano, int mes );
-
     List<DadosBoletoModel> retornarBoletosPagos( Date data );
+
+    DadosBoletoPagoModel retornarBoletoPago( String numeroBoleto );
 
 }

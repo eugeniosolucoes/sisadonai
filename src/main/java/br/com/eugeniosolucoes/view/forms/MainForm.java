@@ -76,6 +76,7 @@ public class MainForm extends BaseForm {
         mItemEnvioBoletos = new javax.swing.JMenuItem();
         mItemPrepararArqRemessa = new javax.swing.JMenuItem();
         mItemProcessarArqRetorno = new javax.swing.JMenuItem();
+        mItemEnviarLoteRps = new javax.swing.JMenuItem();
         jMenuSistema = new javax.swing.JMenu();
         jMenuConfiguracoes = new javax.swing.JMenu();
         mItemConfigEnvioDeBoletos = new javax.swing.JMenuItem();
@@ -125,6 +126,14 @@ public class MainForm extends BaseForm {
             }
         });
         jMenuTesouraria.add(mItemProcessarArqRetorno);
+
+        mItemEnviarLoteRps.setText("Enviar Lote RPS");
+        mItemEnviarLoteRps.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mItemEnviarLoteRpsActionPerformed(evt);
+            }
+        });
+        jMenuTesouraria.add(mItemEnviarLoteRps);
 
         jMenuBarMain.add(jMenuTesouraria);
 
@@ -217,6 +226,12 @@ public class MainForm extends BaseForm {
 
     }//GEN-LAST:event_mItemProcessarArqRetornoActionPerformed
 
+    private void mItemEnviarLoteRpsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemEnviarLoteRpsActionPerformed
+        // TODO add your handling code here:
+        NotaForm notaForm = new NotaForm(null, "Enviar Lote RPS", true, 1000, 600);
+        notaForm.setVisible( true );
+    }//GEN-LAST:event_mItemEnviarLoteRpsActionPerformed
+
     private void exibirLogErroRemessa( Exception ex ) {
         try {
             LOG.log( Level.SEVERE, ex.getMessage(), ex );
@@ -271,6 +286,7 @@ public class MainForm extends BaseForm {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPanel jpConteudo;
     private javax.swing.JMenuItem mItemConfigEnvioDeBoletos;
+    private javax.swing.JMenuItem mItemEnviarLoteRps;
     private javax.swing.JMenuItem mItemEnvioBoletos;
     private javax.swing.JMenuItem mItemPrepararArqRemessa;
     private javax.swing.JMenuItem mItemProcessarArqRetorno;
