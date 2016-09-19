@@ -60,6 +60,7 @@ public class NotaRepositoryImpl implements NotaRepository {
                     + "numero_rps INT NOT NULL,\n"
                     + "data_emissao DATETIME NOT NULL,\n"
                     + "protocolo TEXT NOT NULL,\n"
+                    + "processado BIT,\n"
                     + "CONSTRAINT pk_NossoNumero PRIMARY KEY (numero_boleto) );";
             ps = con.prepareStatement( sql );
             ps.execute();
@@ -112,7 +113,7 @@ public class NotaRepositoryImpl implements NotaRepository {
             while (rs.next()) {
                 result = rs.getObject( "MAX_NUM_LOT_RPS" );
             }
-            return result == null ? 1 : (int) result + 1;
+            return result == null ? Integer.parseInt( Config.PROP.getProperty( "Numero.Lote.Rps.Inicial" ) ) : (int) result + 1;
         } catch ( Exception ex ) {
             throw new IllegalStateException( ex );
         } finally {

@@ -19,5 +19,5 @@ public interface NotaService {
 
     void enviarNsfe( Date data ) throws Exception;
 
-    public List<NotaCariocaModel> listarRspEnviados( Date data );
+    public List<NotaCariocaModel> listarRpsEnviados( Date data );
 }

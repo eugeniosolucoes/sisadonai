@@ -5,6 +5,10 @@
  */
 package br.com.eugeniosolucoes.service.impl;
 
+import br.com.eugeniosolucoes.nfse.model.ConsultarLoteRpsEnvio;
+import br.com.eugeniosolucoes.nfse.model.ConsultarLoteRpsResposta;
+import br.com.eugeniosolucoes.nfse.model.ConsultarSituacaoLoteRpsEnvio;
+import br.com.eugeniosolucoes.nfse.model.ConsultarSituacaoLoteRpsResposta;
 import br.com.eugeniosolucoes.nfse.model.EnviarLoteRpsEnvio;
 import br.com.eugeniosolucoes.nfse.model.EnviarLoteRpsResposta;
 import br.com.eugeniosolucoes.nfse.model.TcCpfCnpj;
@@ -86,21 +90,23 @@ public class NotaServiceImpl implements NotaService {
                 XMLGregorianCalendar dataEmissao = createDataXml();
                 EnviarLoteRpsEnvio envio = processarLoteRps( dataEmissao, indexLote, indexRps, boletosPagos, notas );
                 EnviarLoteRpsResposta resposta = servico.enviarLoteRps( envio );
-                if ( resposta.getProtocolo() == null ) {
-                    if ( resposta.getListaMensagemRetorno() != null ) {
-                        for ( TcMensagemRetorno mensagemRetorno : resposta.getListaMensagemRetorno().getMensagemRetorno() ) {
-                            LOG.info( "Problema envio RPS: {0}\nmensagem: {1}\ncorrecao:{2} ",
-                                    mensagemRetorno.getCodigo(),
-                                    mensagemRetorno.getMensagem(),
-                                    mensagemRetorno.getCorrecao() );
-                        }
-                    }
-                    throw new IllegalStateException( "Falha no envio do Lote RPS, favor entrar em contato com o analista de suporte do SisAdonai!" );
-                }
+                validarEnvio( resposta );
                 LOG.info( resposta.getProtocolo() );
-                for ( NotaCariocaModel nota : notas ) {
-                    nota.setProtocolo( resposta.getProtocolo() );
-                    repository.registrarEnvio( nota );
+
+                ConsultarSituacaoLoteRpsEnvio consultaSituacaoEnvio = new ConsultarSituacaoLoteRpsEnvio();
+                TcIdentificacaoPrestador prestador = new TcIdentificacaoPrestador();
+                prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
+                prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
+                consultaSituacaoEnvio.setPrestador( prestador );
+                consultaSituacaoEnvio.setProtocolo( resposta.getProtocolo() );
+                ConsultarSituacaoLoteRpsResposta consultaSituacaoResposta = servico.consultarSituacaoLoteRps( consultaSituacaoEnvio );
+                if ( consultaSituacaoResposta.getSituacao() > 1 ) {
+                    for ( NotaCariocaModel nota : notas ) {
+                        nota.setProtocolo( resposta.getProtocolo() );
+                        repository.registrarEnvio( nota );
+                    }
+                } else {
+                    validarProcessamento( resposta.getProtocolo() );
                 }
             } else {
                 throw new IllegalStateException( "Não existem registros nesta data que atendam a condição para envio!" );
@@ -111,6 +117,42 @@ public class NotaServiceImpl implements NotaService {
         } catch ( Exception e ) {
             LOG.error( e.getMessage(), e );
             throw new Exception( e );
+        }
+    }
+
+    private void validarEnvio( EnviarLoteRpsResposta resposta ) throws IllegalStateException {
+        if ( resposta.getProtocolo() == null ) {
+            if ( resposta.getListaMensagemRetorno() != null ) {
+                for ( TcMensagemRetorno mensagemRetorno : resposta.getListaMensagemRetorno().getMensagemRetorno() ) {
+                    LOG.info( String.format( "Problema envio RPS: %s\nmensagem: %s\ncorrecao:%s ",
+                            mensagemRetorno.getCodigo(),
+                            mensagemRetorno.getMensagem(),
+                            mensagemRetorno.getCorrecao() ) );
+                }
+            }
+            throw new IllegalStateException( "Falha no envio do Lote RPS, favor entrar em contato com o analista de suporte do SisAdonai!" );
+        }
+    }
+
+    private void validarProcessamento( String protocolo ) throws IllegalStateException {
+        StringBuilder sb = new StringBuilder();
+        ConsultarLoteRpsEnvio envio = new ConsultarLoteRpsEnvio();
+        TcIdentificacaoPrestador prestador = new TcIdentificacaoPrestador();
+        prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
+        prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
+        envio.setPrestador( prestador );
+        envio.setProtocolo( protocolo );
+        ConsultarLoteRpsResposta resposta = servico.consultarLoteRps( envio );
+
+        if ( resposta.getListaMensagemRetorno() != null ) {
+            for ( TcMensagemRetorno mensagemRetorno : resposta.getListaMensagemRetorno().getMensagemRetorno() ) {
+                sb.append( String.format( "Problema envio RPS: %s\nmensagem: %s\ncorrecao:%s ",
+                        mensagemRetorno.getCodigo(),
+                        mensagemRetorno.getMensagem(),
+                        mensagemRetorno.getCorrecao() ) );
+            }
+            LOG.info( sb.toString() );
+            throw new IllegalStateException( "Falha ao processar Lote RPS:\n" + sb.toString()  );
         }
     }
 
@@ -183,7 +225,7 @@ public class NotaServiceImpl implements NotaService {
     }
 
     @Override
-    public List<NotaCariocaModel> listarRspEnviados( Date data ) {
+    public List<NotaCariocaModel> listarRpsEnviados( Date data ) {
         SimpleDateFormat sdf = new SimpleDateFormat( "dd/MM/yyyy" );
         List<NotaCariocaModel> listarRspEnviados = repository.listarRspEnviados( data );
         for ( NotaCariocaModel model : listarRspEnviados ) {

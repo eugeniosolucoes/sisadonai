@@ -7,7 +7,6 @@ package br.com.eugeniosolucoes.view.forms;
 
 import br.com.eugeniosolucoes.service.NotaService;
 import br.com.eugeniosolucoes.service.impl.NotaServiceImpl;
-import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import br.com.eugeniosolucoes.view.model.NotaCariocaModel;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -20,7 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
+import org.joda.time.LocalDate;
 
 /**
  *
@@ -42,12 +41,14 @@ public class NotaForm extends BaseDialog {
     public NotaForm( Frame owner, String title, boolean modal ) {
         super( owner, title, modal );
         initComponents();
+        jProgressBar1.setVisible( false );
     }
 
     public NotaForm( Frame owner, String title, boolean modal, int w, int h ) {
         super( owner, title, modal );
         initComponents();
         configCustomSize( w, h );
+        jProgressBar1.setVisible( false );
     }
 
     /**
@@ -63,6 +64,7 @@ public class NotaForm extends BaseDialog {
         pnlListarRpsEnviados = new javax.swing.JPanel();
         jDateChooser1 = new com.toedter.calendar.JDateChooser( new java.util.Date() );
         btnEnviarLoteRps = new javax.swing.JButton();
+        jProgressBar1 = new javax.swing.JProgressBar();
         btnListarRpsEnviados = new javax.swing.JButton();
         plDados = new javax.swing.JPanel();
         splDados = new javax.swing.JScrollPane();
@@ -85,6 +87,9 @@ public class NotaForm extends BaseDialog {
             }
         });
         pnlListarRpsEnviados.add(btnEnviarLoteRps);
+
+        jProgressBar1.setIndeterminate(true);
+        pnlListarRpsEnviados.add(jProgressBar1);
 
         btnListarRpsEnviados.setText("Listar RPS Enviados");
         btnListarRpsEnviados.addActionListener(new java.awt.event.ActionListener() {
@@ -162,43 +167,56 @@ public class NotaForm extends BaseDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEnviarLoteRpsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarLoteRpsActionPerformed
-        if ( jDateChooser1.getDate() != null ) {
-            try {
-                Date date = jDateChooser1.getDate();
-                notaService.enviarNsfe( date );
-                btnListarRpsEnviadosActionPerformed( evt );
-            } catch ( Exception ex ) {
-                JOptionPane.showMessageDialog( null, ex.getMessage() );
+        new Thread( new Runnable() {
+            @Override
+            public void run() {
+                if ( jDateChooser1.getDate() != null ) {
+                    try {
+                        Date date = jDateChooser1.getDate();
+                        jProgressBar1.setVisible( true );
+                        btnEnviarLoteRps.setEnabled( false );
+                        notaService.enviarNsfe( date );
+                        listarRpsEnviados( LocalDate.now().toDate() );
+                    } catch ( Exception ex ) {
+                        JOptionPane.showMessageDialog( null, ex.getMessage() );
+                    } finally {
+                        jProgressBar1.setVisible( false );
+                        btnEnviarLoteRps.setEnabled( true );
+                    }
+                }
             }
-        }
+        } ).start();
     }//GEN-LAST:event_btnEnviarLoteRpsActionPerformed
 
     private void btnListarRpsEnviadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarRpsEnviadosActionPerformed
         // TODO add your handling code here:
         if ( jDateChooser1.getDate() != null ) {
-            try {
-                Date data = jDateChooser1.getDate();
-                MainForm.setWaitCursor( this );
-                List<NotaCariocaModel> dados = notaService.listarRspEnviados( data );
-                tblDados.setModel( new javax.swing.table.DefaultTableModel( getDados( dados ),
-                        new String[]{"Boleto", "Nome", "Data Pagamento", "Total", "Protocolo"} ) {
-                    boolean[] canEdit = new boolean[]{
-                        false, false, false, false, false
-                    };
-
-                    @Override
-                    public boolean isCellEditable( int rowIndex, int columnIndex ) {
-                        return canEdit[columnIndex];
-                    }
-                } );
-                configurarTabela();
-                MainForm.setDefaultCursor( this );
-            } catch ( Exception ex ) {
-                JOptionPane.showMessageDialog( null, ex.getMessage() );
-            }
+            listarRpsEnviados( jDateChooser1.getDate() );
         }
     }//GEN-LAST:event_btnListarRpsEnviadosActionPerformed
-    
+
+    private void listarRpsEnviados( Date data ) throws HeadlessException {
+        try {
+            MainForm.setWaitCursor( this );
+            List<NotaCariocaModel> dados = notaService.listarRpsEnviados( data );
+            tblDados.setModel( new javax.swing.table.DefaultTableModel( getDados( dados ),
+                    new String[]{"Boleto", "Nome", "Data Pagamento", "Total", "Protocolo"} ) {
+                boolean[] canEdit = new boolean[]{
+                    false, false, false, false, false
+                };
+
+                @Override
+                public boolean isCellEditable( int rowIndex, int columnIndex ) {
+                    return canEdit[columnIndex];
+                }
+            } );
+            configurarTabela();
+            MainForm.setDefaultCursor( this );
+        } catch ( Exception ex ) {
+            JOptionPane.showMessageDialog( null, ex.getMessage() );
+        }
+    }
+
     private void configurarTabela() {
         tblDados.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
@@ -245,6 +263,7 @@ public class NotaForm extends BaseDialog {
     private javax.swing.JButton btnEnviarLoteRps;
     private javax.swing.JButton btnListarRpsEnviados;
     private com.toedter.calendar.JDateChooser jDateChooser1;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JPanel plConteudo;
     private javax.swing.JPanel plDados;
     private javax.swing.JPanel pnlListarRpsEnviados;

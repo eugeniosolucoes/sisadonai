@@ -92,6 +92,11 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEnviarLoteRpsActionPerformed"/>
               </Events>
             </Component>
+            <Component class="javax.swing.JProgressBar" name="jProgressBar1">
+              <Properties>
+                <Property name="indeterminate" type="boolean" value="true"/>
+              </Properties>
+            </Component>
             <Component class="javax.swing.JButton" name="btnListarRpsEnviados">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Listar RPS Enviados"/>

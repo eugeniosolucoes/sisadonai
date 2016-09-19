@@ -61,7 +61,7 @@ public class NfseTest {
         prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
         prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
         envio.setPrestador( prestador );
-        envio.setProtocolo( "00000000000000000000000000000000000000000001643714" );
+        envio.setProtocolo( "00000000000000000000000000000000000000000001643764" );
         ConsultarSituacaoLoteRpsResposta resposta = servico.consultarSituacaoLoteRps( envio );
 
         String xml = XmlUtils.createXmlFromObject( resposta );
@@ -76,7 +76,7 @@ public class NfseTest {
         prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
         prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
         envio.setPrestador( prestador );
-        envio.setProtocolo( "00000000000000000000000000000000000000000001643721" );
+        envio.setProtocolo( "00000000000000000000000000000000000000000001643764" );
         ConsultarLoteRpsResposta resposta = servico.consultarLoteRps( envio );
         String xml = XmlUtils.createXmlFromObject( resposta );
 
@@ -97,7 +97,7 @@ public class NfseTest {
 
     @Test
     public void testlistarRspEnviados() throws Exception {
-        List<NotaCariocaModel> listarRspEnviados = notaService.listarRspEnviados( LocalDate.parse( "20160918", ISODateTimeFormat.basicDate() ).toDate() );
+        List<NotaCariocaModel> listarRspEnviados = notaService.listarRpsEnviados( LocalDate.parse( "2016098", ISODateTimeFormat.basicDate() ).toDate() );
         for(NotaCariocaModel ncm : listarRspEnviados){
             System.out.println( ncm );
         }
