@@ -7,19 +7,26 @@ package br.com.eugeniosolucoes.view.forms;
 
 import br.com.eugeniosolucoes.service.NotaService;
 import br.com.eugeniosolucoes.service.impl.NotaServiceImpl;
+import br.com.eugeniosolucoes.util.RelatorioUtils;
 import br.com.eugeniosolucoes.view.model.NotaCariocaModel;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.joda.time.LocalDate;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -27,7 +34,7 @@ import org.joda.time.LocalDate;
  */
 public class NotaForm extends BaseDialog {
 
-    static final Logger LOG = Logger.getLogger( NotaForm.class.getName() );
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger( NotaForm.class );
 
     private final NotaService notaService = new NotaServiceImpl();
 
@@ -62,10 +69,14 @@ public class NotaForm extends BaseDialog {
 
         plConteudo = new javax.swing.JPanel();
         pnlListarRpsEnviados = new javax.swing.JPanel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser( new java.util.Date() );
+        jLabel1 = new javax.swing.JLabel();
+        jdtPagamento = new com.toedter.calendar.JDateChooser( new java.util.Date() );
         btnEnviarLoteRps = new javax.swing.JButton();
         jProgressBar1 = new javax.swing.JProgressBar();
+        jLabel2 = new javax.swing.JLabel();
+        jdtEnvio = new com.toedter.calendar.JDateChooser(new java.util.Date());
         btnListarRpsEnviados = new javax.swing.JButton();
+        btnExportarExcel = new javax.swing.JButton();
         plDados = new javax.swing.JPanel();
         splDados = new javax.swing.JScrollPane();
         tblDados = new javax.swing.JTable();
@@ -78,7 +89,10 @@ public class NotaForm extends BaseDialog {
         plConteudo.setPreferredSize(new java.awt.Dimension(800, 600));
 
         pnlListarRpsEnviados.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        pnlListarRpsEnviados.add(jDateChooser1);
+
+        jLabel1.setText("Data Pagamento:");
+        pnlListarRpsEnviados.add(jLabel1);
+        pnlListarRpsEnviados.add(jdtPagamento);
 
         btnEnviarLoteRps.setText("Enviar Lote RPS");
         btnEnviarLoteRps.addActionListener(new java.awt.event.ActionListener() {
@@ -91,6 +105,10 @@ public class NotaForm extends BaseDialog {
         jProgressBar1.setIndeterminate(true);
         pnlListarRpsEnviados.add(jProgressBar1);
 
+        jLabel2.setText("Data Envio:");
+        pnlListarRpsEnviados.add(jLabel2);
+        pnlListarRpsEnviados.add(jdtEnvio);
+
         btnListarRpsEnviados.setText("Listar RPS Enviados");
         btnListarRpsEnviados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -98,6 +116,15 @@ public class NotaForm extends BaseDialog {
             }
         });
         pnlListarRpsEnviados.add(btnListarRpsEnviados);
+
+        btnExportarExcel.setText("Exportar para Excel");
+        btnExportarExcel.setEnabled(false);
+        btnExportarExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportarExcelActionPerformed(evt);
+            }
+        });
+        pnlListarRpsEnviados.add(btnExportarExcel);
 
         plDados.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -170,18 +197,21 @@ public class NotaForm extends BaseDialog {
         new Thread( new Runnable() {
             @Override
             public void run() {
-                if ( jDateChooser1.getDate() != null ) {
+                if ( jdtPagamento.getDate() != null ) {
                     try {
-                        Date date = jDateChooser1.getDate();
+                        Date date = jdtPagamento.getDate();
                         jProgressBar1.setVisible( true );
                         btnEnviarLoteRps.setEnabled( false );
+                        btnListarRpsEnviados.setEnabled( false );
                         notaService.enviarNsfe( date );
-                        listarRpsEnviados( LocalDate.now().toDate() );
+                        jdtEnvio.setDate( LocalDate.now().toDate() );
+                        listarRpsEnviados( jdtEnvio.getDate() );
                     } catch ( Exception ex ) {
                         JOptionPane.showMessageDialog( null, ex.getMessage() );
                     } finally {
                         jProgressBar1.setVisible( false );
                         btnEnviarLoteRps.setEnabled( true );
+                        btnListarRpsEnviados.setEnabled( true );
                     }
                 }
             }
@@ -190,10 +220,43 @@ public class NotaForm extends BaseDialog {
 
     private void btnListarRpsEnviadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarRpsEnviadosActionPerformed
         // TODO add your handling code here:
-        if ( jDateChooser1.getDate() != null ) {
-            listarRpsEnviados( jDateChooser1.getDate() );
+        if ( jdtEnvio.getDate() != null ) {
+            listarRpsEnviados( jdtEnvio.getDate() );
         }
     }//GEN-LAST:event_btnListarRpsEnviadosActionPerformed
+
+    private void btnExportarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarExcelActionPerformed
+        // TODO add your handling code here:
+        FileOutputStream fs = null;
+        BufferedOutputStream bs = null;
+        final String relatorio = "relatorio-excel-envio-rps.xls";
+        File file = new File( relatorio );
+        try {
+            List<NotaCariocaModel> dados = notaService.listarRpsEnviados( jdtEnvio.getDate() );
+            byte[] arquivoExcel = RelatorioUtils.gerarArquivoExcel( "/templates/relatorio-excel-envio-rps.jasper",
+                    dados, new HashMap<String, Object>() );
+            fs = new FileOutputStream( file );
+            bs = new BufferedOutputStream( fs );
+            bs.write( arquivoExcel );
+            bs.close();
+        } catch ( Exception e ) {
+            JOptionPane.showMessageDialog( null, e.getMessage() );
+        } finally {
+            try {
+                if( bs != null ) bs.close();
+                if( fs != null ) fs.close();
+            } catch ( IOException ex ) {
+                LOG.error( ex.getMessage(), ex);
+            }
+        }
+        if ( file.exists() && file.canRead() ) {
+            try {
+                Desktop.getDesktop().open( file );
+            } catch ( IOException ex ) {
+                LOG.error( ex.getMessage(), ex);
+            }
+        }
+    }//GEN-LAST:event_btnExportarExcelActionPerformed
 
     private void listarRpsEnviados( Date data ) throws HeadlessException {
         try {
@@ -211,6 +274,7 @@ public class NotaForm extends BaseDialog {
                 }
             } );
             configurarTabela();
+            btnExportarExcel.setEnabled( tblDados.getModel().getRowCount() > 0 );
             MainForm.setDefaultCursor( this );
         } catch ( Exception ex ) {
             JOptionPane.showMessageDialog( null, ex.getMessage() );
@@ -261,9 +325,13 @@ public class NotaForm extends BaseDialog {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEnviarLoteRps;
+    private javax.swing.JButton btnExportarExcel;
     private javax.swing.JButton btnListarRpsEnviados;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JProgressBar jProgressBar1;
+    private com.toedter.calendar.JDateChooser jdtEnvio;
+    private com.toedter.calendar.JDateChooser jdtPagamento;
     private javax.swing.JPanel plConteudo;
     private javax.swing.JPanel plDados;
     private javax.swing.JPanel pnlListarRpsEnviados;

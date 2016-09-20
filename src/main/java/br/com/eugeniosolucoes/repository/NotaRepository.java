@@ -23,4 +23,10 @@ public interface NotaRepository {
 
     List<NotaCariocaModel> listarRspEnviados( Date data );
 
+    boolean retornarFaltaProcessar();
+
+    String retornarUltimoProtocolo();
+
+    void atualizarLoteProcessadoComSucesso( String protocolo );
+
 }

@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import br.com.eugeniosolucoes.repository.NotaRepository;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -35,13 +34,14 @@ public class NotaRepositoryImpl implements NotaRepository {
         PreparedStatement ps = null;
         try {
             con = repository.getConnection();
-            String sql = "INSERT INTO nota_carioca(numero_boleto, numero_lote_rps, numero_rps, data_emissao, protocolo) VALUES(?,?,?,?,?)";
+            String sql = "INSERT INTO nota_carioca(numero_boleto, numero_lote_rps, numero_rps, data_emissao, protocolo, processado) VALUES(?,?,?,?,?,?)";
             ps = con.prepareStatement( sql );
             ps.setString( 1, notaCariocaModel.getNumeroBoleto() );
             ps.setInt( 2, notaCariocaModel.getNumeroLoteRps() );
             ps.setInt( 3, notaCariocaModel.getNumeroRps() );
             ps.setDate( 4, new java.sql.Date( notaCariocaModel.getDataEmissao().getTime() ) );
             ps.setString( 5, notaCariocaModel.getProtocolo() );
+            ps.setByte( 6, (byte) 0 );
             ps.executeUpdate();
         } catch ( Exception ex ) {
             throw new IllegalStateException( ex );
@@ -140,6 +140,67 @@ public class NotaRepositoryImpl implements NotaRepository {
             throw new IllegalStateException( ex );
         } finally {
             repository.fechar( con, ps, rs );
+        }
+    }
+
+    @Override
+    public boolean retornarFaltaProcessar() {
+        String sql = "SELECT DISTINCT 1 AS FALTA_PROCESSAR FROM `nota_carioca` nc WHERE EXISTS(SELECT * FROM `nota_carioca` nc1 WHERE nc1.`processado` = 0 )";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = repository.getConnection();
+            ps = con.prepareStatement( sql );
+            rs = ps.executeQuery();
+            Object result = null;
+            while (rs.next()) {
+                result = rs.getObject( "FALTA_PROCESSAR" );
+            }
+            return result != null;
+        } catch ( SQLException | NumberFormatException ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps, rs );
+        }
+    }
+
+    @Override
+    public String retornarUltimoProtocolo() {
+        String sql = "SELECT DISTINCT `protocolo` FROM `nota_carioca` WHERE `processado` = 0";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = repository.getConnection();
+            ps = con.prepareStatement( sql );
+            rs = ps.executeQuery();
+            String result = null;
+            while (rs.next()) {
+                result = rs.getString( "protocolo" );
+            }
+            return result;
+        } catch ( SQLException ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps, rs );
+        }
+    }
+
+    @Override
+    public void atualizarLoteProcessadoComSucesso( String protocolo ) {
+        String sql = "UPDATE `nota_carioca` SET `processado` = 1  WHERE `protocolo` = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = repository.getConnection();
+            ps = con.prepareStatement( sql );
+            ps.setString( 1, protocolo );
+            ps.executeUpdate();
+        } catch ( SQLException ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps );
         }
     }
 }

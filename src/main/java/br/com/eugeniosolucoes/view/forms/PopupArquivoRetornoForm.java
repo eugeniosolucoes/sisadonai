@@ -84,6 +84,7 @@ public class PopupArquivoRetornoForm extends BaseDialog {
 
         pnlControle = new javax.swing.JPanel();
         btnProcessarArquivos = new javax.swing.JButton();
+        btnAbrirNotaForm = new javax.swing.JButton();
         pnlLog = new javax.swing.JPanel();
         scrollLog = new javax.swing.JScrollPane();
         txtLog = new javax.swing.JTextArea();
@@ -97,6 +98,15 @@ public class PopupArquivoRetornoForm extends BaseDialog {
             }
         });
         pnlControle.add(btnProcessarArquivos);
+
+        btnAbrirNotaForm.setEnabled(false);
+        btnAbrirNotaForm.setLabel("Existem boletos pagos! Deseja enviar o Lote RPS?");
+        btnAbrirNotaForm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAbrirNotaFormActionPerformed(evt);
+            }
+        });
+        pnlControle.add(btnAbrirNotaForm);
 
         txtLog.setEditable(false);
         txtLog.setColumns(20);
@@ -148,11 +158,13 @@ public class PopupArquivoRetornoForm extends BaseDialog {
 
         final String title = this.getTitle();
         final JButton btn = this.btnProcessarArquivos;
+        final JButton btnNota = this.btnAbrirNotaForm;
         final StringBuilder sb = new StringBuilder();
         final JTextArea jta = this.txtLog;
         new Thread( new Runnable() {
             @Override
             public void run() {
+                int contarPago = 0;
                 try {
                     btn.setEnabled( false );
                     JFileChooser arquivo = new JFileChooser();
@@ -163,7 +175,7 @@ public class PopupArquivoRetornoForm extends BaseDialog {
                     arquivo.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
 
                     int r = arquivo.showDialog( null, "Selecionar" );
-
+                    
                     if ( r == JFileChooser.APPROVE_OPTION ) {
                         try {
                             File[] files = arquivo.getSelectedFiles();
@@ -176,6 +188,7 @@ public class PopupArquivoRetornoForm extends BaseDialog {
                                 jta.setText( sb.toString() );
                                 for ( DadosBoletoPagoModel boletoPago : boletosPagos ) {
                                     service.processarBaixaDeBoleto( boletoPago );
+                                    contarPago++;
                                     sb.append( String.format( "%-11s %-14s %-12s  %td/%tm/%tY     %.2f    %-50s%n", 
                                             boletoPago.getMatricula(), 
                                             boletoPago.getNossoNumero(),
@@ -199,13 +212,20 @@ public class PopupArquivoRetornoForm extends BaseDialog {
                     LOG.log( Level.SEVERE, e.getMessage(), e );
                 } finally {
                     btn.setEnabled( true );
+                    btnNota.setEnabled( contarPago > 0 );
                 }
             }
         } ).start();
     }//GEN-LAST:event_btnProcessarArquivosActionPerformed
 
+    private void btnAbrirNotaFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirNotaFormActionPerformed
+        NotaForm notaForm = new NotaForm(null, "Enviar Lote RPS", true, 1000, 600);
+        notaForm.setVisible( true );
+    }//GEN-LAST:event_btnAbrirNotaFormActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAbrirNotaForm;
     private javax.swing.JButton btnProcessarArquivos;
     private javax.swing.JPanel pnlControle;
     private javax.swing.JPanel pnlLog;

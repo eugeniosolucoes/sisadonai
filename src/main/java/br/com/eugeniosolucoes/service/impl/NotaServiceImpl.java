@@ -68,6 +68,41 @@ public class NotaServiceImpl implements NotaService {
 
     private final BoletoRepository boletoRepository = new BoletoRepositoryImpl();
 
+    static enum TipoSituacao {
+
+        NAO_RECEBIDO( (byte) 1, "Não Recebido" ),
+        NAO_PROCESSADO( (byte) 2, "Não Processado" ),
+        PROCESSADO_COM_ERRO( (byte) 3, "Processado com Erro" ),
+        PROCESSADO_COM_SUCESSO( (byte) 4, "Processado com Sucesso" );
+
+        private final byte codigo;
+
+        private final String descricao;
+
+        private TipoSituacao( byte codigo, String descricao ) {
+            this.codigo = codigo;
+            this.descricao = descricao;
+        }
+
+        public byte getCodigo() {
+            return codigo;
+        }
+
+        public String getDescricao() {
+            return descricao;
+        }
+
+        public static TipoSituacao fromValue( byte value ) {
+            for ( TipoSituacao situacao : TipoSituacao.values() ) {
+                if ( situacao.codigo == value ) {
+                    return situacao;
+                }
+            }
+            return null;
+        }
+
+    }
+
     @Override
     public void enviarNsfe() throws Exception {
         Date data = LocalDate.now().toDate();
@@ -82,6 +117,23 @@ public class NotaServiceImpl implements NotaService {
     @Override
     public void enviarNsfe( Date data ) throws Exception {
         try {
+            if ( repository.retornarFaltaProcessar() ) {
+                String protocolo = repository.retornarUltimoProtocolo();
+                if ( protocolo != null ) {
+                    ConsultarSituacaoLoteRpsResposta situacao = consultarSituacao( protocolo );
+                    switch ( TipoSituacao.fromValue( situacao.getSituacao() ) ) {
+                        case NAO_RECEBIDO:
+                            throw new IllegalStateException( String.format( "O Lote de protocolo (%s) não foi recebido, favor tente novamente mais tarde!", protocolo ) );
+                        case NAO_PROCESSADO:
+                            throw new IllegalStateException( String.format( "O Lote de protocolo (%s) ainda não foi processado favor aguardar processamento para envio do próximo lote.", protocolo ) );
+                        case PROCESSADO_COM_ERRO:
+                            throw new IllegalStateException( String.format( "O Lote de protocolo (%s) foi processado com erros, favor entrar em contato com o analista de suporte do SisAdonai!", protocolo ) );
+                        case PROCESSADO_COM_SUCESSO:
+                            repository.atualizarLoteProcessadoComSucesso( protocolo );
+                            break;
+                    }
+                }
+            }
             List<DadosBoletoModel> boletosPagos = boletoRepository.retornarBoletosPagos( data );
             if ( !boletosPagos.isEmpty() ) {
                 List<NotaCariocaModel> notas = new ArrayList<>();
@@ -92,14 +144,7 @@ public class NotaServiceImpl implements NotaService {
                 EnviarLoteRpsResposta resposta = servico.enviarLoteRps( envio );
                 validarEnvio( resposta );
                 LOG.info( resposta.getProtocolo() );
-
-                ConsultarSituacaoLoteRpsEnvio consultaSituacaoEnvio = new ConsultarSituacaoLoteRpsEnvio();
-                TcIdentificacaoPrestador prestador = new TcIdentificacaoPrestador();
-                prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
-                prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
-                consultaSituacaoEnvio.setPrestador( prestador );
-                consultaSituacaoEnvio.setProtocolo( resposta.getProtocolo() );
-                ConsultarSituacaoLoteRpsResposta consultaSituacaoResposta = servico.consultarSituacaoLoteRps( consultaSituacaoEnvio );
+                ConsultarSituacaoLoteRpsResposta consultaSituacaoResposta = consultarSituacao( resposta.getProtocolo() );
                 if ( consultaSituacaoResposta.getSituacao() > 1 ) {
                     for ( NotaCariocaModel nota : notas ) {
                         nota.setProtocolo( resposta.getProtocolo() );
@@ -113,11 +158,25 @@ public class NotaServiceImpl implements NotaService {
             }
         } catch ( IllegalStateException e ) {
             LOG.info( e.getMessage() );
+            if ( e.getMessage().contains( "ClientTransportException" ) ) {
+                throw new Exception( "Falha na conexão com o servidor da Nota Carioca!" );
+            }
             throw new Exception( e.getMessage() );
         } catch ( Exception e ) {
             LOG.error( e.getMessage(), e );
             throw new Exception( e );
         }
+    }
+
+    private ConsultarSituacaoLoteRpsResposta consultarSituacao( String protocolo ) {
+        ConsultarSituacaoLoteRpsEnvio consultaSituacaoEnvio = new ConsultarSituacaoLoteRpsEnvio();
+        TcIdentificacaoPrestador prestador = new TcIdentificacaoPrestador();
+        prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
+        prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
+        consultaSituacaoEnvio.setPrestador( prestador );
+        consultaSituacaoEnvio.setProtocolo( protocolo );
+        ConsultarSituacaoLoteRpsResposta consultaSituacaoResposta = servico.consultarSituacaoLoteRps( consultaSituacaoEnvio );
+        return consultaSituacaoResposta;
     }
 
     private void validarEnvio( EnviarLoteRpsResposta resposta ) throws IllegalStateException {
@@ -152,7 +211,7 @@ public class NotaServiceImpl implements NotaService {
                         mensagemRetorno.getCorrecao() ) );
             }
             LOG.info( sb.toString() );
-            throw new IllegalStateException( "Falha ao processar Lote RPS:\n" + sb.toString()  );
+            throw new IllegalStateException( "Falha ao processar Lote RPS:\n" + sb.toString() );
         }
     }
 
