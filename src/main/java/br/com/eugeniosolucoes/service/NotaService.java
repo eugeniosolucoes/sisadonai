@@ -15,9 +15,9 @@ import java.util.List;
  */
 public interface NotaService {
 
-    void enviarNsfe() throws Exception;
-
     void enviarNsfe( Date data ) throws Exception;
 
     public List<NotaCariocaModel> listarRpsEnviados( Date data );
+
+    Date validarUltimoEnvio() throws IllegalStateException;
 }

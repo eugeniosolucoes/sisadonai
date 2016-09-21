@@ -89,7 +89,8 @@ public class NotaRepositoryImpl implements NotaRepository {
                         rs.getInt( "numero_lote_rps" ),
                         rs.getInt( "numero_rps" ),
                         rs.getDate( "data_emissao" ),
-                        rs.getString( "protocolo" ) ) );
+                        rs.getString( "protocolo" ),
+                        rs.getByte( "processado" ) == 1 ) );
             }
             return list;
         } catch ( Exception ex ) {
@@ -203,4 +204,44 @@ public class NotaRepositoryImpl implements NotaRepository {
             repository.fechar( con, ps );
         }
     }
+
+    @Override
+    public void removerLoteProcessadoComErro( String protocolo ) {
+        String sql = "DELETE FROM `nota_carioca` WHERE `protocolo` = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = repository.getConnection();
+            ps = con.prepareStatement( sql );
+            ps.setString( 1, protocolo );
+            ps.executeUpdate();
+        } catch ( SQLException ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps );
+        }
+    }
+
+    @Override
+    public Date retornarUltimaDataEnvio() {
+        String sql = "SELECT MAX(`data_emissao`) FROM `nota_carioca`";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        java.util.Date result = null;
+        try {
+            con = repository.getConnection();
+            ps = con.prepareStatement( sql );
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                result = new Date( rs.getDate( 1 ).getTime() );
+            }
+        } catch ( Exception ex ) {
+            LOG.error( ex.getMessage(), ex );
+        } finally {
+            repository.fechar( con, ps, rs );
+        }
+        return result;
+    }
+
 }

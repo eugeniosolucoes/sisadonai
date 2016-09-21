@@ -404,7 +404,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
         ResultSet rs = null;
         try {
             con = repository.getConnection();
-            String sql = "SELECT DISTINCT TOP 100 dp.CPF_PFisica, \n"
+            String sql = "SELECT DISTINCT TOP 50 dp.CPF_PFisica, \n"
                     + "            pf.`Nome_PFisica`, \n"
                     + "            epf.`Email_Site`, \n"
                     + "            pf.`Codigo_PFisica`, \n"

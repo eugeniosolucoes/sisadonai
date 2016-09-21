@@ -228,7 +228,7 @@ public class MainForm extends BaseForm {
 
     private void mItemEnviarLoteRpsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemEnviarLoteRpsActionPerformed
         // TODO add your handling code here:
-        NotaForm notaForm = new NotaForm(null, "Enviar Lote RPS", true, 1000, 600);
+        NotaForm notaForm = new NotaForm(null, "Enviar Lote RPS", true, 1100, 600);
         notaForm.setVisible( true );
     }//GEN-LAST:event_mItemEnviarLoteRpsActionPerformed
 

@@ -28,5 +28,9 @@ public interface NotaRepository {
     String retornarUltimoProtocolo();
 
     void atualizarLoteProcessadoComSucesso( String protocolo );
+    
+    void removerLoteProcessadoComErro( String protocolo );
+    
+    Date retornarUltimaDataEnvio();
 
 }

@@ -76,7 +76,7 @@ public class NfseTest {
         prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
         prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
         envio.setPrestador( prestador );
-        envio.setProtocolo( "00000000000000000000000000000000000000000001643830" );
+        envio.setProtocolo( "00000000000000000000000000000000000000000001643840" );
         ConsultarLoteRpsResposta resposta = servico.consultarLoteRps( envio );
         String xml = XmlUtils.createXmlFromObject( resposta );
 

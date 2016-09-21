@@ -30,17 +30,19 @@ public class NotaCariocaModel {
 
     private String protocolo;
 
+    private boolean processado;
+    
     public NotaCariocaModel() {
     }
 
-    public NotaCariocaModel( String numeroBoleto, int numeroRps, int numeroLoteRps, Date dataEmissao, String protocolo ) {
+    public NotaCariocaModel( String numeroBoleto, int numeroRps, int numeroLoteRps, Date dataEmissao, String protocolo, boolean processado ) {
         this.numeroBoleto = numeroBoleto;
         this.numeroRps = numeroRps;
         this.numeroLoteRps = numeroLoteRps;
         this.dataEmissao = dataEmissao;
         this.protocolo = protocolo;
+        this.processado = processado;
     }
-    
     
     public String getNumeroBoleto() {
         return numeroBoleto;
@@ -106,6 +108,14 @@ public class NotaCariocaModel {
         this.total = total;
     }
 
+    public boolean isProcessado() {
+        return processado;
+    }
+
+    public void setProcessado( boolean processado ) {
+        this.processado = processado;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -130,7 +140,7 @@ public class NotaCariocaModel {
 
     @Override
     public String toString() {
-        return "NotaCariocaModel{" + "numeroBoleto=" + numeroBoleto + ", numeroRps=" + numeroRps + ", numeroLoteRps=" + numeroLoteRps + ", dataEmissao=" + dataEmissao + ", protocolo=" + protocolo + '}';
+        return "NotaCariocaModel{" + "numeroBoleto=" + numeroBoleto + ", nome=" + nome + ", dataPagamento=" + dataPagamento + ", total=" + total + ", numeroRps=" + numeroRps + ", numeroLoteRps=" + numeroLoteRps + ", dataEmissao=" + dataEmissao + ", protocolo=" + protocolo + ", processado=" + processado + '}';
     }
     
 }

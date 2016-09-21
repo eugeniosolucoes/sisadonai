@@ -104,55 +104,36 @@ public class NotaServiceImpl implements NotaService {
     }
 
     @Override
-    public void enviarNsfe() throws Exception {
-        Date data = LocalDate.now().toDate();
-        try {
-            enviarNsfe( data );
-        } catch ( Exception e ) {
-            LOG.error( e.getMessage(), e );
-            throw new Exception( e );
-        }
-    }
-
-    @Override
     public void enviarNsfe( Date data ) throws Exception {
         try {
-            if ( repository.retornarFaltaProcessar() ) {
-                String protocolo = repository.retornarUltimoProtocolo();
-                if ( protocolo != null ) {
-                    ConsultarSituacaoLoteRpsResposta situacao = consultarSituacao( protocolo );
-                    switch ( TipoSituacao.fromValue( situacao.getSituacao() ) ) {
-                        case NAO_RECEBIDO:
-                            throw new IllegalStateException( String.format( "O Lote de protocolo (%s) não foi recebido, favor tente novamente mais tarde!", protocolo ) );
-                        case NAO_PROCESSADO:
-                            throw new IllegalStateException( String.format( "O Lote de protocolo (%s) ainda não foi processado favor aguardar processamento para envio do próximo lote.", protocolo ) );
-                        case PROCESSADO_COM_ERRO:
-                            throw new IllegalStateException( String.format( "O Lote de protocolo (%s) foi processado com erros, favor entrar em contato com o analista de suporte do SisAdonai!", protocolo ) );
-                        case PROCESSADO_COM_SUCESSO:
-                            repository.atualizarLoteProcessadoComSucesso( protocolo );
-                            break;
-                    }
-                }
-            }
+
+            validarUltimoEnvio();
+
             List<DadosBoletoModel> boletosPagos = boletoRepository.retornarBoletosPagos( data );
             if ( !boletosPagos.isEmpty() ) {
+
                 List<NotaCariocaModel> notas = new ArrayList<>();
                 int indexLote = repository.retornarProximoNumeroLote();
                 int indexRps = repository.retornarProximoNumeroRps();
                 XMLGregorianCalendar dataEmissao = createDataXml();
                 EnviarLoteRpsEnvio envio = processarLoteRps( dataEmissao, indexLote, indexRps, boletosPagos, notas );
                 EnviarLoteRpsResposta resposta = servico.enviarLoteRps( envio );
+
                 validarEnvio( resposta );
+
                 LOG.info( resposta.getProtocolo() );
+
                 ConsultarSituacaoLoteRpsResposta consultaSituacaoResposta = consultarSituacao( resposta.getProtocolo() );
+
                 if ( consultaSituacaoResposta.getSituacao() > 1 ) {
                     for ( NotaCariocaModel nota : notas ) {
                         nota.setProtocolo( resposta.getProtocolo() );
                         repository.registrarEnvio( nota );
                     }
                 } else {
-                    validarProcessamento( resposta.getProtocolo() );
+                    verificarProcessamento( resposta.getProtocolo() );
                 }
+
             } else {
                 throw new IllegalStateException( "Não existem registros nesta data que atendam a condição para envio!" );
             }
@@ -168,11 +149,32 @@ public class NotaServiceImpl implements NotaService {
         }
     }
 
+    @Override
+    public Date validarUltimoEnvio() throws IllegalStateException {
+        if ( repository.retornarFaltaProcessar() ) {
+            String protocolo = repository.retornarUltimoProtocolo();
+            if ( protocolo != null ) {
+                ConsultarSituacaoLoteRpsResposta situacao = consultarSituacao( protocolo );
+                switch ( TipoSituacao.fromValue( situacao.getSituacao() ) ) {
+                    case NAO_RECEBIDO:
+                        throw new IllegalStateException( String.format( "O Lote de protocolo (%s) não foi recebido, favor tente novamente mais tarde!", protocolo ) );
+                    case NAO_PROCESSADO:
+                        throw new IllegalStateException( String.format( "O Lote de protocolo (%s) ainda não foi processado favor aguardar processamento para envio do próximo lote.", protocolo ) );
+                    case PROCESSADO_COM_ERRO:
+                        repository.removerLoteProcessadoComErro( protocolo );
+                        verificarProcessamento( protocolo );
+                    case PROCESSADO_COM_SUCESSO:
+                        repository.atualizarLoteProcessadoComSucesso( protocolo );
+                        break;
+                }
+            }
+        }
+        return repository.retornarUltimaDataEnvio();
+    }
+
     private ConsultarSituacaoLoteRpsResposta consultarSituacao( String protocolo ) {
         ConsultarSituacaoLoteRpsEnvio consultaSituacaoEnvio = new ConsultarSituacaoLoteRpsEnvio();
-        TcIdentificacaoPrestador prestador = new TcIdentificacaoPrestador();
-        prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
-        prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
+        TcIdentificacaoPrestador prestador = criarPrestador();
         consultaSituacaoEnvio.setPrestador( prestador );
         consultaSituacaoEnvio.setProtocolo( protocolo );
         ConsultarSituacaoLoteRpsResposta consultaSituacaoResposta = servico.consultarSituacaoLoteRps( consultaSituacaoEnvio );
@@ -180,39 +182,47 @@ public class NotaServiceImpl implements NotaService {
     }
 
     private void validarEnvio( EnviarLoteRpsResposta resposta ) throws IllegalStateException {
+        StringBuilder sb = new StringBuilder();
         if ( resposta.getProtocolo() == null ) {
             if ( resposta.getListaMensagemRetorno() != null ) {
                 for ( TcMensagemRetorno mensagemRetorno : resposta.getListaMensagemRetorno().getMensagemRetorno() ) {
-                    LOG.info( String.format( "Problema envio RPS: %s\nmensagem: %s\ncorrecao:%s ",
-                            mensagemRetorno.getCodigo(),
-                            mensagemRetorno.getMensagem(),
-                            mensagemRetorno.getCorrecao() ) );
+                    sb.append( criarMsgRetorno( mensagemRetorno ) );
                 }
             }
-            throw new IllegalStateException( "Falha no envio do Lote RPS, favor entrar em contato com o analista de suporte do SisAdonai!" );
+            LOG.info( sb.toString() );
+            throw new IllegalStateException( "Falha no envio do Lote RPS, favor entrar em contato com o analista de suporte do SisAdonai!\n" + sb.toString() );
         }
     }
 
-    private void validarProcessamento( String protocolo ) throws IllegalStateException {
+    private void verificarProcessamento( String protocolo ) throws IllegalStateException {
         StringBuilder sb = new StringBuilder();
         ConsultarLoteRpsEnvio envio = new ConsultarLoteRpsEnvio();
-        TcIdentificacaoPrestador prestador = new TcIdentificacaoPrestador();
-        prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
-        prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
+        TcIdentificacaoPrestador prestador = criarPrestador();
         envio.setPrestador( prestador );
         envio.setProtocolo( protocolo );
         ConsultarLoteRpsResposta resposta = servico.consultarLoteRps( envio );
 
         if ( resposta.getListaMensagemRetorno() != null ) {
             for ( TcMensagemRetorno mensagemRetorno : resposta.getListaMensagemRetorno().getMensagemRetorno() ) {
-                sb.append( String.format( "Problema envio RPS: %s\nmensagem: %s\ncorrecao:%s ",
-                        mensagemRetorno.getCodigo(),
-                        mensagemRetorno.getMensagem(),
-                        mensagemRetorno.getCorrecao() ) );
+                sb.append( criarMsgRetorno( mensagemRetorno ) );
             }
             LOG.info( sb.toString() );
-            throw new IllegalStateException( "Falha ao processar Lote RPS:\n" + sb.toString() );
+            throw new IllegalStateException( String.format( "O Lote de protocolo (%s) foi processado com erros, favor entrar em contato com o analista de suporte do SisAdonai!%nDetalhes:%n%s", protocolo, sb.toString() ) );
         }
+    }
+
+    private TcIdentificacaoPrestador criarPrestador() {
+        TcIdentificacaoPrestador prestador = new TcIdentificacaoPrestador();
+        prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
+        prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
+        return prestador;
+    }
+
+    private static String criarMsgRetorno( TcMensagemRetorno mensagemRetorno ) {
+        return String.format( "Problema envio RPS: %s\nmensagem: %s\ncorrecao:%s ",
+                mensagemRetorno.getCodigo(),
+                mensagemRetorno.getMensagem(),
+                mensagemRetorno.getCorrecao() );
     }
 
     private EnviarLoteRpsEnvio processarLoteRps( XMLGregorianCalendar dataEmissao, int indexLote, int indexRps, List<DadosBoletoModel> boletosPagos, List<NotaCariocaModel> notas ) {
@@ -257,10 +267,7 @@ public class NotaServiceImpl implements NotaService {
             tcInfRps.setServico( tcDadosServico );
             tcInfRps.setStatus( (byte) 1 );
 
-            TcIdentificacaoPrestador tcIdentificacaoPrestador = new TcIdentificacaoPrestador();
-
-            tcIdentificacaoPrestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
-            tcIdentificacaoPrestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
+            TcIdentificacaoPrestador tcIdentificacaoPrestador = criarPrestador();
 
             tcInfRps.setPrestador( tcIdentificacaoPrestador );
 
@@ -275,7 +282,7 @@ public class NotaServiceImpl implements NotaService {
 
             tcRps.setInfRps( tcInfRps );
             rps.add( tcRps );
-            NotaCariocaModel nota = new NotaCariocaModel( model.getNossoNumero(), indexRps, indexLote, dataEmissao.toGregorianCalendar().getTime(), null );
+            NotaCariocaModel nota = new NotaCariocaModel( model.getNossoNumero(), indexRps, indexLote, dataEmissao.toGregorianCalendar().getTime(), null, true );
             notas.add( nota );
             indexRps++;
         }
