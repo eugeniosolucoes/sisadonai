@@ -49,49 +49,49 @@ import java.util.Formatter;
 import java.util.Locale;
 
 public class NotaServiceImpl implements NotaService {
-
+    
     private static final Logger LOG = LoggerFactory.getLogger( NotaServiceImpl.class );
-
+    
     public static final String INF_RPS = "InfRps";
-
+    
     public static final String LOTE_RPS = "LoteRps";
-
+    
     public static final String SERIE_RPS = "RPS";
-
+    
     public static final String CODIGO_TRIBUTACAO_MUNICIPIO = "080214";
-
+    
     public static final String ITEM_LISTA_SERVICO = "0802";
-
+    
     private final NsfeServico servico = new NsfeServicoImpl();
-
+    
     private final NotaRepository repository = new NotaRepositoryImpl();
-
+    
     private final BoletoRepository boletoRepository = new BoletoRepositoryImpl();
-
+    
     static enum TipoSituacao {
-
+        
         NAO_RECEBIDO( (byte) 1, "Não Recebido" ),
         NAO_PROCESSADO( (byte) 2, "Não Processado" ),
         PROCESSADO_COM_ERRO( (byte) 3, "Processado com Erro" ),
         PROCESSADO_COM_SUCESSO( (byte) 4, "Processado com Sucesso" );
-
+        
         private final byte codigo;
-
+        
         private final String descricao;
-
+        
         private TipoSituacao( byte codigo, String descricao ) {
             this.codigo = codigo;
             this.descricao = descricao;
         }
-
+        
         public byte getCodigo() {
             return codigo;
         }
-
+        
         public String getDescricao() {
             return descricao;
         }
-
+        
         public static TipoSituacao fromValue( byte value ) {
             for ( TipoSituacao situacao : TipoSituacao.values() ) {
                 if ( situacao.codigo == value ) {
@@ -100,31 +100,31 @@ public class NotaServiceImpl implements NotaService {
             }
             return null;
         }
-
+        
     }
-
+    
     @Override
     public void enviarNsfe( Date data ) throws Exception {
         try {
-
+            
             validarUltimoEnvio();
-
+            
             List<DadosBoletoModel> boletosPagos = boletoRepository.retornarBoletosPagos( data );
             if ( !boletosPagos.isEmpty() ) {
-
+                
                 List<NotaCariocaModel> notas = new ArrayList<>();
                 int indexLote = repository.retornarProximoNumeroLote();
                 int indexRps = repository.retornarProximoNumeroRps();
                 XMLGregorianCalendar dataEmissao = createDataXml();
                 EnviarLoteRpsEnvio envio = processarLoteRps( dataEmissao, indexLote, indexRps, boletosPagos, notas );
                 EnviarLoteRpsResposta resposta = servico.enviarLoteRps( envio );
-
+                
                 validarEnvio( resposta );
-
+                
                 LOG.info( resposta.getProtocolo() );
-
+                
                 ConsultarSituacaoLoteRpsResposta consultaSituacaoResposta = consultarSituacao( resposta.getProtocolo() );
-
+                
                 if ( consultaSituacaoResposta.getSituacao() > 1 ) {
                     for ( NotaCariocaModel nota : notas ) {
                         nota.setProtocolo( resposta.getProtocolo() );
@@ -133,7 +133,7 @@ public class NotaServiceImpl implements NotaService {
                 } else {
                     verificarProcessamento( resposta.getProtocolo() );
                 }
-
+                
             } else {
                 throw new IllegalStateException( "Não existem registros nesta data que atendam a condição para envio!" );
             }
@@ -148,7 +148,7 @@ public class NotaServiceImpl implements NotaService {
             throw new Exception( e );
         }
     }
-
+    
     @Override
     public Date validarUltimoEnvio() throws IllegalStateException {
         if ( repository.retornarFaltaProcessar() ) {
@@ -169,9 +169,13 @@ public class NotaServiceImpl implements NotaService {
                 }
             }
         }
-        return repository.retornarUltimaDataEnvio();
+        try {
+            return repository.retornarUltimaDataEnvio();
+        } catch ( Exception e ) {
+            return null;
+        }
     }
-
+    
     private ConsultarSituacaoLoteRpsResposta consultarSituacao( String protocolo ) {
         ConsultarSituacaoLoteRpsEnvio consultaSituacaoEnvio = new ConsultarSituacaoLoteRpsEnvio();
         TcIdentificacaoPrestador prestador = criarPrestador();
@@ -180,20 +184,20 @@ public class NotaServiceImpl implements NotaService {
         ConsultarSituacaoLoteRpsResposta consultaSituacaoResposta = servico.consultarSituacaoLoteRps( consultaSituacaoEnvio );
         return consultaSituacaoResposta;
     }
-
+    
     private void validarEnvio( EnviarLoteRpsResposta resposta ) throws IllegalStateException {
         StringBuilder sb = new StringBuilder();
         if ( resposta.getProtocolo() == null ) {
             if ( resposta.getListaMensagemRetorno() != null ) {
                 for ( TcMensagemRetorno mensagemRetorno : resposta.getListaMensagemRetorno().getMensagemRetorno() ) {
-                    sb.append( criarMsgRetorno( mensagemRetorno ) );
+                    sb.append( criarMsgRetorno( mensagemRetorno ) ).append( "\n" );
                 }
             }
             LOG.info( sb.toString() );
             throw new IllegalStateException( "Falha no envio do Lote RPS, favor entrar em contato com o analista de suporte do SisAdonai!\n" + sb.toString() );
         }
     }
-
+    
     private void verificarProcessamento( String protocolo ) throws IllegalStateException {
         StringBuilder sb = new StringBuilder();
         ConsultarLoteRpsEnvio envio = new ConsultarLoteRpsEnvio();
@@ -201,30 +205,30 @@ public class NotaServiceImpl implements NotaService {
         envio.setPrestador( prestador );
         envio.setProtocolo( protocolo );
         ConsultarLoteRpsResposta resposta = servico.consultarLoteRps( envio );
-
+        
         if ( resposta.getListaMensagemRetorno() != null ) {
             for ( TcMensagemRetorno mensagemRetorno : resposta.getListaMensagemRetorno().getMensagemRetorno() ) {
-                sb.append( criarMsgRetorno( mensagemRetorno ) );
+                sb.append( criarMsgRetorno( mensagemRetorno ) ).append( "\n" );
             }
             LOG.info( sb.toString() );
             throw new IllegalStateException( String.format( "O Lote de protocolo (%s) foi processado com erros, favor entrar em contato com o analista de suporte do SisAdonai!%nDetalhes:%n%s", protocolo, sb.toString() ) );
         }
     }
-
+    
     private TcIdentificacaoPrestador criarPrestador() {
         TcIdentificacaoPrestador prestador = new TcIdentificacaoPrestador();
         prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
         prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
         return prestador;
     }
-
+    
     private static String criarMsgRetorno( TcMensagemRetorno mensagemRetorno ) {
         return String.format( "Problema envio RPS: %s\nmensagem: %s\ncorrecao:%s ",
                 mensagemRetorno.getCodigo(),
                 mensagemRetorno.getMensagem(),
                 mensagemRetorno.getCorrecao() );
     }
-
+    
     private EnviarLoteRpsEnvio processarLoteRps( XMLGregorianCalendar dataEmissao, int indexLote, int indexRps, List<DadosBoletoModel> boletosPagos, List<NotaCariocaModel> notas ) {
         EnviarLoteRpsEnvio loteRpsEnvio = new EnviarLoteRpsEnvio();
         TcLoteRps loteRps = loteRpsEnvio.getLoteRps();
@@ -242,23 +246,23 @@ public class NotaServiceImpl implements NotaService {
             tcIdentificacaoRps.setSerie( SERIE_RPS );
             tcIdentificacaoRps.setTipo( (byte) 1 );
             tcInfRps.setIdentificacaoRps( tcIdentificacaoRps );
-
+            
             tcInfRps.setDataEmissao( dataEmissao );
             tcInfRps.setId( INF_RPS + indexRps );
             tcInfRps.setNaturezaOperacao( Byte.parseByte( PROP.getProperty( "Rps.NaturezaOperacao" ) ) );
             tcInfRps.setOptanteSimplesNacional( Byte.parseByte( PROP.getProperty( "Rps.OptanteSimplesNacional" ) ) );
             tcInfRps.setIncentivadorCultural( Byte.parseByte( PROP.getProperty( "Rps.IncentivadorCultural" ) ) );
-
+            
             TcDadosServico tcDadosServico = new TcDadosServico();
             TcValores tcValores = new TcValores();
-
+            
             BigDecimal value = new BigDecimal( model.getValor() );
             Formatter valor = new Formatter( Locale.US ).format( "%.2f", value );
             tcValores.setValorServicos( new BigDecimal( valor.toString() ) );
             tcValores.setIssRetido( (byte) 2 );
             tcValores.setBaseCalculo( new BigDecimal( valor.toString() ) );
             tcValores.setValorLiquidoNfse( new BigDecimal( valor.toString() ) );
-
+            
             tcDadosServico.setValores( tcValores );
             tcDadosServico.setItemListaServico( ITEM_LISTA_SERVICO );
             tcDadosServico.setCodigoTributacaoMunicipio( CODIGO_TRIBUTACAO_MUNICIPIO );
@@ -266,11 +270,11 @@ public class NotaServiceImpl implements NotaService {
             tcDadosServico.setCodigoMunicipio( MunicipioRJ.RIO_DE_JANEIRO.getCodigo() );
             tcInfRps.setServico( tcDadosServico );
             tcInfRps.setStatus( (byte) 1 );
-
+            
             TcIdentificacaoPrestador tcIdentificacaoPrestador = criarPrestador();
-
+            
             tcInfRps.setPrestador( tcIdentificacaoPrestador );
-
+            
             TcDadosTomador tcDadosTomador = new TcDadosTomador();
             tcDadosTomador.setRazaoSocial( model.getAluno() );
             TcIdentificacaoTomador tcIdentificacaoTomador = new TcIdentificacaoTomador();
@@ -279,7 +283,7 @@ public class NotaServiceImpl implements NotaService {
             tcIdentificacaoTomador.setCpfCnpj( tcCpfCnpj );
             tcDadosTomador.setIdentificacaoTomador( tcIdentificacaoTomador );
             tcInfRps.setTomador( tcDadosTomador );
-
+            
             tcRps.setInfRps( tcInfRps );
             rps.add( tcRps );
             NotaCariocaModel nota = new NotaCariocaModel( model.getNossoNumero(), indexRps, indexLote, dataEmissao.toGregorianCalendar().getTime(), null, true );
@@ -289,7 +293,7 @@ public class NotaServiceImpl implements NotaService {
         loteRps.setQuantidadeRps( loteRpsEnvio.getLoteRps().getListaRps().getRps().size() );
         return loteRpsEnvio;
     }
-
+    
     @Override
     public List<NotaCariocaModel> listarRpsEnviados( Date data ) {
         SimpleDateFormat sdf = new SimpleDateFormat( "dd/MM/yyyy" );
@@ -302,5 +306,5 @@ public class NotaServiceImpl implements NotaService {
         }
         return listarRspEnviados;
     }
-
+    
 }

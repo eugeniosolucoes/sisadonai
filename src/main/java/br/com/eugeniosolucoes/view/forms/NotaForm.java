@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -395,13 +396,27 @@ public class NotaForm extends BaseDialog {
     }//GEN-LAST:event_btnExportarExcelActionPerformed
 
     private void btnVerificarUltimoEnvioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerificarUltimoEnvioActionPerformed
-        // TODO add your handling code here:
-        Date data = notaService.validarUltimoEnvio();
-        JOptionPane.showMessageDialog( null, "Último envio validado com sucesso!" );
-        if ( data != null ) {
-            jdtEnvio.setDate( data );
-            btnListarRpsEnviadosActionPerformed( evt );
-        }
+        final JButton btn = this.btnVerificarUltimoEnvio;
+        new Thread( new Runnable() {
+            @Override
+            public void run() {
+                btn.setEnabled( false );
+                try {
+                    Date data = notaService.validarUltimoEnvio();
+                    if ( data != null ) {
+                        JOptionPane.showMessageDialog( null, "Último envio validado com sucesso!" );
+                        jdtEnvio.setDate( data );
+                        btnListarRpsEnviadosActionPerformed( null );
+                    } else {
+                        JOptionPane.showMessageDialog( null, "Nenhuma data de envio foi encontrada!" );
+                    }
+                } catch ( IllegalStateException | HeadlessException e ) {
+                    JOptionPane.showMessageDialog( null, e.getMessage() );
+                } finally{
+                    btn.setEnabled( true );
+                }
+            }
+        } ).start();
     }//GEN-LAST:event_btnVerificarUltimoEnvioActionPerformed
 
     private void listarRpsEnviados( Date data ) throws HeadlessException {
