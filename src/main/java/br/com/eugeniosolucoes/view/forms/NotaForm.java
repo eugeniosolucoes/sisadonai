@@ -360,6 +360,7 @@ public class NotaForm extends BaseDialog {
 
     private void btnExportarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarExcelActionPerformed
         // TODO add your handling code here:
+        MainForm.setWaitCursor( this );
         FileOutputStream fs = null;
         BufferedOutputStream bs = null;
         final String relatorio = "relatorio-excel-envio-rps.xls";
@@ -393,6 +394,7 @@ public class NotaForm extends BaseDialog {
                 LOG.error( ex.getMessage(), ex );
             }
         }
+        MainForm.setDefaultCursor( this );
     }//GEN-LAST:event_btnExportarExcelActionPerformed
 
     private void btnVerificarUltimoEnvioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerificarUltimoEnvioActionPerformed
