@@ -33,4 +33,6 @@ public interface BoletoRepository {
 
     DadosBoletoPagoModel retornarBoletoPago( String numeroBoleto );
 
+    int retornarRestamBoletosPagos( Date data );
+
 }

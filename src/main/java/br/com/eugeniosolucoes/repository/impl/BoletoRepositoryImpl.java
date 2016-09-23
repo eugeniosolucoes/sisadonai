@@ -452,4 +452,31 @@ public class BoletoRepositoryImpl implements BoletoRepository {
         }
     }
 
+    @Override
+    public int retornarRestamBoletosPagos( Date data ) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int result = 0;
+        try {
+            con = repository.getConnection();
+            String sql = "SELECT DISTINCT COUNT( mens.`Nosso_Numero`) AS TOTAL\n"
+                    + "FROM `Mensalidades` mens \n"
+                    + "WHERE mens.`Codigo_Situacao_Mensalidade` = '2'\n"
+                    + "AND (mens.`Codigo_Forma_Pagamento` = '03' OR mens.`Codigo_Forma_Pagamento` = '04')\n"
+                    + "AND mens.`Data_Pagamento` = ?\n"
+                    + "AND mens.`Nosso_Numero` NOT IN (SELECT `numero_boleto` FROM `nota_carioca`);";
+            ps = con.prepareStatement( sql );
+            ps.setDate( 1, new java.sql.Date( data.getTime() ) );
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                result = rs.getInt( "TOTAL" );
+            }
+        } catch ( Exception ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps, rs );
+        }
+        return result;
+    }
 }

@@ -5,6 +5,7 @@
  */
 package br.com.eugeniosolucoes.service;
 
+import br.com.eugeniosolucoes.excecoes.RestamBoletosPagosException;
 import br.com.eugeniosolucoes.view.model.NotaCariocaModel;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public interface NotaService {
 
-    void enviarNsfe( Date data ) throws Exception;
+    void enviarNsfe( Date data ) throws RestamBoletosPagosException;
 
     public List<NotaCariocaModel> listarRpsEnviados( Date data );
 

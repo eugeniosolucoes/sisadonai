@@ -5,6 +5,7 @@
  */
 package br.com.eugeniosolucoes.view.forms;
 
+import br.com.eugeniosolucoes.excecoes.RestamBoletosPagosException;
 import br.com.eugeniosolucoes.service.NotaService;
 import br.com.eugeniosolucoes.service.impl.NotaServiceImpl;
 import br.com.eugeniosolucoes.util.RelatorioUtils;
@@ -333,23 +334,35 @@ public class NotaForm extends BaseDialog {
                 if ( jdtPagamento.getDate() != null ) {
                     try {
                         Date date = jdtPagamento.getDate();
-                        jProgressBar1.setVisible( true );
-                        btnEnviarLoteRps.setEnabled( false );
-                        btnListarRpsEnviados.setEnabled( false );
+                        alternarBotoesDeEnvio( false );
                         notaService.enviarNsfe( date );
                         jdtEnvio.setDate( LocalDate.now().toDate() );
                         listarRpsEnviados( jdtEnvio.getDate() );
+                    } catch ( RestamBoletosPagosException ex ) {
+                        String message = ex.getMessage();
+                        int result = JOptionPane.showOptionDialog(
+                                null,
+                                message, "Restam RPS a enviar",
+                                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
+                                null, new String[]{"Sim", "Não"}, JOptionPane.YES_OPTION );
+                        if ( result == JOptionPane.YES_OPTION ) {
+                            btnEnviarLoteRpsActionPerformed( null );
+                        }
                     } catch ( Exception ex ) {
                         JOptionPane.showMessageDialog( null, ex.getMessage() );
                     } finally {
-                        jProgressBar1.setVisible( false );
-                        btnEnviarLoteRps.setEnabled( true );
-                        btnListarRpsEnviados.setEnabled( true );
+                        alternarBotoesDeEnvio( true );
                     }
                 }
             }
         } ).start();
     }//GEN-LAST:event_btnEnviarLoteRpsActionPerformed
+
+    private void alternarBotoesDeEnvio( boolean value ) {
+        jProgressBar1.setVisible( !value );
+        btnEnviarLoteRps.setEnabled( value );
+        btnListarRpsEnviados.setEnabled( value );
+    }
 
     private void btnListarRpsEnviadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarRpsEnviadosActionPerformed
         // TODO add your handling code here:
@@ -414,7 +427,7 @@ public class NotaForm extends BaseDialog {
                     }
                 } catch ( IllegalStateException | HeadlessException e ) {
                     JOptionPane.showMessageDialog( null, e.getMessage() );
-                } finally{
+                } finally {
                     btn.setEnabled( true );
                 }
             }
