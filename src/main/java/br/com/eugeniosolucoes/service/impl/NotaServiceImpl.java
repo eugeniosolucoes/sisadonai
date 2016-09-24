@@ -44,6 +44,7 @@ import static br.com.eugeniosolucoes.nfse.util.XmlUtils.*;
 import javax.xml.datatype.XMLGregorianCalendar;
 import br.com.eugeniosolucoes.service.NotaService;
 import br.com.eugeniosolucoes.repository.NotaRepository;
+import br.com.eugeniosolucoes.util.MyStrings;
 import br.com.eugeniosolucoes.view.model.DadosBoletoPagoModel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -140,7 +141,7 @@ public class NotaServiceImpl implements NotaService {
                 int total = boletoRepository.retornarRestamBoletosPagos( data );
                 if ( total > 0 ) {
                     String msg = String.format( "O lote tem um limite de 50 RPS por envio, nesta data (%s) restaram %d RPS a enviar!\nDeseja enviar o próximo lote desta data?",
-                           DATE_FORMAT.format( data ), total );
+                            DATE_FORMAT.format( data ), total );
                     throw new RestamBoletosPagosException( msg );
                 }
             } else {
@@ -315,6 +316,43 @@ public class NotaServiceImpl implements NotaService {
             model.setTotal( String.format( "%.2f", pago.getValor() ) );
         }
         return listarRspEnviados;
+    }
+
+    @Override
+    public void registrarRpsAvulso( NotaCariocaModel model ) {
+        try {
+            String nossoNumero = MyStrings.padLeft( 10, Integer.valueOf( model.getNumeroBoleto() ) );
+            model.setNumeroBoleto( nossoNumero );
+            model.setDataEmissao( new Date() );
+            model.setNumeroLoteRps( 0 );
+            model.setProcessado( true );
+            model.setProtocolo( RPS_AVULSO );
+
+            StringBuilder sb = new StringBuilder();
+
+            boolean deveExistirNossoNumero = boletoRepository.verificarExisteNossoNumero( model.getNumeroBoleto() );
+            if ( !deveExistirNossoNumero ) {
+                sb.append( "Nosso Número não encontrado no sistema!" ).append( "\n" );
+            }
+            boolean naoDeveExistirNumeroRps = repository.verificarExisteNumeroRps( model.getNumeroRps() );
+            if ( naoDeveExistirNumeroRps ) {
+                sb.append( "Número RPS já registrado!" ).append( "\n" );
+            }
+
+            boolean naoDeveExistirNaTabelaNotaCarioca = repository.verificarExisteNumeroBoleto( nossoNumero );
+
+            if ( naoDeveExistirNaTabelaNotaCarioca ) {
+                sb.append( "Nosso Número já registrado como enviado!" ).append( "\n" );
+            }
+
+            if ( !sb.toString().isEmpty() ) {
+                throw new IllegalStateException( sb.toString() );
+            }
+
+            repository.registrarRpsAvulso( model );
+        } catch ( NumberFormatException | IllegalStateException e ) {
+            throw new IllegalStateException( e.getMessage() );
+        }
     }
 
 }

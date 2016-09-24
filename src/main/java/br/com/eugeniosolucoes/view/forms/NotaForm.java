@@ -37,15 +37,15 @@ import org.slf4j.LoggerFactory;
  * @author eugenio
  */
 public class NotaForm extends BaseDialog {
-
+    
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger( NotaForm.class );
-
+    
     private final NotaService notaService = new NotaServiceImpl();
-
+    
     private int totalRpsProcessados;
-
+    
     private int totalRpsNaoProcessados;
-
+    
     private double valorTotal;
 
     /**
@@ -60,7 +60,7 @@ public class NotaForm extends BaseDialog {
         initComponents();
         jProgressBar1.setVisible( false );
     }
-
+    
     public NotaForm( Frame owner, String title, boolean modal, int w, int h ) {
         super( owner, title, modal );
         initComponents();
@@ -78,16 +78,6 @@ public class NotaForm extends BaseDialog {
     private void initComponents() {
 
         plConteudo = new javax.swing.JPanel();
-        plDados = new javax.swing.JPanel();
-        splDados = new javax.swing.JScrollPane();
-        tblDados = new javax.swing.JTable();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        lblTotalRpsProcessados = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        lblTotalRpsNaoProcessados = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        lblValorTotalRpsProcessados = new javax.swing.JLabel();
         tabPanelControl = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -100,6 +90,22 @@ public class NotaForm extends BaseDialog {
         jdtEnvio = new com.toedter.calendar.JDateChooser(new java.util.Date());
         btnListarRpsEnviados = new javax.swing.JButton();
         btnExportarExcel = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        txtNossoNumero = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        txtNumeroRps = new javax.swing.JTextField();
+        btnRegistrarRpsAvulso = new javax.swing.JButton();
+        plDados = new javax.swing.JPanel();
+        splDados = new javax.swing.JScrollPane();
+        tblDados = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        lblTotalRpsProcessados = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        lblTotalRpsNaoProcessados = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        lblValorTotalRpsProcessados = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Enviar Lote RPS");
@@ -107,6 +113,155 @@ public class NotaForm extends BaseDialog {
 
         plConteudo.setBackground(java.awt.SystemColor.control);
         plConteudo.setPreferredSize(new java.awt.Dimension(800, 600));
+
+        jLabel1.setText("Data Pagamento:");
+
+        btnEnviarLoteRps.setText("Enviar Lote RPS");
+        btnEnviarLoteRps.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarLoteRpsActionPerformed(evt);
+            }
+        });
+
+        jProgressBar1.setIndeterminate(true);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(5, 5, 5)
+                .addComponent(jdtPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(btnEnviarLoteRps)
+                .addGap(5, 5, 5)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(328, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(jdtPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnEnviarLoteRps)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        tabPanelControl.addTab("Envio de Lote RPS", jPanel2);
+
+        btnVerificarUltimoEnvio.setText("Verificar Último Envio");
+        btnVerificarUltimoEnvio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerificarUltimoEnvioActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Data Envio:");
+
+        btnListarRpsEnviados.setText("Listar RPS Enviados");
+        btnListarRpsEnviados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListarRpsEnviadosActionPerformed(evt);
+            }
+        });
+
+        btnExportarExcel.setText("Exportar para Excel");
+        btnExportarExcel.setEnabled(false);
+        btnExportarExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportarExcelActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnVerificarUltimoEnvio)
+                .addGap(5, 5, 5)
+                .addComponent(jLabel2)
+                .addGap(5, 5, 5)
+                .addComponent(jdtEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(btnListarRpsEnviados)
+                .addGap(5, 5, 5)
+                .addComponent(btnExportarExcel)
+                .addContainerGap(219, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnVerificarUltimoEnvio)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(jdtEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnListarRpsEnviados)
+                    .addComponent(btnExportarExcel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        tabPanelControl.addTab("Listar RPS Enviados", jPanel3);
+
+        jLabel6.setText("Nosso Número:");
+
+        jLabel7.setText("Número RPS:");
+
+        btnRegistrarRpsAvulso.setText("Registrar");
+        btnRegistrarRpsAvulso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarRpsAvulsoActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtNossoNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtNumeroRps, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRegistrarRpsAvulso)
+                .addContainerGap(329, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(txtNossoNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtNumeroRps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRegistrarRpsAvulso))
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
+
+        tabPanelControl.addTab("RPS Avulso", jPanel4);
 
         plDados.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -194,112 +349,6 @@ public class NotaForm extends BaseDialog {
                 .addContainerGap())
         );
 
-        jLabel1.setText("Data Pagamento:");
-
-        btnEnviarLoteRps.setText("Enviar Lote RPS");
-        btnEnviarLoteRps.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEnviarLoteRpsActionPerformed(evt);
-            }
-        });
-
-        jProgressBar1.setIndeterminate(true);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(5, 5, 5)
-                .addComponent(jdtPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(btnEnviarLoteRps)
-                .addGap(5, 5, 5)
-                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(324, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(jdtPagamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnEnviarLoteRps)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        tabPanelControl.addTab("Envio de Lote RPS", jPanel2);
-
-        btnVerificarUltimoEnvio.setText("Verificar Último Envio");
-        btnVerificarUltimoEnvio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVerificarUltimoEnvioActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setText("Data Envio:");
-
-        btnListarRpsEnviados.setText("Listar RPS Enviados");
-        btnListarRpsEnviados.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnListarRpsEnviadosActionPerformed(evt);
-            }
-        });
-
-        btnExportarExcel.setText("Exportar para Excel");
-        btnExportarExcel.setEnabled(false);
-        btnExportarExcel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExportarExcelActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnVerificarUltimoEnvio)
-                .addGap(5, 5, 5)
-                .addComponent(jLabel2)
-                .addGap(5, 5, 5)
-                .addComponent(jdtEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(btnListarRpsEnviados)
-                .addGap(5, 5, 5)
-                .addComponent(btnExportarExcel)
-                .addContainerGap(215, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnVerificarUltimoEnvio)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(jdtEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnListarRpsEnviados)
-                    .addComponent(btnExportarExcel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        tabPanelControl.addTab("Listar RPS Enviados", jPanel3);
-
         javax.swing.GroupLayout plConteudoLayout = new javax.swing.GroupLayout(plConteudo);
         plConteudo.setLayout(plConteudoLayout);
         plConteudoLayout.setHorizontalGroup(
@@ -315,7 +364,7 @@ public class NotaForm extends BaseDialog {
             plConteudoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plConteudoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabPanelControl, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabPanelControl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(plDados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -349,7 +398,7 @@ public class NotaForm extends BaseDialog {
                             btnEnviarLoteRpsActionPerformed( null );
                         }
                     } catch ( Exception ex ) {
-                        JOptionPane.showMessageDialog( null, ex.getMessage() );
+                        JOptionPane.showMessageDialog( null, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );
                     } finally {
                         alternarBotoesDeEnvio( true );
                     }
@@ -357,7 +406,7 @@ public class NotaForm extends BaseDialog {
             }
         } ).start();
     }//GEN-LAST:event_btnEnviarLoteRpsActionPerformed
-
+    
     private void alternarBotoesDeEnvio( boolean value ) {
         jProgressBar1.setVisible( !value );
         btnEnviarLoteRps.setEnabled( value );
@@ -387,7 +436,7 @@ public class NotaForm extends BaseDialog {
             bs.write( arquivoExcel );
             bs.close();
         } catch ( Exception e ) {
-            JOptionPane.showMessageDialog( null, e.getMessage() );
+            JOptionPane.showMessageDialog( null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );
         } finally {
             try {
                 if ( bs != null ) {
@@ -426,7 +475,7 @@ public class NotaForm extends BaseDialog {
                         JOptionPane.showMessageDialog( null, "Nenhuma data de envio foi encontrada!" );
                     }
                 } catch ( IllegalStateException | HeadlessException e ) {
-                    JOptionPane.showMessageDialog( null, e.getMessage() );
+                    JOptionPane.showMessageDialog( null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );
                 } finally {
                     btn.setEnabled( true );
                 }
@@ -434,6 +483,20 @@ public class NotaForm extends BaseDialog {
         } ).start();
     }//GEN-LAST:event_btnVerificarUltimoEnvioActionPerformed
 
+    private void btnRegistrarRpsAvulsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarRpsAvulsoActionPerformed
+        try {
+            NotaCariocaModel model = new NotaCariocaModel();
+            model.setNumeroBoleto( txtNossoNumero.getText() );
+            model.setNumeroRps( Integer.parseInt( txtNumeroRps.getText() ) );
+            notaService.registrarRpsAvulso( model );
+            txtNossoNumero.setText( "" );
+            txtNumeroRps.setText( "" );
+            listarRpsEnviados( LocalDate.now().toDate() );
+        } catch ( Exception e ) {
+            JOptionPane.showMessageDialog( null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );
+        }
+    }//GEN-LAST:event_btnRegistrarRpsAvulsoActionPerformed
+    
     private void listarRpsEnviados( Date data ) throws HeadlessException {
         try {
             MainForm.setWaitCursor( this );
@@ -443,7 +506,7 @@ public class NotaForm extends BaseDialog {
                 boolean[] canEdit = new boolean[]{
                     false, false, false, false, false, false
                 };
-
+                
                 @Override
                 public Class<?> getColumnClass( int columnIndex ) {
                     switch ( columnIndex ) {
@@ -453,7 +516,7 @@ public class NotaForm extends BaseDialog {
                             return String.class;
                     }
                 }
-
+                
                 @Override
                 public boolean isCellEditable( int rowIndex, int columnIndex ) {
                     return canEdit[columnIndex];
@@ -464,37 +527,37 @@ public class NotaForm extends BaseDialog {
             btnExportarExcel.setEnabled( tblDados.getModel().getRowCount() > 0 );
             MainForm.setDefaultCursor( this );
         } catch ( Exception ex ) {
-            JOptionPane.showMessageDialog( null, ex.getMessage() );
+            JOptionPane.showMessageDialog( null, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );
         }
     }
-
+    
     private void configurarBarraDeStatus() {
         lblTotalRpsProcessados.setText( String.valueOf( totalRpsProcessados ) );
         lblTotalRpsNaoProcessados.setText( String.valueOf( totalRpsNaoProcessados ) );
         lblValorTotalRpsProcessados.setText( String.format( "%.2f", valorTotal ) );
     }
-
+    
     private void configurarTabela() {
         tblDados.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
-
+        
         DefaultTableCellRenderer cellRight = new DefaultTableCellRenderer();
         cellRight.setHorizontalAlignment( SwingConstants.RIGHT );
         DefaultTableCellRenderer cellCenter = new DefaultTableCellRenderer();
         cellCenter.setHorizontalAlignment( SwingConstants.CENTER );
-
+        
         tblDados.getColumnModel().getColumn( 0 ).setCellRenderer( cellCenter );
         tblDados.getColumnModel().getColumn( 2 ).setCellRenderer( cellCenter );
         tblDados.getColumnModel().getColumn( 3 ).setCellRenderer( cellCenter );
         tblDados.getColumnModel().getColumn( 4 ).setCellRenderer( cellRight );
-
+        
         tblDados.getColumnModel().getColumn( 0 ).setPreferredWidth( 70 );
         tblDados.getColumnModel().getColumn( 1 ).setPreferredWidth( 350 );
         tblDados.getColumnModel().getColumn( 2 ).setPreferredWidth( 100 );
         tblDados.getColumnModel().getColumn( 3 ).setPreferredWidth( 80 );
         tblDados.getColumnModel().getColumn( 4 ).setPreferredWidth( 340 );
-
+        
     }
-
+    
     private Object[][] getDados( List<NotaCariocaModel> lista ) {
         totalRpsProcessados = 0;
         totalRpsNaoProcessados = 0;
@@ -525,7 +588,7 @@ public class NotaForm extends BaseDialog {
         }
         return dados;
     }
-
+    
     private void configCustomSize( int largura, int altura ) throws HeadlessException {
         this.setSize( largura, altura );
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
@@ -536,15 +599,19 @@ public class NotaForm extends BaseDialog {
     private javax.swing.JButton btnEnviarLoteRps;
     private javax.swing.JButton btnExportarExcel;
     private javax.swing.JButton btnListarRpsEnviados;
+    private javax.swing.JButton btnRegistrarRpsAvulso;
     private javax.swing.JButton btnVerificarUltimoEnvio;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JProgressBar jProgressBar1;
     private com.toedter.calendar.JDateChooser jdtEnvio;
     private com.toedter.calendar.JDateChooser jdtPagamento;
@@ -556,6 +623,8 @@ public class NotaForm extends BaseDialog {
     private javax.swing.JScrollPane splDados;
     private javax.swing.JTabbedPane tabPanelControl;
     private javax.swing.JTable tblDados;
+    private javax.swing.JTextField txtNossoNumero;
+    private javax.swing.JTextField txtNumeroRps;
     // End of variables declaration//GEN-END:variables
 
 }

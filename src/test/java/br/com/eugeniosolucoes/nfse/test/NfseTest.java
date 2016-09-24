@@ -71,6 +71,7 @@ public class NfseTest {
 
     @Test
     public void testConsultaLoteRps() {
+        // PROXIMOS LOTE/RPS DE TESTE: 77/670
         ConsultarLoteRpsEnvio envio = new ConsultarLoteRpsEnvio();
         TcIdentificacaoPrestador prestador = new TcIdentificacaoPrestador();
         prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );

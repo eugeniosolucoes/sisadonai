@@ -35,4 +35,6 @@ public interface BoletoRepository {
 
     int retornarRestamBoletosPagos( Date data );
 
+    boolean verificarExisteNossoNumero( String nossoNumero );
+
 }

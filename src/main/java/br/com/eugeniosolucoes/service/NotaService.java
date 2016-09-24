@@ -16,9 +16,13 @@ import java.util.List;
  */
 public interface NotaService {
 
+    String RPS_AVULSO = "RPS_AVULSO";
+
     void enviarNsfe( Date data ) throws RestamBoletosPagosException;
 
     public List<NotaCariocaModel> listarRpsEnviados( Date data );
 
     Date validarUltimoEnvio() throws IllegalStateException;
+
+    void registrarRpsAvulso( NotaCariocaModel model );
 }

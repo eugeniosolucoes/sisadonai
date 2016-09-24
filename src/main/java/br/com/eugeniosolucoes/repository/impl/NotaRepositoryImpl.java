@@ -50,6 +50,28 @@ public class NotaRepositoryImpl implements NotaRepository {
         }
     }
 
+    @Override
+    public void registrarRpsAvulso( NotaCariocaModel notaCariocaModel ) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = repository.getConnection();
+            String sql = "INSERT INTO nota_carioca(numero_boleto, numero_lote_rps, numero_rps, data_emissao, protocolo, processado) VALUES(?,?,?,?,?,?)";
+            ps = con.prepareStatement( sql );
+            ps.setString( 1, notaCariocaModel.getNumeroBoleto() );
+            ps.setInt( 2, notaCariocaModel.getNumeroLoteRps() );
+            ps.setInt( 3, notaCariocaModel.getNumeroRps() );
+            ps.setDate( 4, new java.sql.Date( notaCariocaModel.getDataEmissao().getTime() ) );
+            ps.setString( 5, notaCariocaModel.getProtocolo() );
+            ps.setByte( 6, (byte) 1 );
+            ps.executeUpdate();
+        } catch ( Exception ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps );
+        }
+    }
+
     private void criarTabelaNotaCarioca() {
         Connection con = null;
         PreparedStatement ps = null;
@@ -224,7 +246,7 @@ public class NotaRepositoryImpl implements NotaRepository {
 
     @Override
     public Date retornarUltimaDataEnvio() {
-        String sql = "SELECT MAX(`data_emissao`) FROM `nota_carioca`";
+        String sql = "SELECT MAX(`data_emissao`) FROM `nota_carioca` WHERE protocolo <> 'RPS_AVULSO'";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -244,4 +266,51 @@ public class NotaRepositoryImpl implements NotaRepository {
         return result;
     }
 
+    @Override
+    public boolean verificarExisteNumeroRps( int numeroRps ) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Object result = null;
+        try {
+            con = repository.getConnection();
+            String sql = "SELECT DISTINCT 1 AS RESULTADO FROM `nota_carioca` n "
+                    + "WHERE EXISTS(SELECT * FROM `nota_carioca` n1 "
+                    + "WHERE n1.`numero_rps` = ?);";
+            ps = con.prepareStatement( sql );
+            ps.setInt( 1, numeroRps );
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                result = rs.getObject( "RESULTADO" );
+            }
+        } catch ( Exception ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps, rs );
+        }
+        return result != null;
+    }
+
+    @Override
+    public boolean verificarExisteNumeroBoleto( String numeroBoleto ) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Object result = null;
+        try {
+            con = repository.getConnection();
+            String sql = "SELECT `numero_boleto` FROM `nota_carioca` WHERE `numero_boleto` = ?;";
+            ps = con.prepareStatement( sql );
+            ps.setString( 1, numeroBoleto );
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                result = rs.getObject( 1 );
+            }
+        } catch ( Exception ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps, rs );
+        }
+        return result != null;
+    }    
 }

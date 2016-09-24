@@ -33,4 +33,10 @@ public interface NotaRepository {
     
     Date retornarUltimaDataEnvio();
 
+    void registrarRpsAvulso( NotaCariocaModel notaCariocaModel );
+
+    boolean verificarExisteNumeroRps( int numeroRps );
+
+    boolean verificarExisteNumeroBoleto( String numeroBoleto );
+
 }

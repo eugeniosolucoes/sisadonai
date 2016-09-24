@@ -422,6 +422,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                     + "            INNER JOIN `Mensalidades` mens ON mens.`Codigo_PFisica` = pf.`Codigo_PFisica` ) \n"
                     + "            INNER JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`) \n"
                     + "            WHERE mens.`Codigo_Situacao_Mensalidade` = '2' \n"
+                    + "            AND mens.`Nosso_Numero` <> '0000000000' \n"
                     + "            AND (mens.`Codigo_Forma_Pagamento` = '03' OR mens.`Codigo_Forma_Pagamento` = '04') \n"
                     + "            AND mens.`Data_Pagamento` = ?\n"
                     + "            AND mens.`Nosso_Numero` NOT IN (SELECT `numero_boleto` FROM `nota_carioca`); ";
@@ -463,6 +464,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             String sql = "SELECT DISTINCT COUNT( mens.`Nosso_Numero`) AS TOTAL\n"
                     + "FROM `Mensalidades` mens \n"
                     + "WHERE mens.`Codigo_Situacao_Mensalidade` = '2'\n"
+                    + "AND mens.`Nosso_Numero` <> '0000000000' \n"
                     + "AND (mens.`Codigo_Forma_Pagamento` = '03' OR mens.`Codigo_Forma_Pagamento` = '04')\n"
                     + "AND mens.`Data_Pagamento` = ?\n"
                     + "AND mens.`Nosso_Numero` NOT IN (SELECT `numero_boleto` FROM `nota_carioca`);";
@@ -478,5 +480,28 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             repository.fechar( con, ps, rs );
         }
         return result;
+    }
+
+    @Override
+    public boolean verificarExisteNossoNumero( String nossoNumero ) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Object result = null;
+        try {
+            con = repository.getConnection();
+            String sql = "SELECT DISTINCT 1 AS RESULTADO FROM `Mensalidades` m WHERE EXISTS(SELECT * FROM `Mensalidades` m1 WHERE m1.`Nosso_Numero` = ?);";
+            ps = con.prepareStatement( sql );
+            ps.setString( 1, nossoNumero );
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                result = rs.getObject( "RESULTADO" );
+            }
+        } catch ( Exception ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps, rs );
+        }
+        return result != null;
     }
 }
