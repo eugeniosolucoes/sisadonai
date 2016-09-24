@@ -37,15 +37,15 @@ import org.slf4j.LoggerFactory;
  * @author eugenio
  */
 public class NotaForm extends BaseDialog {
-    
+
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger( NotaForm.class );
-    
+
     private final NotaService notaService = new NotaServiceImpl();
-    
+
     private int totalRpsProcessados;
-    
+
     private int totalRpsNaoProcessados;
-    
+
     private double valorTotal;
 
     /**
@@ -60,7 +60,7 @@ public class NotaForm extends BaseDialog {
         initComponents();
         jProgressBar1.setVisible( false );
     }
-    
+
     public NotaForm( Frame owner, String title, boolean modal, int w, int h ) {
         super( owner, title, modal );
         initComponents();
@@ -406,7 +406,7 @@ public class NotaForm extends BaseDialog {
             }
         } ).start();
     }//GEN-LAST:event_btnEnviarLoteRpsActionPerformed
-    
+
     private void alternarBotoesDeEnvio( boolean value ) {
         jProgressBar1.setVisible( !value );
         btnEnviarLoteRps.setEnabled( value );
@@ -492,11 +492,13 @@ public class NotaForm extends BaseDialog {
             txtNossoNumero.setText( "" );
             txtNumeroRps.setText( "" );
             listarRpsEnviados( LocalDate.now().toDate() );
+        } catch ( NumberFormatException e ) {
+            JOptionPane.showMessageDialog( null, "Número de RPS inválido!", "Erro", JOptionPane.ERROR_MESSAGE );
         } catch ( Exception e ) {
             JOptionPane.showMessageDialog( null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );
         }
     }//GEN-LAST:event_btnRegistrarRpsAvulsoActionPerformed
-    
+
     private void listarRpsEnviados( Date data ) throws HeadlessException {
         try {
             MainForm.setWaitCursor( this );
@@ -506,7 +508,7 @@ public class NotaForm extends BaseDialog {
                 boolean[] canEdit = new boolean[]{
                     false, false, false, false, false, false
                 };
-                
+
                 @Override
                 public Class<?> getColumnClass( int columnIndex ) {
                     switch ( columnIndex ) {
@@ -516,7 +518,7 @@ public class NotaForm extends BaseDialog {
                             return String.class;
                     }
                 }
-                
+
                 @Override
                 public boolean isCellEditable( int rowIndex, int columnIndex ) {
                     return canEdit[columnIndex];
@@ -530,34 +532,34 @@ public class NotaForm extends BaseDialog {
             JOptionPane.showMessageDialog( null, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );
         }
     }
-    
+
     private void configurarBarraDeStatus() {
         lblTotalRpsProcessados.setText( String.valueOf( totalRpsProcessados ) );
         lblTotalRpsNaoProcessados.setText( String.valueOf( totalRpsNaoProcessados ) );
         lblValorTotalRpsProcessados.setText( String.format( "%.2f", valorTotal ) );
     }
-    
+
     private void configurarTabela() {
         tblDados.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
-        
+
         DefaultTableCellRenderer cellRight = new DefaultTableCellRenderer();
         cellRight.setHorizontalAlignment( SwingConstants.RIGHT );
         DefaultTableCellRenderer cellCenter = new DefaultTableCellRenderer();
         cellCenter.setHorizontalAlignment( SwingConstants.CENTER );
-        
+
         tblDados.getColumnModel().getColumn( 0 ).setCellRenderer( cellCenter );
         tblDados.getColumnModel().getColumn( 2 ).setCellRenderer( cellCenter );
         tblDados.getColumnModel().getColumn( 3 ).setCellRenderer( cellCenter );
         tblDados.getColumnModel().getColumn( 4 ).setCellRenderer( cellRight );
-        
+
         tblDados.getColumnModel().getColumn( 0 ).setPreferredWidth( 70 );
         tblDados.getColumnModel().getColumn( 1 ).setPreferredWidth( 350 );
         tblDados.getColumnModel().getColumn( 2 ).setPreferredWidth( 100 );
         tblDados.getColumnModel().getColumn( 3 ).setPreferredWidth( 80 );
         tblDados.getColumnModel().getColumn( 4 ).setPreferredWidth( 340 );
-        
+
     }
-    
+
     private Object[][] getDados( List<NotaCariocaModel> lista ) {
         totalRpsProcessados = 0;
         totalRpsNaoProcessados = 0;
@@ -588,7 +590,7 @@ public class NotaForm extends BaseDialog {
         }
         return dados;
     }
-    
+
     private void configCustomSize( int largura, int altura ) throws HeadlessException {
         this.setSize( largura, altura );
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();

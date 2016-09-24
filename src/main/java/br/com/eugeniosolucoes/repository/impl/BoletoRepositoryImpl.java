@@ -30,13 +30,13 @@ import java.util.logging.Logger;
  * @author eugenio
  */
 public class BoletoRepositoryImpl implements BoletoRepository {
-
+    
     static final Logger LOG = Logger.getLogger( BoletoRepositoryImpl.class.getName() );
-
+    
     AbstractRepository repository = AbstractRepository.getInstance();
-
+    
     static final SimpleDateFormat DB_DATE_FORMAT = new SimpleDateFormat( "MM/dd/yyyy hh:mm a" );
-
+    
     @Override
     public List<String> listarAnos() {
         Connection con = null;
@@ -58,7 +58,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
         }
         return Collections.EMPTY_LIST;
     }
-
+    
     @Override
     public List<String> listarTurmas() {
         Connection con = null;
@@ -80,7 +80,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
         }
         return Collections.EMPTY_LIST;
     }
-
+    
     @Override
     public List<DadosBoletoModel> listarBoletos( DadosBoletoFiltroModel boletoFiltroDTO ) {
         Connection con = null;
@@ -181,7 +181,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
         }
         return Collections.EMPTY_LIST;
     }
-
+    
     @Override
     public List<DadosBoletoModel> listarAlunosPorTurma( DadosBoletoFiltroModel boletoFiltroDTO ) {
         Connection con = null;
@@ -214,12 +214,12 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "AND MONTH(mens.`Data_Vencimento`) = ? " );
             sb.append( "AND m.`Codigo_Situacao_Aluno` = '01' " );
             sb.append( "ORDER BY pf.`Nome_PFisica`;" );
-
+            
             ps = con.prepareStatement( sb.toString() );
             ps.setString( 1, boletoFiltroDTO.getTurma() );
             ps.setInt( 2, Integer.valueOf( boletoFiltroDTO.getAno() ) );
             ps.setInt( 3, boletoFiltroDTO.getMeses().indexOf( boletoFiltroDTO.getMes() ) + 1 );
-
+            
             rs = ps.executeQuery();
             List<DadosBoletoModel> list = new ArrayList<>();
             while (rs.next()) {
@@ -229,7 +229,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                 dadosBoletoModel.setMatricula( rs.getString( "Codigo_PFisica" ) );
                 dadosBoletoModel.setTurma( rs.getString( "Nome_Turma" ) );
                 dadosBoletoModel.setSituacaoMensalidade( "Codigo_Situacao_Mensalidade" );
-
+                
                 list.add( dadosBoletoModel );
             }
             return list;
@@ -272,7 +272,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             repository.fechar( con, ps );
         }
     }
-
+    
     @Override
     public DadosBoletoModel retornarBoletoPago( DadosBoletoPagoModel boletoPagoModels ) {
         Connection con = null;
@@ -357,7 +357,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             repository.fechar( con, ps, rs );
         }
     }
-
+    
     @Override
     public DadosBoletoPagoModel retornarBoletoPago( String numeroBoleto ) {
         Connection con = null;
@@ -368,6 +368,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             ps = con.prepareStatement( "SELECT \n"
                     + "    mens.`Codigo_PFisica`, \n"
                     + "    mens.`Nosso_Numero`, \n"
+                    + "    mens.`Codigo_Forma_Pagamento`, \n"
                     + "    pf.`Nome_PFisica`, \n"
                     + "    mens.`Valor_Baixa`, \n"
                     + "    mens.`Data_Vencimento`,\n"
@@ -387,7 +388,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                         rs.getDouble( "Valor_Baixa" ),
                         rs.getDate( "Data_Vencimento" ),
                         rs.getDate( "Data_Pagamento" ),
-                        null ) );
+                        null, rs.getString( "Codigo_Forma_Pagamento" ) ) );
             }
             return list.get( 0 );
         } catch ( Exception ex ) {
@@ -396,7 +397,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             repository.fechar( con, ps, rs );
         }
     }
-
+    
     @Override
     public List<DadosBoletoModel> retornarBoletosPagos( Date data ) {
         Connection con = null;
@@ -452,7 +453,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             repository.fechar( con, ps, rs );
         }
     }
-
+    
     @Override
     public int retornarRestamBoletosPagos( Date data ) {
         Connection con = null;
@@ -481,7 +482,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
         }
         return result;
     }
-
+    
     @Override
     public boolean verificarExisteNossoNumero( String nossoNumero ) {
         Connection con = null;

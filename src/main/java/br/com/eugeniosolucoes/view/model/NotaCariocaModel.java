@@ -15,11 +15,11 @@ import java.util.Objects;
 public class NotaCariocaModel {
 
     private String numeroBoleto;
-    
+
     private String nome;
-    
+
     private String dataPagamento;
-    
+
     private String total;
 
     private int numeroRps;
@@ -31,7 +31,9 @@ public class NotaCariocaModel {
     private String protocolo;
 
     private boolean processado;
-    
+
+    private String formaPagamento;
+
     public NotaCariocaModel() {
     }
 
@@ -43,7 +45,7 @@ public class NotaCariocaModel {
         this.protocolo = protocolo;
         this.processado = processado;
     }
-    
+
     public String getNumeroBoleto() {
         return numeroBoleto;
     }
@@ -116,10 +118,18 @@ public class NotaCariocaModel {
         this.processado = processado;
     }
 
+    public String getFormaPagamento() {
+        return formaPagamento == null ? "" : formaPagamento.equals( "03" ) ? "B" : formaPagamento.equals( "04" ) ? "C" : "";
+    }
+
+    public void setFormaPagamento( String formaPagamento ) {
+        this.formaPagamento = formaPagamento;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.numeroBoleto );
+        hash = 97 * hash + Objects.hashCode( this.numeroBoleto );
         return hash;
     }
 
@@ -135,12 +145,11 @@ public class NotaCariocaModel {
             return false;
         }
         final NotaCariocaModel other = (NotaCariocaModel) obj;
-        return Objects.equals(this.numeroBoleto, other.numeroBoleto );
+        return Objects.equals( this.numeroBoleto, other.numeroBoleto );
     }
 
     @Override
     public String toString() {
         return "NotaCariocaModel{" + "numeroBoleto=" + numeroBoleto + ", nome=" + nome + ", dataPagamento=" + dataPagamento + ", total=" + total + ", numeroRps=" + numeroRps + ", numeroLoteRps=" + numeroLoteRps + ", dataEmissao=" + dataEmissao + ", protocolo=" + protocolo + ", processado=" + processado + '}';
     }
-    
 }

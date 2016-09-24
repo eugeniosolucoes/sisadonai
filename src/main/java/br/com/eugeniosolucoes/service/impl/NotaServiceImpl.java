@@ -314,6 +314,7 @@ public class NotaServiceImpl implements NotaService {
             model.setNome( pago.getAluno() );
             model.setDataPagamento( sdf.format( pago.getPagamento() ) );
             model.setTotal( String.format( "%.2f", pago.getValor() ) );
+            model.setFormaPagamento( pago.getFormaPagamento() );
         }
         return listarRspEnviados;
     }
@@ -351,6 +352,9 @@ public class NotaServiceImpl implements NotaService {
 
             repository.registrarRpsAvulso( model );
         } catch ( NumberFormatException | IllegalStateException e ) {
+            if ( e instanceof NumberFormatException ) {
+                throw new IllegalStateException( "Nosso Número inválido!" );
+            }
             throw new IllegalStateException( e.getMessage() );
         }
     }

@@ -30,13 +30,15 @@ public class DadosBoletoPagoModel {
     private String numeroMensalidade;
     
     private boolean atualizado;
+    
+    private String formaPagamento;
 
     public DadosBoletoPagoModel() {
     }
 
     public DadosBoletoPagoModel( String matricula, String aluno, 
             String nossoNumero, Double valor, Date vencimento, Date pagamento,
-            String numeroMensalidade ) {
+            String numeroMensalidade, String formaPagamento ) {
         this.matricula = matricula;
         this.aluno = aluno;
         this.nossoNumero = nossoNumero;
@@ -44,6 +46,7 @@ public class DadosBoletoPagoModel {
         this.vencimento = vencimento;
         this.pagamento = pagamento;
         this.numeroMensalidade = numeroMensalidade;
+        this.formaPagamento = formaPagamento;
     }
 
     public String getMatricula() {
@@ -117,6 +120,14 @@ public class DadosBoletoPagoModel {
 
     public boolean isBoletoValido() {
         return Long.valueOf( this.nossoNumero ) != 0L;
+    }
+
+    public String getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setFormaPagamento( String formaPagamento ) {
+        this.formaPagamento = formaPagamento;
     }
 
     @Override
