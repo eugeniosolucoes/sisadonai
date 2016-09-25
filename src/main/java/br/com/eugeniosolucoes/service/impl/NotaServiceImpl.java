@@ -237,12 +237,13 @@ public class NotaServiceImpl implements NotaService {
     }
 
     private EnviarLoteRpsEnvio processarLoteRps( XMLGregorianCalendar dataEmissao, int indexLote, int indexRps, List<DadosBoletoModel> boletosPagos, List<NotaCariocaModel> notas ) {
+        TcIdentificacaoPrestador tcIdentificacaoPrestador = criarPrestador();
         EnviarLoteRpsEnvio loteRpsEnvio = new EnviarLoteRpsEnvio();
         TcLoteRps loteRps = loteRpsEnvio.getLoteRps();
         loteRps.setId( LOTE_RPS + indexLote );
         loteRps.setNumeroLote( new BigInteger( String.valueOf( indexLote ) ) );
-        loteRps.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
-        loteRps.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
+        loteRps.setCnpj( tcIdentificacaoPrestador.getCnpj() );
+        loteRps.setInscricaoMunicipal( tcIdentificacaoPrestador.getInscricaoMunicipal() );
         TcLoteRps.ListaRps listaRps = loteRps.getListaRps();
         List<TcRps> rps = listaRps.getRps();
         for ( DadosBoletoModel model : boletosPagos ) {
@@ -278,8 +279,6 @@ public class NotaServiceImpl implements NotaService {
             tcDadosServico.setCodigoMunicipio( MunicipioRJ.RIO_DE_JANEIRO.getCodigo() );
             tcInfRps.setServico( tcDadosServico );
             tcInfRps.setStatus( (byte) 1 );
-
-            TcIdentificacaoPrestador tcIdentificacaoPrestador = criarPrestador();
 
             tcInfRps.setPrestador( tcIdentificacaoPrestador );
 
