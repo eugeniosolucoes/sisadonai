@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import br.com.eugeniosolucoes.repository.NotaRepository;
+import static br.com.eugeniosolucoes.service.NotaService.RPS_AVULSO;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -246,7 +247,7 @@ public class NotaRepositoryImpl implements NotaRepository {
 
     @Override
     public Date retornarUltimaDataEnvio() {
-        String sql = "SELECT MAX(`data_emissao`) FROM `nota_carioca` WHERE protocolo <> 'RPS_AVULSO'";
+        String sql = String.format( "SELECT MAX(`data_emissao`) FROM `nota_carioca` WHERE protocolo <> '%s'", RPS_AVULSO );
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -312,5 +313,25 @@ public class NotaRepositoryImpl implements NotaRepository {
             repository.fechar( con, ps, rs );
         }
         return result != null;
-    }    
+    }
+
+    @Override
+    public boolean excluirRpsAvulso( String numeroBoleto ) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        int result = 0;
+        try {
+            con = repository.getConnection();
+            String sql = String.format("DELETE FROM `nota_carioca` WHERE `numero_boleto` = ? AND protocolo = '%s';", RPS_AVULSO);
+            ps = con.prepareStatement( sql );
+            ps.setString( 1, numeroBoleto );
+            result = ps.executeUpdate();
+        } catch ( Exception ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps );
+        }
+        return result == 1;
+    }  
+    
 }

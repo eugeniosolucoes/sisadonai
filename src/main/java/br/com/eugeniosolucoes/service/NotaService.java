@@ -27,4 +27,6 @@ public interface NotaService {
     Date validarUltimoEnvio() throws IllegalStateException;
 
     void registrarRpsAvulso( NotaCariocaModel model );
+    
+    boolean excluirRpsAvulso( String numeroBoleto );
 }

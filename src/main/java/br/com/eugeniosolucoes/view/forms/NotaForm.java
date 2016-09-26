@@ -28,6 +28,8 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.joda.time.LocalDate;
 import org.slf4j.LoggerFactory;
@@ -59,6 +61,7 @@ public class NotaForm extends BaseDialog {
         super( owner, title, modal );
         initComponents();
         jProgressBar1.setVisible( false );
+        adicionarListeners();
     }
 
     public NotaForm( Frame owner, String title, boolean modal, int w, int h ) {
@@ -66,6 +69,7 @@ public class NotaForm extends BaseDialog {
         initComponents();
         configCustomSize( w, h );
         jProgressBar1.setVisible( false );
+        adicionarListeners();
     }
 
     /**
@@ -96,6 +100,7 @@ public class NotaForm extends BaseDialog {
         jLabel7 = new javax.swing.JLabel();
         txtNumeroRps = new javax.swing.JTextField();
         btnRegistrarRpsAvulso = new javax.swing.JButton();
+        btnExcluirRpsAvulso = new javax.swing.JButton();
         plDados = new javax.swing.JPanel();
         splDados = new javax.swing.JScrollPane();
         tblDados = new javax.swing.JTable();
@@ -224,10 +229,18 @@ public class NotaForm extends BaseDialog {
 
         jLabel7.setText("Número RPS:");
 
-        btnRegistrarRpsAvulso.setText("Registrar");
+        btnRegistrarRpsAvulso.setText("Registrar RPS");
         btnRegistrarRpsAvulso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegistrarRpsAvulsoActionPerformed(evt);
+            }
+        });
+
+        btnExcluirRpsAvulso.setText("Excluir RPS Avulso");
+        btnExcluirRpsAvulso.setEnabled(false);
+        btnExcluirRpsAvulso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirRpsAvulsoActionPerformed(evt);
             }
         });
 
@@ -246,7 +259,9 @@ public class NotaForm extends BaseDialog {
                 .addComponent(txtNumeroRps, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRegistrarRpsAvulso)
-                .addContainerGap(329, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnExcluirRpsAvulso)
+                .addContainerGap(182, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -257,7 +272,8 @@ public class NotaForm extends BaseDialog {
                     .addComponent(txtNossoNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtNumeroRps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRegistrarRpsAvulso))
+                    .addComponent(btnRegistrarRpsAvulso)
+                    .addComponent(btnExcluirRpsAvulso))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -283,6 +299,7 @@ public class NotaForm extends BaseDialog {
         });
         tblDados.setIntercellSpacing(new java.awt.Dimension(3, 3));
         tblDados.setRowHeight(22);
+        tblDados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblDados.getTableHeader().setReorderingAllowed(false);
         splDados.setViewportView(tblDados);
 
@@ -499,6 +516,21 @@ public class NotaForm extends BaseDialog {
         }
     }//GEN-LAST:event_btnRegistrarRpsAvulsoActionPerformed
 
+    private void btnExcluirRpsAvulsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirRpsAvulsoActionPerformed
+        String protocolo = String.valueOf( tblDados.getModel().getValueAt( tblDados.getSelectedRow(), 4 ) );
+        if ( protocolo.equals( NotaService.RPS_AVULSO ) ) {
+            String boleto = String.valueOf( tblDados.getModel().getValueAt( tblDados.getSelectedRow(), 0 ) );
+            try {
+                notaService.excluirRpsAvulso( boleto );
+                listarRpsEnviados( jdtEnvio.getDate() );
+            } catch ( Exception e ) {
+                JOptionPane.showMessageDialog( null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );
+            }
+        } else {
+            JOptionPane.showMessageDialog( null, "Somente um RPS AVULSO podem ser excluído!", "Aviso", JOptionPane.WARNING_MESSAGE );
+        }
+    }//GEN-LAST:event_btnExcluirRpsAvulsoActionPerformed
+
     private void listarRpsEnviados( Date data ) throws HeadlessException {
         try {
             MainForm.setWaitCursor( this );
@@ -597,8 +629,19 @@ public class NotaForm extends BaseDialog {
         setBounds( ( tela.width - getSize().width ) / 2, ( tela.height - getSize().height ) / 2,
                 getSize().width, getSize().height );
     }
+
+    private void adicionarListeners() {
+        tblDados.getSelectionModel().addListSelectionListener( new ListSelectionListener() {
+            @Override
+            public void valueChanged( ListSelectionEvent e ) {
+                btnExcluirRpsAvulso.setEnabled( tblDados.getSelectedRowCount() != 0 );
+            }
+        } );
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEnviarLoteRps;
+    private javax.swing.JButton btnExcluirRpsAvulso;
     private javax.swing.JButton btnExportarExcel;
     private javax.swing.JButton btnListarRpsEnviados;
     private javax.swing.JButton btnRegistrarRpsAvulso;

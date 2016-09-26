@@ -372,4 +372,9 @@ public class NotaServiceImpl implements NotaService {
         }
     }
 
+    @Override
+    public boolean excluirRpsAvulso( String numeroBoleto ) {
+        return repository.excluirRpsAvulso( numeroBoleto );
+    }
+
 }

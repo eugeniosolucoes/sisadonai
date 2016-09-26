@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+<Form version="1.6" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" value="Enviar Lote RPS"/>
@@ -257,7 +257,9 @@
                           <Component id="txtNumeroRps" min="-2" pref="124" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnRegistrarRpsAvulso" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="329" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btnExcluirRpsAvulso" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="182" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -271,6 +273,7 @@
                               <Component id="jLabel7" alignment="3" max="32767" attributes="0"/>
                               <Component id="txtNumeroRps" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btnRegistrarRpsAvulso" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnExcluirRpsAvulso" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="14" max="32767" attributes="0"/>
                       </Group>
@@ -294,10 +297,19 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnRegistrarRpsAvulso">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Registrar"/>
+                    <Property name="text" type="java.lang.String" value="Registrar RPS"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRegistrarRpsAvulsoActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="btnExcluirRpsAvulso">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Excluir RPS Avulso"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExcluirRpsAvulsoActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -396,6 +408,9 @@
                       <Dimension value="[3, 3]"/>
                     </Property>
                     <Property name="rowHeight" type="int" value="22"/>
+                    <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
+                      <JTableSelectionModel selectionMode="0"/>
+                    </Property>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                       <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                     </Property>

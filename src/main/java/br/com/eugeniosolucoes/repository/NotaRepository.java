@@ -39,4 +39,6 @@ public interface NotaRepository {
 
     boolean verificarExisteNumeroBoleto( String numeroBoleto );
 
+    boolean excluirRpsAvulso( String numeroBoleto );
+
 }
