@@ -49,9 +49,9 @@ public class NfseTest {
 
     private final NotaService notaService = new NotaServiceImpl();
 
-    @Test
+    //@Test
     public void testEnviarNsfe() throws Exception {
-        notaService.enviarNsfe( LocalDate.parse( "20160901", ISODateTimeFormat.basicDate() ).toDate() );
+        notaService.enviarNsfe( LocalDate.parse( "20160804", ISODateTimeFormat.basicDate() ).toDate() );
     }
 
     @Test
@@ -71,13 +71,13 @@ public class NfseTest {
 
     @Test
     public void testConsultaLoteRps() {
-        // PROXIMOS LOTE/RPS DE TESTE: 77/670
+        // PROXIMOS LOTE/RPS DE TESTE: 101/1135
         ConsultarLoteRpsEnvio envio = new ConsultarLoteRpsEnvio();
         TcIdentificacaoPrestador prestador = new TcIdentificacaoPrestador();
         prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
         prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
         envio.setPrestador( prestador );
-        envio.setProtocolo( "00000000000000000000000000000000000000000001645003" );
+        envio.setProtocolo( "00000000000000000000000000000000000000000001645036" );
         ConsultarLoteRpsResposta resposta = servico.consultarLoteRps( envio );
         String xml = XmlUtils.createXmlFromObject( resposta );
 
