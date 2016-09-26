@@ -71,13 +71,13 @@ public class NfseTest {
 
     @Test
     public void testConsultaLoteRps() {
-        // PROXIMOS LOTE/RPS DE TESTE: 114/1165
+        // PROXIMOS LOTE/RPS DE TESTE: 119/1300
         ConsultarLoteRpsEnvio envio = new ConsultarLoteRpsEnvio();
         TcIdentificacaoPrestador prestador = new TcIdentificacaoPrestador();
         prestador.setCnpj( PROP.getProperty( "Prestador.Cnpj" ) );
         prestador.setInscricaoMunicipal( PROP.getProperty( "Prestador.InscricaoMunicipal" ) );
         envio.setPrestador( prestador );
-        envio.setProtocolo( "00000000000000000000000000000000000000000001645130" );
+        envio.setProtocolo( "00000000000000000000000000000000000000000001645143" );
         ConsultarLoteRpsResposta resposta = servico.consultarLoteRps( envio );
         String xml = XmlUtils.createXmlFromObject( resposta );
 
