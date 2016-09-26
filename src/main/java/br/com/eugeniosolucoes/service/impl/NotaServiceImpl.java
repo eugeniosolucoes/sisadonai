@@ -6,6 +6,7 @@
 package br.com.eugeniosolucoes.service.impl;
 
 import br.com.eugeniosolucoes.excecoes.RestamBoletosPagosException;
+import br.com.eugeniosolucoes.modelo.RpsConfig;
 import br.com.eugeniosolucoes.nfse.model.ConsultarLoteRpsEnvio;
 import br.com.eugeniosolucoes.nfse.model.ConsultarLoteRpsResposta;
 import br.com.eugeniosolucoes.nfse.model.ConsultarSituacaoLoteRpsEnvio;
@@ -44,8 +45,10 @@ import static br.com.eugeniosolucoes.nfse.util.XmlUtils.*;
 import javax.xml.datatype.XMLGregorianCalendar;
 import br.com.eugeniosolucoes.service.NotaService;
 import br.com.eugeniosolucoes.repository.NotaRepository;
+import br.com.eugeniosolucoes.util.LocalStoreHelper;
 import br.com.eugeniosolucoes.util.MyStrings;
 import br.com.eugeniosolucoes.view.model.DadosBoletoPagoModel;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Formatter;
@@ -72,6 +75,17 @@ public class NotaServiceImpl implements NotaService {
     private final NotaRepository repository = new NotaRepositoryImpl();
 
     private final BoletoRepository boletoRepository = new BoletoRepositoryImpl();
+
+    private RpsConfig rpsConfig;
+
+    public NotaServiceImpl() {
+        try {
+            rpsConfig = (RpsConfig) LocalStoreHelper.restore( new FileInputStream( RPS_CONFIG_FILE ) );
+        } catch ( Exception e ) {
+            LOG.error( e.getMessage(), e );
+            throw new IllegalStateException( e.getMessage() );
+        }
+    }
 
     static enum TipoSituacao {
 
@@ -275,7 +289,7 @@ public class NotaServiceImpl implements NotaService {
             tcDadosServico.setValores( tcValores );
             tcDadosServico.setItemListaServico( ITEM_LISTA_SERVICO );
             tcDadosServico.setCodigoTributacaoMunicipio( CODIGO_TRIBUTACAO_MUNICIPIO );
-            tcDadosServico.setDiscriminacao( PROP.getProperty( "Rps.DadosServico.Discriminacao" ) );
+            tcDadosServico.setDiscriminacao( rpsConfig.getDiscriminacaoDoServico() );
             tcDadosServico.setCodigoMunicipio( MunicipioRJ.RIO_DE_JANEIRO.getCodigo() );
             tcInfRps.setServico( tcDadosServico );
             tcInfRps.setStatus( (byte) 1 );

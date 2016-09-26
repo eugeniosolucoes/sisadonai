@@ -16,6 +16,8 @@ import java.util.List;
  */
 public interface NotaService {
 
+    String RPS_CONFIG_FILE = "rps.dat";
+
     String RPS_AVULSO = "RPS_AVULSO";
 
     void enviarNsfe( Date data ) throws RestamBoletosPagosException;

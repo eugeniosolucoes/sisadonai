@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
@@ -37,6 +38,24 @@ public class LocalStoreHelper {
         } catch ( Exception e ) {
             throw new Exception( e );
         }
+    }
+
+    public static Object restore( InputStream bytes ) throws Exception {
+        ByteArrayOutputStream bytesGrava = new ByteArrayOutputStream();
+        Object objeto = null;
+        byte[] b = new byte[8];
+        try {
+            int i = bytes.read( b );
+            while (i != -1) {
+                bytesGrava.write( b, 0, i );
+                i = bytes.read( b );
+            }
+            ObjectInputStream objetoLeitura = new ObjectInputStream( new ByteArrayInputStream( bytesGrava.toByteArray() ) );
+            objeto = objetoLeitura.readObject();
+        } catch ( IOException | ClassNotFoundException e ) {
+            throw new Exception( e );
+        }
+        return objeto;
     }
 
     private static byte[] objectToByteArray( Object obj ) throws IOException {

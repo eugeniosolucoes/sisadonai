@@ -80,6 +80,7 @@ public class MainForm extends BaseForm {
         jMenuSistema = new javax.swing.JMenu();
         jMenuConfiguracoes = new javax.swing.JMenu();
         mItemConfigEnvioDeBoletos = new javax.swing.JMenuItem();
+        mItemConfigEnvioRps = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         mItemSair = new javax.swing.JMenuItem();
 
@@ -150,6 +151,14 @@ public class MainForm extends BaseForm {
             }
         });
         jMenuConfiguracoes.add(mItemConfigEnvioDeBoletos);
+
+        mItemConfigEnvioRps.setText("Envio de RPS...");
+        mItemConfigEnvioRps.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mItemConfigEnvioRpsActionPerformed(evt);
+            }
+        });
+        jMenuConfiguracoes.add(mItemConfigEnvioRps);
 
         jMenuSistema.add(jMenuConfiguracoes);
         jMenuSistema.add(jSeparator1);
@@ -232,6 +241,10 @@ public class MainForm extends BaseForm {
         notaForm.setVisible( true );
     }//GEN-LAST:event_mItemEnviarLoteRpsActionPerformed
 
+    private void mItemConfigEnvioRpsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemConfigEnvioRpsActionPerformed
+        new ConfigEnvioDeRpsForm( this, "Configuração de Envio de RPS", true ).setVisible( true );
+    }//GEN-LAST:event_mItemConfigEnvioRpsActionPerformed
+
     private void exibirLogErroRemessa( Exception ex ) {
         try {
             LOG.log( Level.SEVERE, ex.getMessage(), ex );
@@ -286,6 +299,7 @@ public class MainForm extends BaseForm {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPanel jpConteudo;
     private javax.swing.JMenuItem mItemConfigEnvioDeBoletos;
+    private javax.swing.JMenuItem mItemConfigEnvioRps;
     private javax.swing.JMenuItem mItemEnviarLoteRps;
     private javax.swing.JMenuItem mItemEnvioBoletos;
     private javax.swing.JMenuItem mItemPrepararArqRemessa;
