@@ -14,6 +14,7 @@ import br.com.eugeniosolucoes.modelo.RpsConfig;
 import br.com.eugeniosolucoes.service.NotaService;
 import br.com.eugeniosolucoes.util.LocalStoreHelper;
 import java.awt.Frame;
+import java.io.File;
 import java.io.FileInputStream;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
@@ -143,8 +144,11 @@ public class ConfigEnvioDeRpsForm extends BaseDialog {
 
     private void restaurarObjeto() {
         try {
-            obj = (RpsConfig) LocalStoreHelper.restore( new FileInputStream( NotaService.RPS_CONFIG_FILE ) );
-            txtDiscriminacao.setText( obj.getDiscriminacaoDoServico() );
+            File file = new File( NotaService.RPS_CONFIG_FILE );
+            if ( file.exists() ) {
+                obj = (RpsConfig) LocalStoreHelper.restore( new FileInputStream( NotaService.RPS_CONFIG_FILE ) );
+                txtDiscriminacao.setText( obj.getDiscriminacaoDoServico() );
+            }
         } catch ( Exception ex ) {
             LOG.error( ex.getMessage(), ex );
             JOptionPane.showMessageDialog( null, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );

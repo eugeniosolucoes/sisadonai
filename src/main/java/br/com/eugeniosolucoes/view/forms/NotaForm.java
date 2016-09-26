@@ -559,7 +559,7 @@ public class NotaForm extends BaseDialog {
             configurarTabela();
             configurarBarraDeStatus();
             btnExportarExcel.setEnabled( tblDados.getModel().getRowCount() > 0 );
-            tblDados.changeSelection( tblDados.getRowCount() -1, 0, false, false);
+            tblDados.changeSelection( tblDados.getRowCount() - 1, 0, false, false );
             tblDados.clearSelection();
             MainForm.setDefaultCursor( this );
         } catch ( Exception ex ) {
