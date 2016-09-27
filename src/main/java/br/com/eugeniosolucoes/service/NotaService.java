@@ -6,6 +6,7 @@
 package br.com.eugeniosolucoes.service;
 
 import br.com.eugeniosolucoes.excecoes.RestamBoletosPagosException;
+import br.com.eugeniosolucoes.excecoes.EmptyResultException;
 import br.com.eugeniosolucoes.view.model.NotaCariocaModel;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +21,7 @@ public interface NotaService {
 
     String RPS_AVULSO = "RPS_AVULSO";
 
-    void enviarNsfe( Date data ) throws RestamBoletosPagosException;
+    void enviarNsfe( Date data ) throws RestamBoletosPagosException, EmptyResultException;
 
     public List<NotaCariocaModel> listarRpsEnviados( Date data );
 

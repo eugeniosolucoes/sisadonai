@@ -7,6 +7,7 @@ package br.com.eugeniosolucoes.view.forms;
 
 import br.com.eugeniosolucoes.excecoes.RestamBoletosPagosException;
 import br.com.eugeniosolucoes.service.NotaService;
+import br.com.eugeniosolucoes.excecoes.EmptyResultException;
 import br.com.eugeniosolucoes.service.impl.NotaServiceImpl;
 import br.com.eugeniosolucoes.util.RelatorioUtils;
 import br.com.eugeniosolucoes.view.model.NotaCariocaModel;
@@ -414,6 +415,8 @@ public class NotaForm extends BaseDialog {
                         if ( result == JOptionPane.YES_OPTION ) {
                             btnEnviarLoteRpsActionPerformed( null );
                         }
+                    } catch ( EmptyResultException ex ) {
+                        JOptionPane.showMessageDialog( null, ex.getMessage(), "Informação", JOptionPane.INFORMATION_MESSAGE );
                     } catch ( Exception ex ) {
                         JOptionPane.showMessageDialog( null, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );
                     } finally {
