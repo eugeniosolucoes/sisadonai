@@ -124,7 +124,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "INNER JOIN `TabelasMensalidades` tabmens ON tabmens.`Codigo_Periodo_Letivo` = pl.`Codigo_Periodo_Letivo` " );
             sb.append( "AND tabmens.`Codigo_Curso` = c.`Codigo_Curso` " );
             sb.append( "AND tabmens.`Codigo_Serie` = s.`Codigo_Serie` ) " );
-            sb.append( "INNER JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
+            sb.append( "LEFT JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
             sb.append( "LEFT JOIN `EnderecosPFisicas` ep ON ep.`Codigo_PFisica` = pf.`Codigo_PFisica` ) " );
             sb.append( "LEFT JOIN `Estados` est ON est.`Codigo_Estado` = ep.`Codigo_Estado`  ) " );
             sb.append( "LEFT JOIN `Cidades` cid ON cid.`Codigo_Cidade` = ep.`Codigo_Cidade` AND cid.`Codigo_Estado` = ep.`Codigo_Estado` ) " );
@@ -197,7 +197,7 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             sb.append( "    tu.`Nome_Turma`, " );
             sb.append( "    m.`Codigo_Situacao_Aluno` " );
             sb.append( "FROM ((((((((`PFisicas` pf " );
-            sb.append( "INNER JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
+            sb.append( "LEFT JOIN `DocumentosPFisicas` dp ON dp.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
             sb.append( "INNER JOIN `Matriculas` m ON m.`Codigo_PFisica` = pf.`Codigo_PFisica`) " );
             sb.append( "INNER JOIN `PeriodosLetivos` pl ON pl.`Codigo_Periodo_Letivo` = m.`Codigo_Periodo_Letivo`) " );
             sb.append( "INNER JOIN `Cursos` c ON c.`Codigo_Curso` = m.`Codigo_Curso`) " );

@@ -39,9 +39,9 @@ import org.joda.time.LocalDate;
 public class BoletoServiceImpl implements BoletoService {
 
     static final Logger LOG = Logger.getLogger( BoletoServiceImpl.class.getName() );
-    
+
     BoletoRepository repository = new BoletoRepositoryImpl();
-    
+
     @Override
     public DadosBoletoFiltroModel carregarFiltros() {
         LocalDate dataCorrente = LocalDate.now();
@@ -213,6 +213,9 @@ public class BoletoServiceImpl implements BoletoService {
         StringBuilder sb = new StringBuilder();
         for ( DadosBoletoModel model : dados ) {
             Map<String, String> parametros = new HashMap<>();
+            if ( MyStrings.isNullOrEmpty( model.getCpf() ) ) {
+                parametros.put( "CPF", " CPF: inválido!" );
+            }
             if ( MyStrings.isNullOrEmpty( model.getEmail() ) || !MyStrings.validarEmail( model.getEmail() ) ) {
                 parametros.put( "EMAIL", " E-mail: inválido!" );
             }
@@ -246,7 +249,7 @@ public class BoletoServiceImpl implements BoletoService {
 
     @Override
     public void validarListaDeBoletos( List<DadosBoletoModel> lista, DadosBoletoFiltroModel boletoFiltroModel ) {
-        
+
         StringBuilder sb = new StringBuilder();
         try {
             validarListaDeBoletos( lista );
