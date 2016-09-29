@@ -26,11 +26,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -38,7 +38,7 @@ import org.joda.time.LocalDate;
  */
 public class BoletoServiceImpl implements BoletoService {
 
-    static final Logger LOG = Logger.getLogger( BoletoServiceImpl.class.getName() );
+    static final Logger LOG = LoggerFactory.getLogger(BoletoServiceImpl.class.getName() );
 
     BoletoRepository repository = new BoletoRepositoryImpl();
 
@@ -76,9 +76,12 @@ public class BoletoServiceImpl implements BoletoService {
                 continue;
             }
 
-            Boleto boleto = criarBoleto( dados );
-
-            boletos.add( boleto );
+            try {
+                Boleto boleto = criarBoleto( dados );
+                boletos.add( boleto );
+            } catch ( Exception e ) {
+                LOG.error( e.getMessage(), e );
+            }
         }
         //MyGeradorDeBoleto gerador = new MyGeradorDeBoleto( boletos );
 
@@ -152,7 +155,7 @@ public class BoletoServiceImpl implements BoletoService {
             pdf = criarGeradorDeBoleto( boleto ).geraPDF();
             Thread.sleep( 1000 );
         } catch ( Exception e ) {
-            LOG.log( Level.SEVERE, e.getMessage(), e );
+            LOG.error( e.getMessage(), e );
             throw new IllegalStateException( e.getMessage() );
         }
         return pdf;
@@ -214,7 +217,7 @@ public class BoletoServiceImpl implements BoletoService {
         for ( DadosBoletoModel model : dados ) {
             Map<String, String> parametros = new HashMap<>();
             if ( MyStrings.isNullOrEmpty( model.getCpf() ) ) {
-                parametros.put( "CPF", " CPF: inválido!" );
+                parametros.put( "CPF", " CPF: inválido - IMPEDITIVO PARA ENVIO!" );
             }
             if ( MyStrings.isNullOrEmpty( model.getEmail() ) || !MyStrings.validarEmail( model.getEmail() ) ) {
                 parametros.put( "EMAIL", " E-mail: inválido!" );
