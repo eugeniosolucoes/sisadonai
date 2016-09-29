@@ -426,7 +426,8 @@ public class BoletoRepositoryImpl implements BoletoRepository {
                     + "            AND mens.`Nosso_Numero` <> '0000000000' \n"
                     + "            AND (mens.`Codigo_Forma_Pagamento` = '03' OR mens.`Codigo_Forma_Pagamento` = '04') \n"
                     + "            AND mens.`Data_Pagamento` = ?\n"
-                    + "            AND mens.`Nosso_Numero` NOT IN (SELECT `numero_boleto` FROM `nota_carioca`); ";
+                    + "            AND mens.`Nosso_Numero` NOT IN (SELECT `numero_boleto` FROM `nota_carioca`)"
+                    + "            ORDER BY pf.`Nome_PFisica`; ";
             ps = con.prepareStatement( sql );
             ps.setDate( 1, new java.sql.Date( data.getTime() ) );
             rs = ps.executeQuery();

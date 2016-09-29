@@ -5,6 +5,7 @@
  */
 package br.com.eugeniosolucoes.service.impl;
 
+import br.com.eugeniosolucoes.excecoes.EmptyResultException;
 import br.com.eugeniosolucoes.excecoes.RestamBoletosPagosException;
 import br.com.eugeniosolucoes.modelo.RpsConfig;
 import br.com.eugeniosolucoes.nfse.model.ConsultarLoteRpsEnvio;
@@ -123,7 +124,7 @@ public class NotaServiceImpl implements NotaService {
     }
 
     @Override
-    public void enviarNsfe( Date data ) throws RestamBoletosPagosException {
+    public void enviarNsfe( Date data ) throws RestamBoletosPagosException, EmptyResultException {
         try {
 
             validarUltimoEnvio();
@@ -159,7 +160,7 @@ public class NotaServiceImpl implements NotaService {
                     throw new RestamBoletosPagosException( msg );
                 }
             } else {
-                throw new IllegalStateException( "Não existem registros nesta data que atendam a condição para envio!" );
+                throw new EmptyResultException( "Não existem registros nesta data que atendam a condição para envio!" );
             }
         } catch ( IllegalStateException e ) {
             LOG.info( e.getMessage() );

@@ -222,7 +222,7 @@ public class DadosBoletoModel implements Comparable<DadosBoletoModel> {
 
     @Override
     public int compareTo( DadosBoletoModel o ) {
-        return this.matricula.compareTo( o.matricula );
+        return this.getAluno().compareTo( o.getAluno() );
     }
     
 }

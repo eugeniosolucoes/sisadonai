@@ -7,6 +7,7 @@ package br.com.eugeniosolucoes.view.forms;
 
 import br.com.eugeniosolucoes.excecoes.RestamBoletosPagosException;
 import br.com.eugeniosolucoes.service.NotaService;
+import br.com.eugeniosolucoes.excecoes.EmptyResultException;
 import br.com.eugeniosolucoes.service.impl.NotaServiceImpl;
 import br.com.eugeniosolucoes.util.RelatorioUtils;
 import br.com.eugeniosolucoes.view.model.NotaCariocaModel;
@@ -20,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +43,10 @@ import org.slf4j.LoggerFactory;
 public class NotaForm extends BaseDialog {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger( NotaForm.class );
+
+    private static final String LISTAGEM = "Listagem de RPS enviados em: ";
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "dd/MM/yyyy" );
 
     private final NotaService notaService = new NotaServiceImpl();
 
@@ -111,6 +117,7 @@ public class NotaForm extends BaseDialog {
         lblTotalRpsNaoProcessados = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         lblValorTotalRpsProcessados = new javax.swing.JLabel();
+        lblListagem = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Enviar Lote RPS");
@@ -360,29 +367,36 @@ public class NotaForm extends BaseDialog {
             plDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plDadosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(splDados, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
+                .addComponent(splDados, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
+        lblListagem.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblListagem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblListagem.setText(LISTAGEM);
+
         javax.swing.GroupLayout plConteudoLayout = new javax.swing.GroupLayout(plConteudo);
         plConteudo.setLayout(plConteudoLayout);
         plConteudoLayout.setHorizontalGroup(
             plConteudoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(plConteudoLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, plConteudoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(plConteudoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(plDados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tabPanelControl))
+                .addGroup(plConteudoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblListagem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(plDados, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tabPanelControl, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap())
         );
         plConteudoLayout.setVerticalGroup(
             plConteudoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plConteudoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabPanelControl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tabPanelControl, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+                .addGap(10, 10, 10)
+                .addComponent(lblListagem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(plDados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -414,6 +428,8 @@ public class NotaForm extends BaseDialog {
                         if ( result == JOptionPane.YES_OPTION ) {
                             btnEnviarLoteRpsActionPerformed( null );
                         }
+                    } catch ( EmptyResultException ex ) {
+                        JOptionPane.showMessageDialog( null, ex.getMessage(), "Informação", JOptionPane.INFORMATION_MESSAGE );
                     } catch ( Exception ex ) {
                         JOptionPane.showMessageDialog( null, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );
                     } finally {
@@ -561,9 +577,18 @@ public class NotaForm extends BaseDialog {
             btnExportarExcel.setEnabled( tblDados.getModel().getRowCount() > 0 );
             tblDados.changeSelection( tblDados.getRowCount() - 1, 0, false, false );
             tblDados.clearSelection();
+            configurarLabelListagem();
             MainForm.setDefaultCursor( this );
         } catch ( Exception ex ) {
             JOptionPane.showMessageDialog( null, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );
+        }
+    }
+
+    private void configurarLabelListagem() {
+        try {
+            lblListagem.setText( LISTAGEM + DATE_FORMAT.format( jdtEnvio.getDate() ) );
+        } catch ( Exception e ) {
+            LOG.error( e.getMessage() );
         }
     }
 
@@ -662,6 +687,7 @@ public class NotaForm extends BaseDialog {
     private javax.swing.JProgressBar jProgressBar1;
     private com.toedter.calendar.JDateChooser jdtEnvio;
     private com.toedter.calendar.JDateChooser jdtPagamento;
+    private javax.swing.JLabel lblListagem;
     private javax.swing.JLabel lblTotalRpsNaoProcessados;
     private javax.swing.JLabel lblTotalRpsProcessados;
     private javax.swing.JLabel lblValorTotalRpsProcessados;
