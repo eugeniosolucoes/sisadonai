@@ -337,6 +337,7 @@ public class TratadorArquivoRemessa {
         String cpf = recuperarCampo( linha, 23, 34 );
         String cep = repository.retornarCepDoAluno( cpf );
         if ( MyStrings.isNullOrEmpty( cep ) || cep.length() != 8 ) {
+            LOG.log(Level.SEVERE, "CPF: {0} - CEP INVALIDO:{1}", new Object[]{cpf, cep});
             throw new CepException( "CEP inválido: " + cep );
         }
         return linha.substring( 0, 128 ).concat( cep ).concat( linha.substring( 136 ) );
