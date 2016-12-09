@@ -29,5 +29,7 @@ public interface NotaService {
 
     void registrarRpsAvulso( NotaCariocaModel model );
     
+    void registrarRpsCancelado( NotaCariocaModel model );
+    
     boolean excluirRpsAvulso( String numeroBoleto );
 }

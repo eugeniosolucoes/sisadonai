@@ -107,6 +107,7 @@ public class NotaForm extends BaseDialog {
         txtNumeroRps = new javax.swing.JTextField();
         btnRegistrarRpsAvulso = new javax.swing.JButton();
         btnExcluirRpsAvulso = new javax.swing.JButton();
+        chkCancelado = new javax.swing.JCheckBox();
         plDados = new javax.swing.JPanel();
         splDados = new javax.swing.JScrollPane();
         tblDados = new javax.swing.JTable();
@@ -251,6 +252,8 @@ public class NotaForm extends BaseDialog {
             }
         });
 
+        chkCancelado.setText("Cancelado");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -265,10 +268,12 @@ public class NotaForm extends BaseDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtNumeroRps, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chkCancelado)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRegistrarRpsAvulso)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnExcluirRpsAvulso)
-                .addContainerGap(182, Short.MAX_VALUE))
+                .addContainerGap(109, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,8 +285,9 @@ public class NotaForm extends BaseDialog {
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtNumeroRps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnRegistrarRpsAvulso)
-                    .addComponent(btnExcluirRpsAvulso))
-                .addContainerGap(14, Short.MAX_VALUE))
+                    .addComponent(btnExcluirRpsAvulso)
+                    .addComponent(chkCancelado))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         tabPanelControl.addTab("RPS Avulso", jPanel4);
@@ -393,7 +399,7 @@ public class NotaForm extends BaseDialog {
             plConteudoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plConteudoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabPanelControl, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+                .addComponent(tabPanelControl)
                 .addGap(10, 10, 10)
                 .addComponent(lblListagem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -521,9 +527,14 @@ public class NotaForm extends BaseDialog {
             NotaCariocaModel model = new NotaCariocaModel();
             model.setNumeroBoleto( txtNossoNumero.getText() );
             model.setNumeroRps( Integer.parseInt( txtNumeroRps.getText() ) );
-            notaService.registrarRpsAvulso( model );
+            if(chkCancelado.isSelected()) {
+                notaService.registrarRpsCancelado( model );
+            } else {
+                notaService.registrarRpsAvulso( model );
+            }
             txtNossoNumero.setText( "" );
             txtNumeroRps.setText( "" );
+            chkCancelado.setSelected( false );
             listarRpsEnviados( LocalDate.now().toDate() );
         } catch ( NumberFormatException e ) {
             JOptionPane.showMessageDialog( null, "Número de RPS inválido!", "Erro", JOptionPane.ERROR_MESSAGE );
@@ -673,6 +684,7 @@ public class NotaForm extends BaseDialog {
     private javax.swing.JButton btnListarRpsEnviados;
     private javax.swing.JButton btnRegistrarRpsAvulso;
     private javax.swing.JButton btnVerificarUltimoEnvio;
+    private javax.swing.JCheckBox chkCancelado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

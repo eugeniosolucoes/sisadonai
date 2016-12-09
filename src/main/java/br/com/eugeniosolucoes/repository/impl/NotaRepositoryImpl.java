@@ -333,5 +333,27 @@ public class NotaRepositoryImpl implements NotaRepository {
         }
         return result == 1;
     }  
+
+    @Override
+    public void registrarRpsCancelado( NotaCariocaModel notaCariocaModel ) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = repository.getConnection();
+            String sql = "UPDATE nota_carioca SET numero_lote_rps = ?, numero_rps = ?, data_emissao = ?, protocolo = ?, processado = ? WHERE numero_boleto = ?";
+            ps = con.prepareStatement( sql );
+            ps.setInt( 1, notaCariocaModel.getNumeroLoteRps() );
+            ps.setInt( 2, notaCariocaModel.getNumeroRps() );
+            ps.setDate( 3, new java.sql.Date( notaCariocaModel.getDataEmissao().getTime() ) );
+            ps.setString( 4, notaCariocaModel.getProtocolo() );
+            ps.setByte( 5, (byte) 1 );
+            ps.setString( 6, notaCariocaModel.getNumeroBoleto() );
+            ps.executeUpdate();
+        } catch ( Exception ex ) {
+            throw new IllegalStateException( ex );
+        } finally {
+            repository.fechar( con, ps );
+        }
+    }
     
 }

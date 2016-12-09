@@ -60,7 +60,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="tabPanelControl" pref="75" max="32767" attributes="0"/>
+                  <Component id="tabPanelControl" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                   <Component id="lblListagem" max="32767" attributes="0"/>
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
@@ -259,10 +259,12 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="txtNumeroRps" min="-2" pref="124" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
+                          <Component id="chkCancelado" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnRegistrarRpsAvulso" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnExcluirRpsAvulso" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="182" max="32767" attributes="0"/>
+                          <EmptySpace pref="109" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -277,8 +279,9 @@
                               <Component id="txtNumeroRps" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btnRegistrarRpsAvulso" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btnExcluirRpsAvulso" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="chkCancelado" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="14" max="32767" attributes="0"/>
+                          <EmptySpace pref="13" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -314,6 +317,11 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExcluirRpsAvulsoActionPerformed"/>
                   </Events>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkCancelado">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Cancelado"/>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>
