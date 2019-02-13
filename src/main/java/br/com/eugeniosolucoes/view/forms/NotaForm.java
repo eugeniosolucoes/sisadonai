@@ -580,6 +580,7 @@ public class NotaForm extends BaseDialog {
             configurarLabelListagem();
             MainForm.setDefaultCursor( this );
         } catch ( Exception ex ) {
+            LOG.error( ex.getMessage(), ex );
             JOptionPane.showMessageDialog( null, ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE );
         }
     }

@@ -392,7 +392,8 @@ public class BoletoRepositoryImpl implements BoletoRepository {
             }
             return list.get( 0 );
         } catch ( Exception ex ) {
-            throw new IllegalStateException( ex );
+            LOG.log( Level.SEVERE, ex.getMessage(), ex );
+            throw new IllegalStateException( "Nosso_Numero não encontrada na tabela Mensalidades!" );
         } finally {
             repository.fechar( con, ps, rs );
         }

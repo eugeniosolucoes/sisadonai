@@ -324,11 +324,15 @@ public class NotaServiceImpl implements NotaService {
         SimpleDateFormat sdf = new SimpleDateFormat( "dd/MM/yyyy" );
         List<NotaCariocaModel> listarRspEnviados = repository.listarRspEnviados( data );
         for ( NotaCariocaModel model : listarRspEnviados ) {
-            DadosBoletoPagoModel pago = boletoRepository.retornarBoletoPago( model.getNumeroBoleto() );
-            model.setNome( pago.getAluno() );
-            model.setDataPagamento( sdf.format( pago.getPagamento() ) );
-            model.setTotal( String.format( "%.2f", pago.getValor() ) );
-            model.setFormaPagamento( pago.getFormaPagamento() );
+            try {
+                DadosBoletoPagoModel pago = boletoRepository.retornarBoletoPago( model.getNumeroBoleto() );
+                model.setNome( pago.getAluno() );
+                model.setDataPagamento( sdf.format( pago.getPagamento() ) );
+                model.setTotal( String.format( "%.2f", pago.getValor() ) );
+                model.setFormaPagamento( pago.getFormaPagamento() );
+            } catch ( Exception e ) {
+                LOG.error( e.getMessage(), e );
+            }
         }
         return listarRspEnviados;
     }

@@ -33,7 +33,7 @@ public class NotaCariocaModel {
     private boolean processado;
 
     private String formaPagamento;
-
+    
     public NotaCariocaModel() {
     }
 
