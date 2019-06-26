@@ -46,7 +46,7 @@ public class BoletoServiceImpl implements BoletoService {
     
     static {
         try {
-            CONF.load( BoletoServiceImpl.class.getResourceAsStream( "/conf/boleto.properties" ) );
+             CONFIG.load( new FileInputStream( "sisadonai.properties" ) );
         } catch ( Exception e ) {
             LOG.error( e.getMessage(), e );
         }
