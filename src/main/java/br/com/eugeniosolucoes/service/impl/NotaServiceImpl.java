@@ -382,4 +382,38 @@ public class NotaServiceImpl implements NotaService {
         return repository.excluirRpsAvulso( numeroBoleto );
     }
 
+    @Override
+    public void registrarRpsCancelado( NotaCariocaModel model ) {
+        try {
+            String nossoNumero = MyStrings.padLeft( 10, Integer.valueOf( model.getNumeroBoleto() ) );
+            model.setNumeroBoleto( nossoNumero );
+            model.setDataEmissao( new Date() );
+            model.setNumeroLoteRps( 0 );
+            model.setProcessado( true );
+            model.setProtocolo( RPS_AVULSO );
+
+            StringBuilder sb = new StringBuilder();
+
+            boolean deveExistirNossoNumero = boletoRepository.verificarExisteNossoNumero( model.getNumeroBoleto() );
+            if ( !deveExistirNossoNumero ) {
+                sb.append( "Nosso Número não encontrado no sistema!" ).append( "\n" );
+            }
+            boolean naoDeveExistirNumeroRps = repository.verificarExisteNumeroRps( model.getNumeroRps() );
+            if ( naoDeveExistirNumeroRps ) {
+                sb.append( "Número RPS já registrado!" ).append( "\n" );
+            }
+
+            if ( !sb.toString().isEmpty() ) {
+                throw new IllegalStateException( sb.toString() );
+            }
+
+            repository.registrarRpsCancelado( model );
+        } catch ( NumberFormatException | IllegalStateException e ) {
+            if ( e instanceof NumberFormatException ) {
+                throw new IllegalStateException( "Nosso Número inválido!" );
+            }
+            throw new IllegalStateException( e.getMessage() );
+        }
+    }
+
 }
