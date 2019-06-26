@@ -42,7 +42,7 @@ public class BoletoServiceImpl implements BoletoService {
     
     static final Logger LOG = LoggerFactory.getLogger( BoletoServiceImpl.class.getName() );
     
-    static final Properties CONF = new Properties();
+    static final Properties CONFIG = new Properties();
     
     static {
         try {
@@ -107,12 +107,12 @@ public class BoletoServiceImpl implements BoletoService {
         //long nossoNumeroInicial = 15262;
         Endereco enderecoBeneficiario = Endereco.novoEndereco()
                 //.comLogradouro( "Rua São Bento, 13 - 2o Andar Parte" )
-                .comLogradouro( CONF.getProperty( "boleto.curso.endereco" ) )
+                .comLogradouro(CONFIG.getProperty( "boleto.curso.endereco" ) )
                 //.comBairro( "Centro" )
-                .comBairro( CONF.getProperty( "boleto.curso.bairro" ) )
-                .comCep( CONF.getProperty( "boleto.curso.cep" ) )
-                .comCidade( CONF.getProperty( "boleto.curso.cidade" ) )
-                .comUf( CONF.getProperty( "boleto.curso.uf" ) );
+                .comBairro(CONFIG.getProperty( "boleto.curso.bairro" ) )
+                .comCep(CONFIG.getProperty( "boleto.curso.cep" ) )
+                .comCidade(CONFIG.getProperty( "boleto.curso.cidade" ) )
+                .comUf(CONFIG.getProperty( "boleto.curso.uf" ) );
         Datas datas = Datas.novasDatas()
                 .comDocumento( LocalDate.now().getDayOfMonth(),
                         LocalDate.now().getMonthOfYear(),
