@@ -8,6 +8,7 @@ import java.text.Normalizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -86,4 +87,9 @@ public final class MyStrings {
         }
         return Normalizer.normalize( str, Normalizer.Form.NFD ).replaceAll( "[^\\p{ASCII}]", "" );
     }
+
+    public static String apenasNumeros( String valorNumerico ) {
+        return valorNumerico.replace( ",", "" ).replace( ".", "" );
+    }
+
 }

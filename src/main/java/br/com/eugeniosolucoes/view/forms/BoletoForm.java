@@ -5,20 +5,30 @@
  */
 package br.com.eugeniosolucoes.view.forms;
 
+import br.com.caelum.stella.boleto.Boleto;
 import br.com.eugeniosolucoes.controle.Controlador;
 import br.com.eugeniosolucoes.excecoes.ActionException;
 import br.com.eugeniosolucoes.service.BoletoService;
 import br.com.eugeniosolucoes.service.impl.BoletoServiceImpl;
+import br.com.eugeniosolucoes.util.ArquivoRemessaoCNAB400;
+import br.com.eugeniosolucoes.util.MyFilter;
 import br.com.eugeniosolucoes.util.MyStrings;
+import br.com.eugeniosolucoes.util.TratadorArquivoRemessa;
+import static br.com.eugeniosolucoes.view.forms.MainForm.LOG;
 import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
+import java.awt.Desktop;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -27,6 +37,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
+import org.joda.time.LocalDateTime;
 
 /**
  *
@@ -41,6 +52,8 @@ public class BoletoForm extends BaseDialog {
     private DadosBoletoFiltroModel boletoFiltroModel;
     
     private List<DadosBoletoModel> boletoModel;
+    
+    private final ArquivoRemessaoCNAB400 arquivoRemessaoCNAB400 = new ArquivoRemessaoCNAB400();
 
     /**
      * Creates new form View1
@@ -95,6 +108,7 @@ public class BoletoForm extends BaseDialog {
         lblMes = new javax.swing.JLabel();
         cmbMes = new javax.swing.JComboBox<>();
         jpbEnvio = new javax.swing.JProgressBar();
+        btnGerarArqRemessa = new javax.swing.JButton();
         plDados = new javax.swing.JPanel();
         splDados = new javax.swing.JScrollPane();
         tblDados = new javax.swing.JTable();
@@ -178,9 +192,15 @@ public class BoletoForm extends BaseDialog {
         });
 
         jpbEnvio.setIndeterminate(true);
-        jpbEnvio.setOpaque(true);
         jpbEnvio.setString("Processando envio...");
         jpbEnvio.setStringPainted(true);
+
+        btnGerarArqRemessa.setText("Gerar Arq. Remessa");
+        btnGerarArqRemessa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGerarArqRemessaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout plControlesLayout = new javax.swing.GroupLayout(plControles);
         plControles.setLayout(plControlesLayout);
@@ -188,7 +208,7 @@ public class BoletoForm extends BaseDialog {
             plControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plControlesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(plControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(plControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(plControlesLayout.createSequentialGroup()
                         .addComponent(lblAno)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -198,8 +218,14 @@ public class BoletoForm extends BaseDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cmbMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblTurma)
+                        .addComponent(lblTurma))
+                    .addGroup(plControlesLayout.createSequentialGroup()
+                        .addComponent(chkTodos)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnVisualizarBoletos)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(plControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(plControlesLayout.createSequentialGroup()
                         .addComponent(cmbTurma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblMatriculoAno)
@@ -208,14 +234,12 @@ public class BoletoForm extends BaseDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnPesquisar))
                     .addGroup(plControlesLayout.createSequentialGroup()
-                        .addComponent(chkTodos)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnVisualizarBoletos)
+                        .addComponent(btnGerarArqRemessa)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEnviarBoletos)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jpbEnvio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(124, Short.MAX_VALUE))
+                .addContainerGap(93, Short.MAX_VALUE))
         );
         plControlesLayout.setVerticalGroup(
             plControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -243,7 +267,8 @@ public class BoletoForm extends BaseDialog {
                     .addComponent(chkTodos)
                     .addComponent(btnVisualizarBoletos)
                     .addComponent(btnEnviarBoletos)
-                    .addComponent(jpbEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jpbEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGerarArqRemessa))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -285,7 +310,7 @@ public class BoletoForm extends BaseDialog {
             plDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(plDadosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(splDados, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
+                .addComponent(splDados, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -423,6 +448,36 @@ public class BoletoForm extends BaseDialog {
             }
         } ).start();
     }//GEN-LAST:event_btnEnviarBoletosActionPerformed
+
+    private void btnGerarArqRemessaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGerarArqRemessaActionPerformed
+        JFileChooser arquivo = new JFileChooser();
+        arquivo.setDialogTitle( "Selecione o local para salvar o arquivo de remessa." );
+        arquivo.setDialogType( JFileChooser.SAVE_DIALOG );
+        //arquivo.setFileFilter( new MyFilter( "txt" ) );
+        arquivo.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
+
+        int r = arquivo.showDialog( null, "Selecionar" );
+
+        if ( r == JFileChooser.APPROVE_OPTION ) {
+
+            try {
+                //txtListaDeEmail.setText( arquivo.getSelectedFile().getCanonicalPath() );
+                JOptionPane.showMessageDialog( this, "Favor aguardar a geração do arquivo!", this.getTitle(), JOptionPane.INFORMATION_MESSAGE );
+                TratadorArquivoRemessa tar = new TratadorArquivoRemessa();
+                File f = arquivo.getSelectedFile();
+                List<DadosBoletoModel> selecionados = getSelecionados();
+                List<Boleto> boletos = service.getBoletosSelecionados( selecionados );
+                String conteudo = arquivoRemessaoCNAB400.processarArquivoRemessa( boletos );
+                final String nomeArquivo = "ARQUIVO_REMESSA_EXEMPLO.txt";
+                tar.criarNovoArquivoRemessa(f.getCanonicalPath() + "/" + nomeArquivo, conteudo );
+                MyStrings.exibeMensagem( String.format( "Arquivo de Remessa preparado com sucesso!%nLocal: %s", nomeArquivo ) );
+            } catch ( Exception ex ) {
+                JOptionPane.showMessageDialog( this, "Houve erro ao gerar o arquivo!\nSerá exibido o arquivo de log com os problemas!", this.getTitle(), JOptionPane.ERROR_MESSAGE );
+                exibirLogErroRemessa( ex );
+            }
+        }
+        
+    }//GEN-LAST:event_btnGerarArqRemessaActionPerformed
     
     private String[] getAnos() {
         return boletoFiltroModel.getAnos().toArray( new String[boletoFiltroModel.getAnos().size()] );
@@ -504,9 +559,25 @@ public class BoletoForm extends BaseDialog {
         tblDados.getColumnModel().getColumn( 5 ).setPreferredWidth( 80 );
         
     }
+    
+    private void exibirLogErroRemessa( Exception ex ) {
+        try {
+            LOG.log( Level.SEVERE, ex.getMessage(), ex );
+            String nomeArquivoLog = String.format( "log-arquivo-remessa%s.txt", TratadorArquivoRemessa.SUFIXO_ARQUIVO_LOG.format( LocalDateTime.now().toDate() ) );
+            try ( FileWriter writer = new FileWriter( nomeArquivoLog ) ) {
+                writer.append( ex.getMessage() );
+            } catch ( IOException ex1 ) {
+                LOG.log( Level.SEVERE, ex.getMessage(), ex1 );
+            }
+            Desktop.getDesktop().open( new File( nomeArquivoLog ) );
+        } catch ( IOException ex1 ) {
+            LOG.log( Level.SEVERE, ex.getMessage(), ex1 );
+        }
+    }    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEnviarBoletos;
+    private javax.swing.JButton btnGerarArqRemessa;
     private javax.swing.JButton btnPesquisar;
     private javax.swing.JButton btnVisualizarBoletos;
     private javax.swing.JCheckBox chkTodos;

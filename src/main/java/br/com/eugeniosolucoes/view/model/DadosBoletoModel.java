@@ -92,7 +92,7 @@ public class DadosBoletoModel implements Comparable<DadosBoletoModel> {
     public String getNossoNumero() {
         return nossoNumero;
     }
-
+    
     public void setNossoNumero( String nossoNumero ) {
         this.nossoNumero = nossoNumero;
     }

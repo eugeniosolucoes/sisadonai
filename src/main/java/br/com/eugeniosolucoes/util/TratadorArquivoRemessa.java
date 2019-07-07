@@ -259,6 +259,16 @@ public class TratadorArquivoRemessa {
         return nomeArquivo;
     }
 
+    public void criarNovoArquivoRemessa( String nomeArquivo, String conteudo ) throws IOException {
+        if ( nomeArquivo != null ) {
+            try ( FileWriter writer = new FileWriter( nomeArquivo ) ) {
+                writer.append( conteudo );
+            }
+        } else {
+            throw new IllegalStateException( "Problemas na geração do arquivo!" );
+        }
+    }    
+    
     static String tratarNomeArquivo( String nome ) {
         int indice = nome.lastIndexOf( ".txt" );
         return nome.substring( 0, indice ).concat( "-sisadonai.txt" );

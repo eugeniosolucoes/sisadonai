@@ -10,7 +10,7 @@ import br.com.caelum.stella.boleto.Boleto;
 import br.com.caelum.stella.boleto.Datas;
 import br.com.caelum.stella.boleto.Endereco;
 import br.com.caelum.stella.boleto.Pagador;
-import br.com.caelum.stella.boleto.bancos.Santander;
+import br.com.caelum.stella.boleto.bancos.Itau;
 import br.com.eugeniosolucoes.modelo.SituacaoMatricula;
 import br.com.eugeniosolucoes.repository.BoletoRepository;
 import br.com.eugeniosolucoes.repository.impl.BoletoRepositoryImpl;
@@ -39,21 +39,21 @@ import org.slf4j.LoggerFactory;
  * @author eugenio
  */
 public class BoletoServiceImpl implements BoletoService {
-    
+
     static final Logger LOG = LoggerFactory.getLogger( BoletoServiceImpl.class.getName() );
-    
+
     static final Properties CONFIG = new Properties();
-    
+
     static {
         try {
-             CONFIG.load( new FileInputStream( "sisadonai.properties" ) );
+            CONFIG.load( new FileInputStream( "sisadonai.properties" ) );
         } catch ( Exception e ) {
             LOG.error( e.getMessage(), e );
         }
     }
-    
+
     BoletoRepository repository = new BoletoRepositoryImpl();
-    
+
     @Override
     public DadosBoletoFiltroModel carregarFiltros() {
         LocalDate dataCorrente = LocalDate.now();
@@ -68,26 +68,26 @@ public class BoletoServiceImpl implements BoletoService {
         }
         return model;
     }
-    
+
     @Override
     public List<DadosBoletoModel> listarBoletos( DadosBoletoFiltroModel dadosBoletoFiltroModel ) {
         List<DadosBoletoModel> lista = repository.listarBoletos( dadosBoletoFiltroModel );
         return lista;
     }
-    
+
     @Override
     public JasperPrint visualizarBoletos( List<DadosBoletoModel> lista ) {
         if ( lista.isEmpty() ) {
             throw new IllegalStateException( "Nenhum boleto selecionado!" );
         }
         List<Boleto> boletos = new ArrayList<>();
-        
+
         for ( DadosBoletoModel dados : lista ) {
-            
+
             if ( !dados.isBoletoValido() ) {
                 continue;
             }
-            
+
             try {
                 Boleto boleto = criarBoleto( dados );
                 boletos.add( boleto );
@@ -100,19 +100,43 @@ public class BoletoServiceImpl implements BoletoService {
         //return gerador.geraRelatorio();
         return criarGeradorDeBoleto( boletos ).geraRelatorio();
     }
+
+    @Override
+    public List<Boleto> getBoletosSelecionados( List<DadosBoletoModel> lista ) {
+        if ( lista.isEmpty() ) {
+            throw new IllegalStateException( "Nenhum boleto selecionado!" );
+        }
+        List<Boleto> boletos = new ArrayList<>();
+
+        for ( DadosBoletoModel dados : lista ) {
+
+            if ( !dados.isBoletoValido() ) {
+                continue;
+            }
+
+            try {
+                Boleto boleto = criarBoleto( dados );
+                boletos.add( boleto );
+            } catch ( Exception e ) {
+                LOG.error( e.getMessage(), e );
+            }
+        }
+        return boletos;
+    }
+    
     
     private Boleto criarBoleto( DadosBoletoModel dados ) {
-        Santander banco = new Santander();
+        Itau banco = new Itau();
         //TODO: TESTE -105613749500
         //long nossoNumeroInicial = 15262;
         Endereco enderecoBeneficiario = Endereco.novoEndereco()
                 //.comLogradouro( "Rua São Bento, 13 - 2o Andar Parte" )
-                .comLogradouro(CONFIG.getProperty( "boleto.curso.endereco" ) )
+                .comLogradouro( CONFIG.getProperty( "boleto.curso.endereco" ) )
                 //.comBairro( "Centro" )
-                .comBairro(CONFIG.getProperty( "boleto.curso.bairro" ) )
-                .comCep(CONFIG.getProperty( "boleto.curso.cep" ) )
-                .comCidade(CONFIG.getProperty( "boleto.curso.cidade" ) )
-                .comUf(CONFIG.getProperty( "boleto.curso.uf" ) );
+                .comBairro( CONFIG.getProperty( "boleto.curso.bairro" ) )
+                .comCep( CONFIG.getProperty( "boleto.curso.cep" ) )
+                .comCidade( CONFIG.getProperty( "boleto.curso.cidade" ) )
+                .comUf( CONFIG.getProperty( "boleto.curso.uf" ) );
         Datas datas = Datas.novasDatas()
                 .comDocumento( LocalDate.now().getDayOfMonth(),
                         LocalDate.now().getMonthOfYear(),
@@ -124,16 +148,15 @@ public class BoletoServiceImpl implements BoletoService {
         //Quem emite o boleto
         Beneficiario beneficiario = Beneficiario.novoBeneficiario()
                 .comNomeBeneficiario( "CURSO ADONAI LTDA" )
+                .comAgencia( "7190" )
+                .comCodigoBeneficiario( "48759" )
+                .comDigitoCodigoBeneficiario( "0" )
+                //.comNumeroConvenio( "1207113" )
+                .comCarteira( "109" )
                 .comEndereco( enderecoBeneficiario )
-                .comAgencia( "3451" ).comDigitoAgencia( "7" )
-                .comCodigoBeneficiario( "13003087" )
-                .comDigitoCodigoBeneficiario( "9" )
-                .comCarteira( "101" )
-                .comNumeroConvenio( "7570007" )
+                .comNossoNumero( MyStrings.padLeft( 8, Integer.valueOf( dados.getNossoNumero() ) ) )
                 .comDocumento( "10.851.328/0001-75" )
-                .comNossoNumero( dados.getNossoNumero() );
-        String digito = banco.getGeradorDeDigito().calculaDVNossoNumero( beneficiario.getNossoNumero() );
-        beneficiario.comDigitoNossoNumero( digito );
+                .comDigitoNossoNumero( "347-1" );
         Endereco enderecoPagador = Endereco.novoEndereco()
                 .comLogradouro( dados.getEndereco().getLogradouro() )
                 .comBairro( dados.getEndereco().getBairro() )
@@ -160,7 +183,7 @@ public class BoletoServiceImpl implements BoletoService {
                 .comLocaisDePagamento( "Até o vencimento pagável em qualquer banco do sistema de compensação" );
         return boleto;
     }
-    
+
     @Override
     public byte[] criarBoletoPDF( DadosBoletoModel dados ) {
         Boleto boleto = criarBoleto( dados );
@@ -174,25 +197,25 @@ public class BoletoServiceImpl implements BoletoService {
         }
         return pdf;
     }
-    
+
     private static MyGeradorDeBoleto criarGeradorDeBoleto( List<Boleto> boletos ) {
         Map<String, Object> parametros = new HashMap<>();
-        
+
         InputStream templetoBoleto = BoletoServiceImpl.class.getResourceAsStream( "/templates/boleto-default.jasper" );
-        
+
         parametros.put( JRParameter.REPORT_LOCALE, new Locale( "pt", "BR" ) );
-        
+
         MyGeradorDeBoleto gerador = new MyGeradorDeBoleto( templetoBoleto, parametros, boletos );
         return gerador;
     }
-    
+
     private static MyGeradorDeBoleto criarGeradorDeBoleto( Boleto boleto ) {
         Map<String, Object> parametros = new HashMap<>();
-        
+
         InputStream templetoBoleto = BoletoServiceImpl.class.getResourceAsStream( "/templates/boleto-default.jasper" );
-        
+
         parametros.put( JRParameter.REPORT_LOCALE, new Locale( "pt", "BR" ) );
-        
+
         MyGeradorDeBoleto gerador = new MyGeradorDeBoleto( templetoBoleto, parametros, boleto );
         return gerador;
     }
@@ -209,22 +232,22 @@ public class BoletoServiceImpl implements BoletoService {
                 + "Multa de 2,00%% ",
                 DATA_FORMAT.format( dados.getVencimento() ) );
     }
-    
+
     private static String criarInstrucao4( DadosBoletoModel dados ) {
         return String.format( "%s (%s)", dados.getAluno(), dados.getTurma() );
     }
-    
+
     private static String criarInstrucao3( DadosBoletoModel dados ) {
         return String.format( "*** TOTAL À PAGAR ATÉ O VENCIMENTO: R$ %.2f ***", dados.getValor() );
     }
-    
+
     private static String criarInstrucao2( DadosBoletoModel dados ) {
         return String.format( "Parcela %s de %s: R$ %.2f",
                 dados.getNumeroMensalidade(),
                 dados.getQuantidadeMensalidade(),
                 dados.getValor() );
     }
-    
+
     @Override
     public void validarListaDeBoletos( List<DadosBoletoModel> dados ) {
         StringBuilder sb = new StringBuilder();
@@ -263,10 +286,10 @@ public class BoletoServiceImpl implements BoletoService {
             throw new IllegalStateException( sb.toString() );
         }
     }
-    
+
     @Override
     public void validarListaDeBoletos( List<DadosBoletoModel> lista, DadosBoletoFiltroModel boletoFiltroModel ) {
-        
+
         StringBuilder sb = new StringBuilder();
         try {
             validarListaDeBoletos( lista );
@@ -283,5 +306,5 @@ public class BoletoServiceImpl implements BoletoService {
             throw new IllegalStateException( sb.toString() );
         }
     }
-    
+
 }

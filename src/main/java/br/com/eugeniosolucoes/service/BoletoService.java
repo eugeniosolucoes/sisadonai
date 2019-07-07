@@ -5,6 +5,7 @@
  */
 package br.com.eugeniosolucoes.service;
 
+import br.com.caelum.stella.boleto.Boleto;
 import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
 import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.text.SimpleDateFormat;
@@ -35,4 +36,6 @@ public interface BoletoService {
     void validarListaDeBoletos( List<DadosBoletoModel> dados );
 
     public void validarListaDeBoletos( List<DadosBoletoModel> boletoModel, DadosBoletoFiltroModel boletoFiltroModel );
+
+    List<Boleto> getBoletosSelecionados( List<DadosBoletoModel> lista );
 }
