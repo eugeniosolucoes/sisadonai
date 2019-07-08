@@ -11,8 +11,12 @@ import br.com.eugeniosolucoes.repository.ArquivoRemessaRepository;
 import br.com.eugeniosolucoes.repository.impl.ArquivoRemessaRepositoryImpl;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -177,7 +181,7 @@ public class TratadorArquivoRemessa {
     static final String DIGITO_CONTA_CORRENTE = "9";
 
     static final int TAMANHO = 240;
-    
+
     public static final SimpleDateFormat SUFIXO_ARQUIVO_LOG = new SimpleDateFormat( "_yyyyMMdd_HHmmss" );
 
     ArquivoRemessaRepository repository = new ArquivoRemessaRepositoryImpl();
@@ -267,8 +271,8 @@ public class TratadorArquivoRemessa {
         } else {
             throw new IllegalStateException( "Problemas na geração do arquivo!" );
         }
-    }    
-    
+    }
+
     static String tratarNomeArquivo( String nome ) {
         int indice = nome.lastIndexOf( ".txt" );
         return nome.substring( 0, indice ).concat( "-sisadonai.txt" );
@@ -347,7 +351,7 @@ public class TratadorArquivoRemessa {
         String cpf = recuperarCampo( linha, 23, 34 );
         String cep = repository.retornarCepDoAluno( cpf );
         if ( MyStrings.isNullOrEmpty( cep ) || cep.length() != 8 ) {
-            LOG.log(Level.SEVERE, "CPF: {0} - CEP INVALIDO:{1}", new Object[]{cpf, cep});
+            LOG.log( Level.SEVERE, "CPF: {0} - CEP INVALIDO:{1}", new Object[]{cpf, cep} );
             throw new CepException( "CEP inválido: " + cep );
         }
         return linha.substring( 0, 128 ).concat( cep ).concat( linha.substring( 136 ) );

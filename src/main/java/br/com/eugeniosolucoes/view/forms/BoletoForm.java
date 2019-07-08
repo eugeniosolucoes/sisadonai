@@ -11,6 +11,7 @@ import br.com.eugeniosolucoes.excecoes.ActionException;
 import br.com.eugeniosolucoes.service.BoletoService;
 import br.com.eugeniosolucoes.service.impl.BoletoServiceImpl;
 import br.com.eugeniosolucoes.util.ArquivoRemessaoCNAB400;
+import br.com.eugeniosolucoes.util.MyFilter;
 import br.com.eugeniosolucoes.util.MyStrings;
 import br.com.eugeniosolucoes.util.TratadorArquivoRemessa;
 import br.com.eugeniosolucoes.view.model.DadosBoletoFiltroModel;
@@ -22,6 +23,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -449,34 +452,48 @@ public class BoletoForm extends BaseDialog {
     }//GEN-LAST:event_btnEnviarBoletosActionPerformed
 
     private void btnGerarArqRemessaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGerarArqRemessaActionPerformed
-        JFileChooser arquivo = new JFileChooser();
-        arquivo.setDialogTitle( "Selecione o local para salvar o arquivo de remessa." );
-        arquivo.setDialogType( JFileChooser.SAVE_DIALOG );
-        //arquivo.setFileFilter( new MyFilter( "txt" ) );
-        arquivo.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
-        final String nomeArquivo = String.format( "sisadonai_arquivo_remessa_itau%s.txt", TratadorArquivoRemessa.SUFIXO_ARQUIVO_LOG.format( new Date() ) );
-        
-        arquivo.setSelectedFile( new File( nomeArquivo ) );
-        
-        int r = arquivo.showDialog( null, "Selecionar" );
-        
-        if ( r == JFileChooser.APPROVE_OPTION ) {
-            
-            try {
+        List<DadosBoletoModel> selecionados = getSelecionados();
+        List<Boleto> boletos; 
+        try {
+            if ( selecionados.isEmpty() ) {
+                JOptionPane.showMessageDialog( this, "Nenhum boleto selecionado!", this.getTitle(), JOptionPane.INFORMATION_MESSAGE );
+                return;
+            }
+            boletos = service.getBoletosSelecionados( selecionados );
+            if ( boletos.isEmpty() ) {
+                throw new Exception( "Selecione somente boletos com \"nosso número\" gerado!" );
+            }
+        } catch ( Exception e ) {
+            JOptionPane.showMessageDialog( this, e.getMessage(), this.getTitle(), JOptionPane.INFORMATION_MESSAGE );
+            return;
+        }
+        try {
+            JFileChooser arquivo = new JFileChooser();
+            arquivo.setDialogTitle( "Selecione o local para salvar o arquivo de remessa." );
+            arquivo.setDialogType( JFileChooser.SAVE_DIALOG );
+            arquivo.setFileFilter( new MyFilter( "txt" ) );
+            arquivo.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
+            final String nomeArquivo = String.format( "sisadonai_arquivo_remessa_itau%s.txt", TratadorArquivoRemessa.SUFIXO_ARQUIVO_LOG.format( new Date() ) );
+
+            arquivo.setSelectedFile( new File( nomeArquivo ) );
+
+            int r = arquivo.showDialog( null, "Selecionar" );
+
+            if ( r == JFileChooser.APPROVE_OPTION ) {
+
                 //txtListaDeEmail.setText( arquivo.getSelectedFile().getCanonicalPath() );
                 JOptionPane.showMessageDialog( this, "Favor aguardar a geração do arquivo!", this.getTitle(), JOptionPane.INFORMATION_MESSAGE );
                 TratadorArquivoRemessa tar = new TratadorArquivoRemessa();
                 File f = arquivo.getSelectedFile();
-                List<DadosBoletoModel> selecionados = getSelecionados();
-                List<Boleto> boletos = service.getBoletosSelecionados( selecionados );
                 String conteudo = arquivoRemessaoCNAB400.processarArquivoRemessa( boletos );
                 tar.criarNovoArquivoRemessa( f.getCanonicalPath(), conteudo );
                 MyStrings.exibeMensagem( String.format( "Arquivo de Remessa preparado com sucesso!%nLocal: %s", nomeArquivo ) );
-            } catch ( Exception ex ) {
-                JOptionPane.showMessageDialog( this, "Houve erro ao gerar o arquivo!\nSerá exibido o arquivo de log com os problemas!", this.getTitle(), JOptionPane.ERROR_MESSAGE );
-                exibirLogErroRemessa( ex );
             }
+        } catch ( Exception ex ) {
+            JOptionPane.showMessageDialog( this, "Houve erro ao gerar o arquivo!\nSerá exibido o arquivo de log com os problemas!", this.getTitle(), JOptionPane.ERROR_MESSAGE );
+            exibirLogErroRemessa( ex );
         }
+
 
     }//GEN-LAST:event_btnGerarArqRemessaActionPerformed
     

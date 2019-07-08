@@ -41,9 +41,9 @@ public abstract class AbstractCNAB400 {
                 break;
             case N:
                 if ( substituir && campo.getValor().length() > maxLength ) {
-                    s = String.format( ( "%0" + ( campo.getPicture().getLength() ) + "d" ), substituir ? Integer.valueOf( campo.getValor().substring( 0, maxLength ) ) : Integer.valueOf( padrao ) );
+                    s = String.format( ( "%0" + ( campo.getPicture().getLength() ) + "d" ), substituir ? Long.valueOf( campo.getValor().substring( 0, maxLength ) ) : Integer.valueOf( padrao ) );
                 } else {
-                    s = String.format( ( "%0" + ( campo.getPicture().getLength() ) + "d" ), substituir ? Integer.valueOf( campo.getValor() ) : Integer.valueOf( padrao ) );
+                    s = String.format( ( "%0" + ( campo.getPicture().getLength() ) + "d" ), substituir ? Long.valueOf( campo.getValor() ) : Integer.valueOf( padrao ) );
                 }
                 break;
         }

@@ -45,19 +45,28 @@ public class ArquivoRemessaoCNAB400 {
             header.getCampo( "DATA_DE_GERACAO" ).setValor( DATE_FORMAT.format( new Date() ) );
             header.getCampo( "NOME_DA_EMPRESA" ).setValor( modelo.getBeneficiario().getNomeBeneficiario() );
             header.getCampo( "NUMERO_SEQUENCIAL" ).setValor( String.valueOf( numSeq++ ) );
-            result += header.getLinhaHeader() + "\n";
+            result += header.getLinhaHeader() + String.format("%n" );
             for ( Boleto boleto : boletos ) {
+                detalhe.getCampo( "TIPO_DE_REGISTRO" ).setValor( "1" );
                 detalhe.getCampo( "CODIGO_DE_INSCRICAO" ).setValor( "02" );
                 detalhe.getCampo( "NUMERO_DE_INSCRICAO" ).setValor( modelo.getBeneficiario().getDocumento().replaceAll( "\\D*", "" ) );
                 detalhe.getCampo( "AGENCIA" ).setValor( modelo.getBeneficiario().getAgencia() );
                 detalhe.getCampo( "CONTA" ).setValor( modelo.getBeneficiario().getCodigoBeneficiario() );
                 detalhe.getCampo( "NOSSO_NUMERO" ).setValor( boleto.getNossoNumeroECodDocumento().substring( 4, 12 ) );
                 detalhe.getCampo( "NR_DA_CARTEIRA" ).setValor( boleto.getBeneficiario().getCarteira() );
+                detalhe.getCampo( "CARTEIRA" ).setValor( "I" );//CODIGO CARTEIRA 
+                detalhe.getCampo( "COD_DE_OCORRENCIA" ).setValor( "1" ); //REMESSA
+                detalhe.getCampo( "NR_DO_DOCUMENTO" ).setValor( boleto.getNossoNumeroECodDocumento().substring( 4, 12 ) ); // NOSSO NUMERO/COD DOC
                 detalhe.getCampo( "VENCIMENTO" ).setValor( DATE_FORMAT.format( boleto.getDatas().getVencimento().getTime() ) );
                 detalhe.getCampo( "VALOR_DO_TITULO" ).setValor( MyStrings.apenasNumeros( boleto.getValorBoleto().toString() ) );
                 detalhe.getCampo( "CODIGO_DO_BANCO" ).setValor( "341" );
+                detalhe.getCampo( "ESPECIE" ).setValor( "4" ); // MENSALIDADE ESCOLAR
                 detalhe.getCampo( "ACEITE" ).setValor( boleto.getAceite() ? "A" : "N" );
                 detalhe.getCampo( "DATA_DE_EMISSAO" ).setValor( DATE_FORMAT.format( boleto.getDatas().getDocumento().getTime() ) );
+                detalhe.getCampo( "INSTRUCAO_1" ).setValor( "5" ); //RECEBER CONFORME INSTRUÇÕES NO PRÓPRIO TÍTULO
+                detalhe.getCampo( "INSTRUCAO_2" ).setValor( "5" ); //RECEBER CONFORME INSTRUÇÕES NO PRÓPRIO TÍTULO
+                detalhe.getCampo( "CODIGO_DE_INSCRICAO_PAGADOR" ).setValor( "1" );
+                detalhe.getCampo( "NUMERO_DE_INSCRICAO_PAGADOR" ).setValor( boleto.getPagador().getDocumento().replaceAll( "\\D*", "" ) );
                 detalhe.getCampo( "NOME_PAGADOR" ).setValor( MyStrings.removerAcentos( boleto.getPagador().getNome().toUpperCase() ) );
                 detalhe.getCampo( "LOGRADOURO" ).setValor( MyStrings.removerAcentos( boleto.getPagador().getEndereco().getLogradouro().toUpperCase() ) );
                 detalhe.getCampo( "BAIRRO" ).setValor( MyStrings.removerAcentos( boleto.getPagador().getEndereco().getBairro().toUpperCase() ) );
@@ -66,10 +75,10 @@ public class ArquivoRemessaoCNAB400 {
                 detalhe.getCampo( "ESTADO" ).setValor( MyStrings.removerAcentos( boleto.getPagador().getEndereco().getUf().toUpperCase() ) );
                 detalhe.getCampo( "NUMERO_SEQUENCIAL" ).setValor( String.valueOf( numSeq++ ) );
 
-                result += detalhe.getLinhaDetalhe() + "\n";
+                result += detalhe.getLinhaDetalhe() + String.format("%n" );
             }
             trailer.getCampo( "NUMERO_SEQUENCIAL" ).setValor( String.valueOf( numSeq ) );
-            result += trailer.getLinhaTrailer();
+            result += trailer.getLinhaTrailer() + String.format("%n" );
         } catch ( SizeLineException e ) {
             throw new IllegalStateException( e );
         }
