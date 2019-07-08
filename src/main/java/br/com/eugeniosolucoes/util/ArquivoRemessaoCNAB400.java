@@ -56,7 +56,7 @@ public class ArquivoRemessaoCNAB400 {
                 detalhe.getCampo( "NR_DA_CARTEIRA" ).setValor( boleto.getBeneficiario().getCarteira() );
                 detalhe.getCampo( "CARTEIRA" ).setValor( "I" );//CODIGO CARTEIRA 
                 detalhe.getCampo( "COD_DE_OCORRENCIA" ).setValor( "1" ); //REMESSA
-                detalhe.getCampo( "NR_DO_DOCUMENTO" ).setValor( boleto.getNossoNumeroECodDocumento().substring( 4, 12 ) ); // NOSSO NUMERO/COD DOC
+                detalhe.getCampo( "NR_DO_DOCUMENTO" ).setValor( boleto.getNumeroDoDocumento() ); // MATRICULA/MES_MENSALIDADE
                 detalhe.getCampo( "VENCIMENTO" ).setValor( DATE_FORMAT.format( boleto.getDatas().getVencimento().getTime() ) );
                 detalhe.getCampo( "VALOR_DO_TITULO" ).setValor( MyStrings.apenasNumeros( boleto.getValorBoleto().toString() ) );
                 detalhe.getCampo( "CODIGO_DO_BANCO" ).setValor( "341" );
