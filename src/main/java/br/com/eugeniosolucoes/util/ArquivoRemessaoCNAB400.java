@@ -60,11 +60,11 @@ public class ArquivoRemessaoCNAB400 {
                 detalhe.getCampo( "VENCIMENTO" ).setValor( DATE_FORMAT.format( boleto.getDatas().getVencimento().getTime() ) );
                 detalhe.getCampo( "VALOR_DO_TITULO" ).setValor( MyStrings.apenasNumeros( boleto.getValorBoleto().toString() ) );
                 detalhe.getCampo( "CODIGO_DO_BANCO" ).setValor( "341" );
-                detalhe.getCampo( "ESPECIE" ).setValor( "4" ); // MENSALIDADE ESCOLAR
+                detalhe.getCampo( "ESPECIE" ).setValor( "04" ); // MENSALIDADE ESCOLAR
                 detalhe.getCampo( "ACEITE" ).setValor( boleto.getAceite() ? "A" : "N" );
                 detalhe.getCampo( "DATA_DE_EMISSAO" ).setValor( DATE_FORMAT.format( boleto.getDatas().getDocumento().getTime() ) );
-                detalhe.getCampo( "INSTRUCAO_1" ).setValor( "5" ); //RECEBER CONFORME INSTRUÇÕES NO PRÓPRIO TÍTULO
-                detalhe.getCampo( "INSTRUCAO_2" ).setValor( "5" ); //RECEBER CONFORME INSTRUÇÕES NO PRÓPRIO TÍTULO
+                detalhe.getCampo( "INSTRUCAO_1" ).setValor( "05" ); //RECEBER CONFORME INSTRUÇÕES NO PRÓPRIO TÍTULO
+                detalhe.getCampo( "INSTRUCAO_2" ).setValor( "05" ); //RECEBER CONFORME INSTRUÇÕES NO PRÓPRIO TÍTULO
                 detalhe.getCampo( "CODIGO_DE_INSCRICAO_PAGADOR" ).setValor( "1" );
                 detalhe.getCampo( "NUMERO_DE_INSCRICAO_PAGADOR" ).setValor( boleto.getPagador().getDocumento().replaceAll( "\\D*", "" ) );
                 detalhe.getCampo( "NOME_PAGADOR" ).setValor( MyStrings.removerAcentos( boleto.getPagador().getNome().toUpperCase() ) );
