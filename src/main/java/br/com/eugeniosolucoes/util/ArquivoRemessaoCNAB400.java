@@ -6,9 +6,7 @@
 package br.com.eugeniosolucoes.util;
 
 import br.com.caelum.stella.boleto.Boleto;
-import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

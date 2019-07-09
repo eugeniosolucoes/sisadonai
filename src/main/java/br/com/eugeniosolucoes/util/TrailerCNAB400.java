@@ -5,6 +5,7 @@
  */
 package br.com.eugeniosolucoes.util;
 
+import static br.com.eugeniosolucoes.util.Picture.Type.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,20 +20,20 @@ public class TrailerCNAB400 extends AbstractCNAB400 {
     private static int contador = 1;
 
     static {
-        CAMPOS_TRAILER.add( new Campo( "TIPO_DE_REGISTRO", new Posicao( 1, 1 ), new Picture( Picture.Type.N, 1, false ), "9" ) );
-        CAMPOS_TRAILER.add( addCampo( "BRANCOS", Picture.Type.S, 393 ) );
-        CAMPOS_TRAILER.add( addCampo( "NUMERO_SEQUENCIAL", Picture.Type.N, 6 ) );
+        CAMPOS_TRAILER.add( addCampo( "TIPO_DE_REGISTRO", N, 1, "9" ) );
+        CAMPOS_TRAILER.add( addCampo( "BRANCOS", S, 393, " " ) );
+        CAMPOS_TRAILER.add( addCampo( "NUMERO_SEQUENCIAL", N, 6, "0" ) );
     }
 
     public String getLinhaTrailer() throws SizeLineException {
         return this.getLinha( CAMPOS_TRAILER );
     }
 
-    public static Campo addCampo( String nome, Picture.Type type, int length ) {
-        Campo campo = new Campo( nome, contador, new Picture( type, length ) );
+    private static Campo addCampo( String nome, Picture.Type type, int length, String valorPadrao ) {
+        Campo campo = new Campo( nome, contador, new Picture( type, length ), valorPadrao );
         contador += length;
         return campo;
-    }
+    }    
 
     @Override
     public Campo getCampo( String nome ) {
