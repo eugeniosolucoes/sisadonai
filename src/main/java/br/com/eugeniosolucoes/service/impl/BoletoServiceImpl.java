@@ -148,16 +148,20 @@ public class BoletoServiceImpl implements BoletoService {
                         LocalDate.fromDateFields( dados.getVencimento() ).getYear() );
         //Quem emite o boleto
         Beneficiario beneficiario = Beneficiario.novoBeneficiario()
-                .comNomeBeneficiario( "CURSO ADONAI LTDA" )
-                .comAgencia( "7190" )
-                .comCodigoBeneficiario( "48759" )
-                .comDigitoCodigoBeneficiario( "0" )
+                .comNomeBeneficiario( CONFIG.getProperty( "boleto.curso.nome" ) )
+                .comAgencia( CONFIG.getProperty( "boleto.curso.conta.agencia" ) )
+                .comCodigoBeneficiario( CONFIG.getProperty( "boleto.curso.conta.numero" ) )
+                .comDigitoCodigoBeneficiario( CONFIG.getProperty( "boleto.curso.conta.dv" ) )
                 //.comNumeroConvenio( "1207113" )
-                .comCarteira( "109" )
+                .comCarteira( CONFIG.getProperty( "boleto.curso.conta.carteira" ) )
                 .comEndereco( enderecoBeneficiario )
                 .comNossoNumero( MyStrings.padLeft( 8, Integer.valueOf( dados.getNossoNumero() ) ) )
-                .comDocumento( "10.851.328/0001-75" )
-                .comDigitoNossoNumero( calcularDacItau( "7190", "48759", "109", MyStrings.padLeft( 8, Integer.valueOf( dados.getNossoNumero() ) ) ) );
+                .comDocumento( CONFIG.getProperty( "boleto.curso.cnpj" )  )
+                .comDigitoNossoNumero( 
+                        calcularDacItau( CONFIG.getProperty( "boleto.curso.conta.numero" ), 
+                        CONFIG.getProperty( "boleto.curso.conta.numero" ), 
+                        CONFIG.getProperty( "boleto.curso.conta.carteira" ), 
+                        MyStrings.padLeft( 8, Integer.valueOf( dados.getNossoNumero() ) ) ) );
         Endereco enderecoPagador = Endereco.novoEndereco()
                 .comLogradouro( dados.getEndereco().getLogradouro() )
                 .comBairro( dados.getEndereco().getBairro() )
