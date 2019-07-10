@@ -22,6 +22,7 @@ import br.com.eugeniosolucoes.view.model.DadosBoletoModel;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -156,7 +157,7 @@ public class BoletoServiceImpl implements BoletoService {
                 .comEndereco( enderecoBeneficiario )
                 .comNossoNumero( MyStrings.padLeft( 8, Integer.valueOf( dados.getNossoNumero() ) ) )
                 .comDocumento( "10.851.328/0001-75" )
-                .comDigitoNossoNumero( "347-1" );
+                .comDigitoNossoNumero( calcularDacItau( "7190", "48759", "109", MyStrings.padLeft( 8, Integer.valueOf( dados.getNossoNumero() ) ) ) );
         Endereco enderecoPagador = Endereco.novoEndereco()
                 .comLogradouro( dados.getEndereco().getLogradouro() )
                 .comBairro( dados.getEndereco().getBairro() )
@@ -307,4 +308,31 @@ public class BoletoServiceImpl implements BoletoService {
         }
     }
 
+    public String calcularDacItau( String agencia, String cc, String carteira, String nossoNumero ) {
+        int sum = 0;
+        agencia = MyStrings.padLeft( 4, Integer.valueOf( agencia ) );
+        cc = MyStrings.padLeft( 5, Integer.valueOf( cc ) );
+        carteira = MyStrings.padLeft( 3, Integer.valueOf( carteira ) );
+        nossoNumero = MyStrings.padLeft( 8, Integer.valueOf( nossoNumero ) );
+        List<String> asList = Arrays.asList( agencia, cc, carteira, nossoNumero );
+        int cont = 0;
+        List<Integer> produtos = new ArrayList<>( 20 );
+        for ( String string : asList ) {
+            for ( char c : string.toCharArray() ) {
+                Integer value = Integer.valueOf( String.valueOf( c ) );
+                produtos.add( value * ( cont % 2 == 0 ? 1 : 2 ) );
+                cont++;
+            }
+        }
+        final int mod10 = 10;
+        for ( Integer i : produtos ) {
+            if ( i >= mod10 ) {
+                sum += 1;
+                sum += i % mod10;
+            } else {
+                sum += i;
+            }
+        }
+        return String.valueOf( mod10 - (sum % mod10) );
+    }
 }

@@ -5,6 +5,7 @@
  */
 package br.com.eugeniosolucoes.test;
 
+import br.com.eugeniosolucoes.service.impl.BoletoServiceImpl;
 import br.com.eugeniosolucoes.util.MyStrings;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -15,6 +16,8 @@ import static org.junit.Assert.*;
  */
 public class ValidacoesTest {
 
+    private final BoletoServiceImpl boletoService = new BoletoServiceImpl();
+    
     @Test
     public void testValidarEmailComAcentos() {
         String email = "eugenio@eugeniosoluções.com.br";
@@ -38,14 +41,13 @@ public class ValidacoesTest {
         String cep = "07700-500";
         assertFalse( MyStrings.validarCEP( cep ) );
     }
-    
-    
+
     @Test
     public void testCEPInvalidoComLetra() {
         String cep = "20770A00";
         assertFalse( MyStrings.validarCEP( cep ) );
     }
-    
+
     @Test
     public void testRemoveAcentos() {
         assertEquals( "eugenio", MyStrings.removerAcentos( "eugênio" ) );
@@ -55,5 +57,16 @@ public class ValidacoesTest {
         assertNull( null, MyStrings.removerAcentos( null ) );
 
     }
+
+    @Test
+    public void testDACNossoNumeroItau() {
+        String calcularDacItau = boletoService.calcularDacItau( "0057", "72192", "109", "98712345" );
+        assertEquals( "8", calcularDacItau );
+    }
     
+    @Test
+    public void testDACNossoNumeroItau2() {
+        String calcularDacItau = boletoService.calcularDacItau( "0057", "12345", "110", "12345678" );
+        assertEquals( "8", calcularDacItau );
+    } 
 }
