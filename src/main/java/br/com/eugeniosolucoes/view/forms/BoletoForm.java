@@ -57,6 +57,8 @@ public class BoletoForm extends BaseDialog {
     
     private final ArquivoRemessaoCNAB400 arquivoRemessaoCNAB400 = new ArquivoRemessaoCNAB400();
 
+    private static int contArqRemessa = 1;
+
     /**
      * Creates new form View1
      *
@@ -473,7 +475,7 @@ public class BoletoForm extends BaseDialog {
             arquivo.setDialogType( JFileChooser.SAVE_DIALOG );
             arquivo.setFileFilter( new MyFilter( "txt" ) );
             arquivo.setFileSelectionMode( JFileChooser.APPROVE_OPTION );
-            final String nomeArquivo = String.format( "sisadonai_arquivo_remessa_itau%s.txt", TratadorArquivoRemessa.SUFIXO_ARQUIVO_LOG.format( new Date() ) );
+            final String nomeArquivo = String.format( "ARQREM%02d.txt", contArqRemessa );
 
             arquivo.setSelectedFile( new File( nomeArquivo ) );
 
@@ -487,7 +489,8 @@ public class BoletoForm extends BaseDialog {
                 File f = arquivo.getSelectedFile();
                 String conteudo = arquivoRemessaoCNAB400.processarArquivoRemessa( boletos );
                 tar.criarNovoArquivoRemessa( f.getCanonicalPath(), conteudo );
-                MyStrings.exibeMensagem( String.format( "Arquivo de Remessa preparado com sucesso!%nLocal: %s", nomeArquivo ) );
+                MyStrings.exibeMensagem( String.format( "Arquivo de Remessa preparado com sucesso!%nLocal: %s", f.getCanonicalPath() ) );
+                contArqRemessa = contArqRemessa >= 10 ? 1 : contArqRemessa + 1; 
             }
         } catch ( Exception ex ) {
             JOptionPane.showMessageDialog( this, "Houve erro ao gerar o arquivo!\nSerá exibido o arquivo de log com os problemas!", this.getTitle(), JOptionPane.ERROR_MESSAGE );
