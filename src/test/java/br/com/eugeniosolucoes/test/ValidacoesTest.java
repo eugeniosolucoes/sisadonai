@@ -69,4 +69,11 @@ public class ValidacoesTest {
         String calcularDacItau = boletoService.calcularDacItau( "0057", "12345", "110", "12345678" );
         assertEquals( "8", calcularDacItau );
     } 
+    
+    @Test
+    public void testDACNossoNumeroItau3() {
+        String calcularDacItau = boletoService.calcularDacItau( "0057", "72192", "198", "98712345" );
+        assertEquals( "1", calcularDacItau );
+    } 
+    
 }

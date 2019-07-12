@@ -472,12 +472,12 @@ public class BoletoForm extends BaseDialog {
             arquivo.setDialogTitle( "Selecione o local para salvar o arquivo de remessa." );
             arquivo.setDialogType( JFileChooser.SAVE_DIALOG );
             arquivo.setFileFilter( new MyFilter( "txt" ) );
-            arquivo.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
+            arquivo.setFileSelectionMode( JFileChooser.APPROVE_OPTION );
             final String nomeArquivo = String.format( "sisadonai_arquivo_remessa_itau%s.txt", TratadorArquivoRemessa.SUFIXO_ARQUIVO_LOG.format( new Date() ) );
 
             arquivo.setSelectedFile( new File( nomeArquivo ) );
 
-            int r = arquivo.showDialog( null, "Selecionar" );
+            int r = arquivo.showDialog( this, "Selecionar" );
 
             if ( r == JFileChooser.APPROVE_OPTION ) {
 

@@ -207,7 +207,7 @@ public class MainForm extends BaseForm {
         arquivo.setDialogTitle( "Selecione o arquivo de remessa a ser preparado." );
         arquivo.setDialogType( JFileChooser.OPEN_DIALOG );
         arquivo.setFileFilter( new MyFilter( "txt" ) );
-        arquivo.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
+        arquivo.setFileSelectionMode( JFileChooser.APPROVE_OPTION );
 
         int r = arquivo.showDialog( null, "Selecionar" );
 
