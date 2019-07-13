@@ -227,18 +227,18 @@ public class BoletoServiceImpl implements BoletoService {
         return gerador;
     }
 
-//    private static String criarInstrucao1( DadosBoletoModel dados ) {
-//        return String.format( "Após %s cobrar: Juros de Mora de 0,99%% Mensal (R$ %.2f ao dia) / "
-//                + "Multa de 2,00%% (R$ %.2f)",
-//                DATA_FORMAT.format( dados.getVencimento() ),
-//                ( dados.getValor() * dados.getPercentualJuros() / 100 ),
-//                ( dados.getValor() * dados.getPercentualMulta() / 100 ) );
-//    }
     private static String criarInstrucao1( DadosBoletoModel dados ) {
-        return String.format( "Após %s cobrar: Juros de Mora de 1%% Mensal / "
-                + "Multa de 2,00%% ",
-                DATA_FORMAT.format( dados.getVencimento() ) );
+        return String.format( "Após %s cobrar: Juros de Mora de 1%% Mensal (R$ %.2f ao dia) / "
+                + "Multa de 2,00%% (R$ %.2f)",
+                DATA_FORMAT.format( dados.getVencimento() ),
+                ( dados.getValor() * dados.getPercentualJuros() / 100 ),
+                ( dados.getValor() * dados.getPercentualMulta() / 100 ) );
     }
+//    private static String criarInstrucao1( DadosBoletoModel dados ) {
+//        return String.format( "Após %s cobrar: Juros de Mora de 1%% Mensal / "
+//                + "Multa de 2,00%% ",
+//                DATA_FORMAT.format( dados.getVencimento() ) );
+//    }
 
     private static String criarInstrucao4( DadosBoletoModel dados ) {
         return String.format( "%s (%s)", dados.getAluno(), dados.getTurma() );
