@@ -158,10 +158,11 @@ public class BoletoServiceImpl implements BoletoService {
                 .comNossoNumero( MyStrings.padLeft( 8, Integer.valueOf( dados.getNossoNumero() ) ) )
                 .comDocumento( CONFIG.getProperty( "boleto.curso.cnpj" )  )
                 .comDigitoNossoNumero( 
-                        calcularDacItau( CONFIG.getProperty( "boleto.curso.conta.numero" ), 
+                        calcularDacItau( 
+                        CONFIG.getProperty( "boleto.curso.conta.agencia" ), 
                         CONFIG.getProperty( "boleto.curso.conta.numero" ), 
                         CONFIG.getProperty( "boleto.curso.conta.carteira" ), 
-                        MyStrings.padLeft( 8, Integer.valueOf( dados.getNossoNumero() ) ) ) );
+                        dados.getNossoNumero() ) );
         Endereco enderecoPagador = Endereco.novoEndereco()
                 .comLogradouro( dados.getEndereco().getLogradouro() )
                 .comBairro( dados.getEndereco().getBairro() )
@@ -185,7 +186,8 @@ public class BoletoServiceImpl implements BoletoService {
                         criarInstrucao2( dados ),
                         criarInstrucao3( dados ),
                         criarInstrucao4( dados ) )
-                .comLocaisDePagamento( "Até o vencimento pagável em qualquer banco do sistema de compensação" );
+                //.comLocaisDePagamento( "Até o vencimento pagável em qualquer banco do sistema de compensação" );
+                .comLocaisDePagamento( "Até o vencimento, preferencialmente no Itaú e Após o vencimento, somente no Itaú" );
         return boleto;
     }
 

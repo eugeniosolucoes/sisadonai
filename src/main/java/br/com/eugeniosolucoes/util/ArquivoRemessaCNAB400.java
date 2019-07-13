@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author eugenio
  */
-public class ArquivoRemessaoCNAB400 {
+public class ArquivoRemessaCNAB400 {
 
     private final HeaderCNAB400 header;
 
@@ -24,7 +24,7 @@ public class ArquivoRemessaoCNAB400 {
 
     private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "ddMMyy" );
 
-    public ArquivoRemessaoCNAB400() {
+    public ArquivoRemessaCNAB400() {
         header = new HeaderCNAB400();
         detalhe = new DetalheCNAB400();
         trailer = new TrailerCNAB400();
@@ -56,7 +56,7 @@ public class ArquivoRemessaoCNAB400 {
                 detalhe.getCampo( "COD_DE_OCORRENCIA" ).setValor( "1" ); //REMESSA
                 detalhe.getCampo( "NR_DO_DOCUMENTO" ).setValor( boleto.getNumeroDoDocumento() ); // MATRICULA/MES_MENSALIDADE
                 detalhe.getCampo( "VENCIMENTO" ).setValor( DATE_FORMAT.format( boleto.getDatas().getVencimento().getTime() ) );
-                detalhe.getCampo( "VALOR_DO_TITULO" ).setValor( MyStrings.apenasNumeros( boleto.getValorBoleto().toString() ) );
+                detalhe.getCampo( "VALOR_DO_TITULO" ).setValor( tratarValorBoleto( boleto ) );
                 detalhe.getCampo( "CODIGO_DO_BANCO" ).setValor( "341" );
                 detalhe.getCampo( "ESPECIE" ).setValor( "04" ); // MENSALIDADE ESCOLAR
                 detalhe.getCampo( "ACEITE" ).setValor( boleto.getAceite() ? "A" : "N" );
@@ -81,5 +81,9 @@ public class ArquivoRemessaoCNAB400 {
             throw new IllegalStateException( e );
         }
         return result;
+    }
+
+    private static String tratarValorBoleto( Boleto boleto ) {
+        return MyStrings.apenasNumeros( boleto.getValorBoleto() );
     }
 }

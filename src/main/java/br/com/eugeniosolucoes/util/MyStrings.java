@@ -88,8 +88,8 @@ public final class MyStrings {
         return Normalizer.normalize( str, Normalizer.Form.NFD ).replaceAll( "[^\\p{ASCII}]", "" );
     }
 
-    public static String apenasNumeros( String valorNumerico ) {
-        return valorNumerico.replace( ",", "" ).replace( ".", "" );
+    public static String apenasNumeros( Number number ) {
+        return String.format( "%.2f", number ).replace( ".", "" ).replace( ",", "" );
     }
 
 }

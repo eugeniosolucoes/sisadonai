@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="boleto-default" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ff653490-88f9-4546-aaa6-53f137c26ccc">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="211"/>
+	<property name="ireport.y" value="204"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<style name="Celula" forecolor="#646464" fontName="Arial" fontSize="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
@@ -716,7 +716,7 @@
 			</textField>
 			<staticText>
 				<reportElement style="Celula" x="1" y="500" width="389" height="10" uuid="e8d29361-12cd-4e98-a29a-88ceb7b4e383"/>
-				<text><![CDATA[Instruções]]></text>
+				<text><![CDATA[Instruções de responsabilidade do beneficiário. Qualquer dúvida sobre este boleto, contate o beneficiário]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement style="Txt_valor" x="390" y="558" width="164" height="14" uuid="0a791ab6-641e-4a4a-b3fd-c907a6320d3d"/>

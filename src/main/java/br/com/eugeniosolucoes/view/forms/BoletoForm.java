@@ -10,7 +10,7 @@ import br.com.eugeniosolucoes.controle.Controlador;
 import br.com.eugeniosolucoes.excecoes.ActionException;
 import br.com.eugeniosolucoes.service.BoletoService;
 import br.com.eugeniosolucoes.service.impl.BoletoServiceImpl;
-import br.com.eugeniosolucoes.util.ArquivoRemessaoCNAB400;
+import br.com.eugeniosolucoes.util.ArquivoRemessaCNAB400;
 import br.com.eugeniosolucoes.util.MyFilter;
 import br.com.eugeniosolucoes.util.MyStrings;
 import br.com.eugeniosolucoes.util.TratadorArquivoRemessa;
@@ -55,7 +55,7 @@ public class BoletoForm extends BaseDialog {
     
     private List<DadosBoletoModel> boletoModel;
     
-    private final ArquivoRemessaoCNAB400 arquivoRemessaoCNAB400 = new ArquivoRemessaoCNAB400();
+    private final ArquivoRemessaCNAB400 arquivoRemessaoCNAB400 = new ArquivoRemessaCNAB400();
 
     private static int contArqRemessa = 1;
 
