@@ -339,6 +339,11 @@ public class BoletoServiceImpl implements BoletoService {
                 sum += i;
             }
         }
-        return String.valueOf( mod10 - (sum % mod10) );
+        int resto =  sum % mod10;
+        if( resto == 0 ){
+            return "0";
+        } else {
+            return String.valueOf( mod10 - resto );
+        }
     }
 }

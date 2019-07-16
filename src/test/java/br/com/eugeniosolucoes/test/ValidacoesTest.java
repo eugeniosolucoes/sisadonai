@@ -82,4 +82,10 @@ public class ValidacoesTest {
         assertEquals( "6", calcularDacItau );
     }    
     
+    @Test
+    public void testDACNossoNumeroItau5() {
+        String calcularDacItau = boletoService.calcularDacItau( "7190", "48759", "109", "00242374" );
+        assertEquals( "0", calcularDacItau );
+    }    
+    
 }
