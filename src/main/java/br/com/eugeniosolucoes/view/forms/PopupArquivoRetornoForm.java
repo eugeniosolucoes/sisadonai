@@ -11,7 +11,7 @@
 package br.com.eugeniosolucoes.view.forms;
 
 import br.com.eugeniosolucoes.service.ArquivoDeRetornoService;
-import br.com.eugeniosolucoes.service.impl.ArquivoDeRetornoServiceImpl;
+import br.com.eugeniosolucoes.service.impl.ArquivoDeRetornoCNAB400ServiceImpl;
 import br.com.eugeniosolucoes.util.MyFilter;
 import br.com.eugeniosolucoes.view.model.DadosBoletoPagoModel;
 import java.awt.Dimension;
@@ -34,7 +34,7 @@ public class PopupArquivoRetornoForm extends BaseDialog {
 
     static final Logger LOG = Logger.getLogger( PopupArquivoRetornoForm.class.getName() );
 
-    private final ArquivoDeRetornoService service = new ArquivoDeRetornoServiceImpl();
+    private final ArquivoDeRetornoService service = new ArquivoDeRetornoCNAB400ServiceImpl();
 
     /**
      * Creates new form FormPopup
