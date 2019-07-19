@@ -60,13 +60,25 @@ public class ArquivoDeRetornoCNAB400ServiceImpl implements ArquivoDeRetornoServi
             String linha = scanner.nextLine();
             // 1 - SEGMENTO DETALHE
             // 02 - CODIGO OCORRENCIA
-            if ( linha.charAt( 0 ) == '1' && linha.substring( 108, 110 ).equals( "02" ) ) {
-                String linhaDetalhe = linha;
-                DadosBoletoPagoModel boletoPago = criarDadosBoletoPago( linhaDetalhe );
+            if ( isLinhaDetalhe( linha ) ) {
+                DadosBoletoPagoModel boletoPago = criarDadosBoletoPago( linha );
                 lista.add( boletoPago );
             }
         }
         return lista;
+    }
+
+    private static boolean isLinhaDetalhe( String linha ) {
+        if ( linha.charAt( 0 ) == '1' ) {
+            // CODIGO DA OCORRENCIA OU MOVIMENTO
+            String codigo = linha.substring( 108, 110 );
+            switch ( codigo ) {
+                case "02":
+                case "06":
+                    return true;
+            }
+        }
+        return false;
     }
 
     @Override
