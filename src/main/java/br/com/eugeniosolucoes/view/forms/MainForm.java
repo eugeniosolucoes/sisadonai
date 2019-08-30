@@ -60,6 +60,32 @@ public class MainForm extends BaseForm {
         }
     }
 
+    private void mItemPrepararArqRemessaActionPerformed(java.awt.event.ActionEvent evt) {                                                        
+        JFileChooser arquivo = new JFileChooser();
+        arquivo.setDialogTitle( "Selecione o arquivo de remessa a ser preparado." );
+        arquivo.setDialogType( JFileChooser.OPEN_DIALOG );
+        arquivo.setFileFilter( new MyFilter( "txt" ) );
+        arquivo.setFileSelectionMode( JFileChooser.APPROVE_OPTION );
+
+        int r = arquivo.showDialog( null, "Selecionar" );
+
+        if ( r == JFileChooser.APPROVE_OPTION ) {
+
+            try {
+                //txtListaDeEmail.setText( arquivo.getSelectedFile().getCanonicalPath() );
+                JOptionPane.showMessageDialog( this, "Favor aguardar a geração do arquivo!", this.getTitle(), JOptionPane.INFORMATION_MESSAGE );
+                TratadorArquivoRemessa tar = new TratadorArquivoRemessa();
+                File f = arquivo.getSelectedFile();
+                String conteudo = tar.corrigirArquivo( f );
+                String nomeArquivo = tar.criarNovoArquivo( f.getCanonicalPath(), conteudo );
+                MyStrings.exibeMensagem( String.format( "Arquivo de Remessa preparado com sucesso!%nLocal: %s", nomeArquivo ) );
+            } catch ( Exception ex ) {
+                JOptionPane.showMessageDialog( this, "Houve erro ao gerar o arquivo!\nSerá exibido o arquivo de log com os problemas!", this.getTitle(), JOptionPane.ERROR_MESSAGE );
+                exibirLogErroRemessa( ex );
+            }
+        }
+    }
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -74,7 +100,6 @@ public class MainForm extends BaseForm {
         jMenuBarMain = new javax.swing.JMenuBar();
         jMenuTesouraria = new javax.swing.JMenu();
         mItemEnvioBoletos = new javax.swing.JMenuItem();
-        mItemPrepararArqRemessa = new javax.swing.JMenuItem();
         mItemProcessarArqRetorno = new javax.swing.JMenuItem();
         mItemEnviarLoteRps = new javax.swing.JMenuItem();
         jMenuSistema = new javax.swing.JMenu();
@@ -110,15 +135,6 @@ public class MainForm extends BaseForm {
             }
         });
         jMenuTesouraria.add(mItemEnvioBoletos);
-
-        mItemPrepararArqRemessa.setMnemonic('P');
-        mItemPrepararArqRemessa.setText("Preparar Arquivo de Remessa");
-        mItemPrepararArqRemessa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mItemPrepararArqRemessaActionPerformed(evt);
-            }
-        });
-        jMenuTesouraria.add(mItemPrepararArqRemessa);
 
         mItemProcessarArqRetorno.setText("Processar Arquivo de Retorno");
         mItemProcessarArqRetorno.addActionListener(new java.awt.event.ActionListener() {
@@ -202,32 +218,6 @@ public class MainForm extends BaseForm {
         }
     }//GEN-LAST:event_formComponentResized
 
-    private void mItemPrepararArqRemessaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemPrepararArqRemessaActionPerformed
-        JFileChooser arquivo = new JFileChooser();
-        arquivo.setDialogTitle( "Selecione o arquivo de remessa a ser preparado." );
-        arquivo.setDialogType( JFileChooser.OPEN_DIALOG );
-        arquivo.setFileFilter( new MyFilter( "txt" ) );
-        arquivo.setFileSelectionMode( JFileChooser.APPROVE_OPTION );
-
-        int r = arquivo.showDialog( null, "Selecionar" );
-
-        if ( r == JFileChooser.APPROVE_OPTION ) {
-
-            try {
-                //txtListaDeEmail.setText( arquivo.getSelectedFile().getCanonicalPath() );
-                JOptionPane.showMessageDialog( this, "Favor aguardar a geração do arquivo!", this.getTitle(), JOptionPane.INFORMATION_MESSAGE );
-                TratadorArquivoRemessa tar = new TratadorArquivoRemessa();
-                File f = arquivo.getSelectedFile();
-                String conteudo = tar.corrigirArquivo( f );
-                String nomeArquivo = tar.criarNovoArquivo( f.getCanonicalPath(), conteudo );
-                MyStrings.exibeMensagem( String.format( "Arquivo de Remessa preparado com sucesso!%nLocal: %s", nomeArquivo ) );
-            } catch ( Exception ex ) {
-                JOptionPane.showMessageDialog( this, "Houve erro ao gerar o arquivo!\nSerá exibido o arquivo de log com os problemas!", this.getTitle(), JOptionPane.ERROR_MESSAGE );
-                exibirLogErroRemessa( ex );
-            }
-        }
-    }//GEN-LAST:event_mItemPrepararArqRemessaActionPerformed
-
     private void mItemProcessarArqRetornoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItemProcessarArqRetornoActionPerformed
         // TODO add your handling code here:
         PopupArquivoRetornoForm popup = new PopupArquivoRetornoForm( null, true, "Processar Arquivo de Retorno", 800, 600 );
@@ -302,7 +292,6 @@ public class MainForm extends BaseForm {
     private javax.swing.JMenuItem mItemConfigEnvioRps;
     private javax.swing.JMenuItem mItemEnviarLoteRps;
     private javax.swing.JMenuItem mItemEnvioBoletos;
-    private javax.swing.JMenuItem mItemPrepararArqRemessa;
     private javax.swing.JMenuItem mItemProcessarArqRetorno;
     private javax.swing.JMenuItem mItemSair;
     // End of variables declaration//GEN-END:variables
