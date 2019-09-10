@@ -107,7 +107,8 @@ public class ArquivoDeRetornoCNAB400ServiceImpl implements ArquivoDeRetornoServi
             dadosBoletoPagoModel.setVencimento( DATE_FORMAT.parse( linhaDetalhe.substring( 146, 146 + 6 ) ) );
 
             String valorPago = linhaDetalhe.substring( 152, 152 + 13 );
-            double valor = Double.parseDouble( valorPago ) / 100;
+            String juroDeMoraMulta = linhaDetalhe.substring( 266, 266 + 13 );
+            double valor = ( Double.parseDouble( valorPago ) + Double.parseDouble( juroDeMoraMulta ) ) / 100;
             dadosBoletoPagoModel.setValor( valor );
         } catch ( ParseException ex ) {
             LOG.log( Level.SEVERE, ex.getMessage(), ex );
